@@ -12,5 +12,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectFolder: () => ipcRenderer.invoke('select-folder'),
     getMode: () => ipcRenderer.invoke('get-mode'),
     openSongWindow: () => ipcRenderer.send('open-song-window'),
-    receiveSongs: (callback) => ipcRenderer.on('update-songs', callback)
+    getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder)
 });

@@ -8,36 +8,39 @@ document.addEventListener("DOMContentLoaded", function () {
     let songs = [];
     let songNameElement = document.getElementById('songName');
 
-    // Nueva función para cargar canciones basada en el modo actual
-    // async function initializePlayer() {
-    //     try {
-    //         const { mode, data } = await window.electronAPI.getMode();
-    //         console.log('Modo actual:', mode, 'Datos:', data);
+    async function initializePlayer() {
+        try {
+            const { mode, data } = await window.electronAPI.getMode();
+            console.log('Modo actual:', mode, 'Datos:', data);
 
-    //         if (mode === 'local') {
-    //             await loadSongs(data);
-    //         } else if (mode === 'spotify') {
-    //             // Lógica para Spotify (si es necesario)
-    //             console.log('Modo Spotify, URL:', data);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error inicializando reproductor:', error);
-    //     }
-    // }
-
-    // Eliminar el listener de 'update-songs' existente y reemplazar con:
-    // initializePlayer();
-
-    window.electronAPI.receiveSongs((_, data) => {
-        console.log("Canciones recibidas en la ventana de reproducción:", data.songs); // Log para verificar las canciones recibidas
-        songs = data.songs;
-        if (songs.length > 0) {
-            console.log("Reproduciendo la primera canción:", songs[0]); // Log para verificar la primera canción
-            playSong(currentSongIndex);
-        } else {
-            console.error("No se recibieron canciones para reproducir"); // Log para verificar si no hay canciones
+            if (mode === 'local') {
+                await loadSongs(data);
+            } else if (mode === 'spotify') {
+                // Lógica para Spotify (si es necesario)
+                console.log('Modo Spotify, URL:', data);
+            }
+        } catch (error) {
+            console.error('Error inicializando reproductor:', error);
         }
-    });
+    }
+
+    // Función para cargar canciones desde una carpeta local
+    async function loadSongs(folder) {
+        console.log('[DEBUG] Cargando canciones desde:', folder);
+        try {
+            const response = await window.electronAPI.getSongsFromFolder(folder);
+            console.log('[DEBUG] Canciones recibidas:', response);
+            songs = response;
+            if (songs.length > 0) {
+                console.log('[DEBUG] Reproduciendo primera canción');
+                playSong(currentSongIndex);
+            } else {
+                console.warn('[DEBUG] Carpeta vacía - No hay canciones');
+            }
+        } catch (error) {
+            console.error('[ERROR] Fallo al cargar canciones:', error);
+        }
+    }
 
     const audioElement = document.getElementById('audioElement');
     if (!audioElement) {
@@ -61,29 +64,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para reproducir una canción específica
     function playSong(index) {
+        console.log('[DEBUG] Intentando reproducir índice:', index);
+        const audioElement = document.getElementById('audioElement');
         if (!audioElement) {
-            console.error('Audio element no encontrado'); // Log para verificar si el elemento de audio existe
+            console.error('[ERROR] Elemento audio no encontrado');
             return;
         }
-
+        
         if (songs[index]) {
-            console.log("Reproduciendo canción:", songs[index]); // Log para verificar la canción que se está reproduciendo
+            console.log('[DEBUG] Estableciendo fuente:', songs[index]);
             audioElement.src = songs[index];
             audioElement.play().catch(error => {
-                console.error('Error de reproducción:', error); // Log para verificar errores de reproducción
+                console.error('[ERROR] Error de reproducción:', error);
             });
             updateSongName(songs[index]);
         } else {
-            console.error("Índice de canción no válido:", index); // Log para verificar si el índice es válido
+            console.error('[ERROR] Índice inválido o canción no existe');
         }
     }
 
-
     // Función para actualizar el nombre de la canción
     function updateSongName(songPath) {
-        const songName = songPath.split('/').pop(); // Obtener el nombre del archivo
-        songNameElement.textContent = songName; // Actualizar el texto del elemento
+        // Decodificar la URL (por ejemplo, convierte "%20" de nuevo a espacios)
+        const decodedPath = decodeURIComponent(songPath);
+    
+        // Extraer el nombre del archivo (eliminar la ruta completa)
+        const songName = decodedPath.split('/').pop(); // Obtener el nombre del archivo
+    
+        // Actualizar el texto del elemento
+        const songNameElement = document.getElementById('songName');
+        if (songNameElement) {
+            songNameElement.textContent = songName;
+        } else {
+            console.error('Elemento songName no encontrado');
+        }
     }
+
+    initializePlayer();
 
     // Función para avanzar a la siguiente canción
     function playNextSong() {

@@ -17,20 +17,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const localFolderBtn = document.getElementById('localFolderBtn');
-    if (localFolderBtn) {
-        localFolderBtn.addEventListener('click', async () => {
-            console.log("Botón de carpeta local clickeado");
-            const folder = await window.electronAPI.selectFolder();
-            if (folder) {
-                console.log("Carpeta seleccionada:", folder);
-                window.electronAPI.setMode('local', folder);
-                window.electronAPI.openSongWindow();
-            } else {
-                console.log("No se seleccionó ninguna carpeta");
-            }
-        });
-    }
+    // render_mainWindow.js (al seleccionar carpeta)
+    localFolderBtn.addEventListener('click', async () => {
+        const folder = await window.electronAPI.selectFolder();
+        if (folder) {
+            // Primero establecer el modo
+            window.electronAPI.setMode('local', folder);
+            // Luego abrir la ventana
+            window.electronAPI.openSongWindow();
+        }
+    });
 
     const spotifyModal = document.getElementById('spotifyModal');
     const modalClose = document.getElementById('modalClose');
