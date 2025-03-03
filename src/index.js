@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron'); 
-const { pathToFileURL } = require('url'); 
+const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
+const { pathToFileURL } = require('url');
 const path = require('node:path');
 const fs = require('fs');
 
@@ -60,16 +60,22 @@ function createSongWindow() {
   songWindow.on('closed', () => {
     songWindow = null;
   });
+
+  songWindow.webContents.openDevTools();
 }
 
 function getSongsFromFolder(folder) {
+  console.log("Buscando canciones en la carpeta:", folder); // Log para verificar la carpeta
   const files = fs.readdirSync(folder);
   const songs = files.filter(file => {
-      const ext = path.extname(file).toLowerCase();
-      return ['.mp3', '.wav', '.ogg'].includes(ext);
-  }).map(file => 
-      pathToFileURL(path.join(folder, file)).href // Convertir a URL
-  );
+    const ext = path.extname(file).toLowerCase();
+    return ['.mp3', '.wav', '.ogg'].includes(ext);
+  }).map(file => {
+    const songPath = pathToFileURL(path.join(folder, file)).href;
+    console.log("Canción encontrada:", songPath); // Log para verificar cada canción
+    return songPath;
+  });
+  console.log("Total de canciones encontradas:", songs.length); // Log para verificar el total
   return songs;
 }
 
@@ -82,8 +88,8 @@ ipcMain.on('open-song-window', () => {
 
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
-      songWindow.close();
-      songWindow = null;
+    songWindow.close();
+    songWindow = null;
   }
   startWindow.show();
 });
@@ -98,7 +104,7 @@ ipcMain.on('close-window', () => {
     startWindow.close();
   }
   if (songWindow) {
-    songWindow.close(); 
+    songWindow.close();
   }
 });
 
@@ -110,27 +116,34 @@ ipcMain.handle('select-folder', async () => {
 });
 
 ipcMain.on('set-mode', (_, { mode, data }) => {
+  console.log(`Modo establecido: ${mode}, Datos: ${data}`); // Log para verificar el modo y los datos
   currentMode = mode;
   modeData = data;
 
   if (mode === 'local') {
-      const songs = getSongsFromFolder(data); // Obtener canciones
-      if (songWindow) {
-          songWindow.webContents.send('update-songs', { songs }); // Enviar a la ventana
-      }
+    const songs = getSongsFromFolder(data);
+    console.log("Canciones encontradas:", songs); // Log para verificar las canciones
+    if (songWindow) {
+      console.log("Enviando canciones a la ventana de reproducción..."); // Log para verificar el envío
+      songWindow.webContents.send('update-songs', { songs });
+    } else {
+      console.error("La ventana de reproducción no está abierta"); // Log para verificar si la ventana está abierta
+    }
   }
 });
 
 ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
 
 ipcMain.handle('get-songs-from-folder', async (event, folder) => {
+  console.log("Obteniendo canciones de la carpeta:", folder);
   const files = fs.readdirSync(folder);
   const songs = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
       return ['.mp3', '.wav', '.ogg'].includes(ext);
-  }).map(file => 
-      pathToFileURL(path.join(folder, file)).href // Convertir a URL
+  }).map(file =>
+      pathToFileURL(path.join(folder, file)).href
   );
+  console.log("Canciones encontradas:", songs);
   return songs;
 });
 

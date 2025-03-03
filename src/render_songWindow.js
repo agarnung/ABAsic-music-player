@@ -1,14 +1,42 @@
 /// render_songWindow.js
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM completamente cargado y analizado en la ventana de canciones");
+
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
     let songNameElement = document.getElementById('songName');
 
+    // Nueva función para cargar canciones basada en el modo actual
+    // async function initializePlayer() {
+    //     try {
+    //         const { mode, data } = await window.electronAPI.getMode();
+    //         console.log('Modo actual:', mode, 'Datos:', data);
+
+    //         if (mode === 'local') {
+    //             await loadSongs(data);
+    //         } else if (mode === 'spotify') {
+    //             // Lógica para Spotify (si es necesario)
+    //             console.log('Modo Spotify, URL:', data);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error inicializando reproductor:', error);
+    //     }
+    // }
+
+    // Eliminar el listener de 'update-songs' existente y reemplazar con:
+    // initializePlayer();
+
     window.electronAPI.receiveSongs((_, data) => {
+        console.log("Canciones recibidas en la ventana de reproducción:", data.songs); // Log para verificar las canciones recibidas
         songs = data.songs;
-        if (songs.length > 0) playSong(currentSongIndex);
+        if (songs.length > 0) {
+            console.log("Reproduciendo la primera canción:", songs[0]); // Log para verificar la primera canción
+            playSong(currentSongIndex);
+        } else {
+            console.error("No se recibieron canciones para reproducir"); // Log para verificar si no hay canciones
+        }
     });
 
     const audioElement = document.getElementById('audioElement');
@@ -31,36 +59,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Función para cargar la lista de canciones desde la carpeta local
-    async function loadSongs(folder) {
-        try {
-            const response = await window.electronAPI.getSongsFromFolder(folder);
-            console.log('Canciones encontradas:', response);
-            songs = response;
-            if (songs.length > 0) {
-                playSong(currentSongIndex);
-            }
-        } catch (error) {
-            console.error('Error al cargar las canciones:', error);
-        }
-    }
-
     // Función para reproducir una canción específica
     function playSong(index) {
         if (!audioElement) {
-            console.error('Audio element no encontrado');
+            console.error('Audio element no encontrado'); // Log para verificar si el elemento de audio existe
             return;
         }
-        
+
         if (songs[index]) {
+            console.log("Reproduciendo canción:", songs[index]); // Log para verificar la canción que se está reproduciendo
             audioElement.src = songs[index];
             audioElement.play().catch(error => {
-                console.error('Error de reproducción:', error);
-                showErrorNotification('Error al reproducir el archivo');
+                console.error('Error de reproducción:', error); // Log para verificar errores de reproducción
             });
             updateSongName(songs[index]);
+        } else {
+            console.error("Índice de canción no válido:", index); // Log para verificar si el índice es válido
         }
     }
+
+
     // Función para actualizar el nombre de la canción
     function updateSongName(songPath) {
         const songName = songPath.split('/').pop(); // Obtener el nombre del archivo
@@ -95,9 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (playPauseBtn) {
         playPauseBtn.addEventListener('click', () => {
             if (audioElement.paused) {
+                console.log("Reproduciendo canción");
                 audioElement.play();
                 playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-pause"></i></span>';
             } else {
+                console.log("Pausando canción");
                 audioElement.pause();
                 playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
             }
@@ -146,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Cambiar el ícono cuando la canción termina
         audioElement.addEventListener('ended', () => {
+            console.log("Canción terminada, reproduciendo siguiente canción");
             playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
             playNextSong();
         });
