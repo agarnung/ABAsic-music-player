@@ -31,15 +31,30 @@
 
   <p>This is the song window. Enjoy the music!</p>
 
-  <audio controls>
-    <source src="../assets/music/01 - Opening Theme.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-  </audio>
-
-  <div>
-    <button id="startBtn" class="button is-primary">Start</button>
-    <button id="stopBtn" class="button is-warning">Stop</button>
+  <div class="audio-player">
+    <!-- Controles -->
+    <div class="controls">
+      <button id="playPauseBtn" class="button is-primary is-large">
+        <span class="icon">
+          <i class="fas fa-play"></i>
+        </span>
+      </button>
+    </div>
+  
+    <!-- Barra de progreso -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+      <span class="time" id="currentTime">0:00</span>
+      <span class="time" id="duration">0:00</span>
+    </div>
+  
+    <!-- Elemento audio oculto -->
+    <audio id="audioElement" src="../assets/music/01 - Opening Theme.mp3"></audio>
   </div>
+
+
 
   <div>
     <button id="backBtn" class="button is-primary">Back to Main</button>

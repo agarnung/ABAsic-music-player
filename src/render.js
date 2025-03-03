@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     const audioElement = document.querySelector('audio');
     if (audioElement) {
-        const startBtn = document.querySelector('#startBtn');
-        const stopBtn = document.querySelector('#stopBtn');
-
-        function playMusic() {
-            if (audioElement.paused) audioElement.play();
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        if (playPauseBtn) {
+            playPauseBtn.addEventListener('click', () => {
+                if (audioElement.paused) {
+                    audioElement.play();
+                    playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-pause"></i></span>';
+                } else {
+                    audioElement.pause();
+                    playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
+                }
+            });
         }
-        function stopMusic() {
-            if (!audioElement.paused) audioElement.pause();
-        }
-
-        if (startBtn) startBtn.addEventListener("click", playMusic);
-        if (stopBtn) stopBtn.addEventListener("click", stopMusic);
     }
 
     const backBtn = document.getElementById('backBtn');
@@ -36,11 +36,52 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const progressBar = document.getElementById('progressBar');
+    const progress = document.getElementById('progress');
+    const currentTime = document.getElementById('currentTime');
+    const duration = document.getElementById('duration');
+
+    // Funciones de formato de tiempo
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Actualizar barra de progreso
+    function updateProgress() {
+        const percent = (audioElement.currentTime / audioElement.duration) * 100;
+        progress.style.width = `${percent}%`;
+        currentTime.textContent = formatTime(audioElement.currentTime);
+    }
+
+    // Event listeners para el audio
+    if (audioElement) {
+        audioElement.addEventListener('timeupdate', updateProgress);
+        audioElement.addEventListener('loadedmetadata', () => {
+            duration.textContent = formatTime(audioElement.duration);
+        });
+
+        // Control de la barra de progreso
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const width = rect.width;
+            const percent = offsetX / width;
+            audioElement.currentTime = percent * audioElement.duration;
+        });
+
+        // Cambiar el ícono cuando la canción termina
+        audioElement.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
+        });
+    }
+
     const modeInfo = document.getElementById('modeInfo');
     if (modeInfo) {
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode');
-        
+
         if (mode === 'spotify') {
             modeInfo.textContent = `Modo Spotify: ${urlParams.get('url')}`;
             modeInfo.classList.add('is-info');

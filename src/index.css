@@ -37,3 +37,60 @@ h1 {
   font-size: 3rem; 
   margin-bottom: 1rem; 
 }
+
+.audio-player {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+#playPauseBtn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+#playPauseBtn .icon {
+  margin-left: 3px;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress {
+  height: 100%;
+  background: #3273dc;
+  border-radius: 4px;
+  width: 0%;
+}
+
+.time {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.is-hidden {
+  display: none !important;
+}
