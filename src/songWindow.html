@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Song Window</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
+  <script defer src="render.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <div class="level is-mobile level-right draggable-container">
+        <div class="level-right">
+          <button id="minimizeBtn" class="level-item button is-light">
+            <img src="../assets/icons/minimize.png" alt="Minimize" width="20" />
+          </button>
+          <button id="closeBtn" class="level-item button is-light">
+            <img src="../assets/icons/close.png" alt="Close" width="20" />
+          </button>
+        </div>
+      </div>
+      <h1 class="has-text-centered">🎵 Song Window</h1>
+    </div>
+  </header>
+
+  <p>This is the song window. Enjoy the music!</p>
+
+  <audio controls>
+    <source src="../assets/music/01 - Opening Theme.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div>
+    <button id="startBtn" class="button is-primary">Start</button>
+    <button id="stopBtn" class="button is-warning">Stop</button>
+    <button id="restartBtn" class="button is-info">Restart</button>
+  </div>
+
+  <div>
+    <button id="backBtn" class="button is-primary">Back to Main</button>
+  </div>
+</body>
+
+</html>

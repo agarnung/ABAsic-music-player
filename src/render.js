@@ -1,36 +1,51 @@
-/// File used to run JavaScript in our fornt-end (it like our front-end code)
-
-// Stablish a reference to all our elements in the HTML
-// Buttons
-const audioElement = document.querySelector('audio');
-const startBtn = document.querySelector('#startBtn');
-const stopBtn = document.querySelector('#stopBtn');
-const restartBtn = document.querySelector('#restartBtn');
-
-
-// Esperar a que cargue el DOM, para asegurar que el script se ejecute después de que el HTML se haya cargado completamente y no haya errores por elementos que no existan y se quieran usar (auqnue el atributo defer hace lo mismo)
 document.addEventListener("DOMContentLoaded", function () {
-    // Función para reproducir música
-    function playMusic() {
-        if (audioElement.paused) {
-            audioElement.play();
-        }
+    const audioElement = document.querySelector('audio');
+    if (audioElement) {
+      const startBtn = document.querySelector('#startBtn');
+      const stopBtn = document.querySelector('#stopBtn');
+      const restartBtn = document.querySelector('#restartBtn');
+  
+      function playMusic() {
+        if (audioElement.paused) audioElement.play();
+      }
+      function stopMusic() {
+        if (!audioElement.paused) audioElement.pause();
+      }
+      function restartMusic() {
+        audioElement.currentTime = 0;
+        if (audioElement.paused) audioElement.play();
+      }
+  
+      if (startBtn) startBtn.addEventListener("click", playMusic);
+      if (stopBtn) stopBtn.addEventListener("click", stopMusic);
+      if (restartBtn) restartBtn.addEventListener("click", restartMusic);
+    }
+  
+    const openSongWindowBtn = document.getElementById('openSongWindowBtn');
+    if (openSongWindowBtn) {
+      openSongWindowBtn.addEventListener('click', () => {
+        window.electronAPI.openSongWindow();
+      });
+    }
+    
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        window.electronAPI.closeSongWindow();
+      });
     }
 
-    // Función para detener música
-    function stopMusic() {
-        if (audioElement.paused)
-            return;
-        audioElement.pause();
+    const closeBtn = document.getElementById('closeBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            window.electronAPI.closeWindow(); 
+        });
     }
 
-    // Función para detener música
-    function restartMusic() {
-        audioElement.currentTime = 0; // Reinicia la música al inicio
+    const minimizeBtn = document.getElementById('minimizeBtn');
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', () => {
+            window.electronAPI.minimizeWindow();
+        });
     }
-
-    // Asignar eventos a los botones
-    startBtn.addEventListener("click", playMusic);
-    stopBtn.addEventListener("click", stopMusic);
-    restartBtn.addEventListener("click", restartMusic);
-});
+  });

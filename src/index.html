@@ -1,28 +1,45 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ABAsic Music Player</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
-    <!-- <link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon"> -->
-    <script defer src="render.js"></script> <!-- defer attribute to make the JS load AFTER the HTML -->
-  </head>
-  <body>
-    <h1>🎵 Music Player</h1>
-    <p>Welcome to your favourite music player.</p>
+<html lang="es">
 
-    <audio controls>
-      <source src="../assets/music/01 - Opening Theme.mp3" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>        
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>ABAsic Music Player</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
+  <script defer src="render.js"></script> <!-- defer attribute to make the JS load AFTER the HTML -->
+</head>
 
-    <div>
-      <button id="startBtn" class="button is-primary">Start</button>
-      <button id="stopBtn" class="button is-warning">Stop</button>
-      <button id="restartBtn" class="button is-info">Restart</button>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="level is-mobile level-right draggable-container">
+        <div class="level-right">
+          <button id="minimizeBtn" class="level-item button is-light">
+            <img src="../assets/icons/minimize.png" alt="Minimize" width="20" />
+          </button>
+          <button id="closeBtn" class="level-item button is-light">
+            <img src="../assets/icons/close.png" alt="Close" width="20" />
+          </button>
+        </div>
+      </div>
+      <h1 class="has-text-centered">🎵 Music Player</h1>
     </div>
-    
-  </body>
+  </header>
+
+  <p>Welcome to your favourite music player.</p>
+
+  <div class="container">
+    <h2 class="title is-4">Selecciona un modo de reproducción:</h2>
+    <div class="buttons">
+      <button id="localFolderBtn" class="button is-primary">Carpeta Local</button>
+      <button id="spotifyListBtn" class="button is-info">Lista de Spotify</button>
+    </div>
+  </div>
+  
+  <div>
+    <button id="openSongWindowBtn" class="button is-primary">Open songs</button>
+  </div>
+</body>
+
 </html>

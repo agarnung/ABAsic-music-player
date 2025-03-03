@@ -2,7 +2,7 @@
   "name": "abasic-music-player",
   "productName": "abasic-music-player",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "A basic and nice music player",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -13,8 +13,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "agarnung",
-    "email": "garnungalejandro@gmail.com"
+    "name": "Alejandro Garnung Menéndez"
   },
   "license": "MIT",
   "dependencies": {

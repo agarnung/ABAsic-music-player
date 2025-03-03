@@ -7,6 +7,23 @@
   font-weight: 400 500 600 700; 
 }
 
+/* colors, defined in :root, they can be used anywhere in the CSS */
+:root {
+  --white: #FFFFFF;
+}
+
+/* Hacer solo el contenedor de los botones draggable */
+.draggable-container {
+  -webkit-app-region: drag; /* Permite arrastrar la ventana desde este contenedor */
+  cursor: move; /* Cambia el cursor al mover */
+  padding: 10px; /* Espaciado interno (ajusta según tu diseño) */
+}
+
+/* Excluir los botones del drag */
+.draggable-container button {
+  -webkit-app-region: no-drag; /* Evita que los botones sean draggables */
+}
+
 body {
   font-family: 'Pixelify Sans', sans-serif;
   font-weight: 400;

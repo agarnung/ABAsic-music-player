@@ -1,9 +1,6 @@
 # ABAsic-music-player
 A basic nice music player
 
-- Compartir la app con amigos pulsando botón
-- Conectar con spotify para reproducir la lista dada la URL 
-
 # Usage
 
 Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo) de ``abasic-music-player-win32-x64/abasic-music-player.exe`, ejecutalo y, ¡ya puedes disfrutar de tu reproductor de música favorito!
@@ -14,7 +11,7 @@ Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo)
 - Usamos Electron Forge para distribuir nuestra aplicación al resto de usuarios, una vez completada.
 - Usamos el framework CSS [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) para el desarrollo de CSS.
 - Usamos la fuente variable [Pixelify Sans](https://gwfh.mranftl.com/fonts/pixelify-sans?subsets=latin) [Variable Font](https://fonts.google.com/selection) para mayor flexibilidad y poner modificar el peso de la fuente `wght`.
-- Usamos [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker) para que nuestra app use un favicon.ico propio.
+- Usamos [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker) para que nuestra app use un favicon.ico propio. See https://www.youtube.com/watch?v=dtk-v5vk8iA&ab_channel=tylerlaceby.
 
 # Tutorial (for developers)
 
@@ -50,3 +47,8 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 # References
 - https://www.youtube.com/watch?v=3yqDxhR2XxE&ab_channel=Fireship
 - https://www.youtube.com/@nashallery
+
+# TODO 
+- Compartir la app con amigos pulsando botón
+- Conectar con spotify para reproducir la lista dada la URL 
+- Si se da "para atrás" y la canción están más de 5 segundos avanzada, hace las veces de "botón de reiniciar esta canción". Si lleva menos de 5 segundos avanzada, vuelve a la canción anterior. Así nos olvidamos de "botón de reiniciar esta canción".
