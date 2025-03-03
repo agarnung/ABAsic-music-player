@@ -7,7 +7,7 @@
   <title>Song Window</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
-  <script defer src="render_songWindow.js"></script>
+  <script defer src="render/songWindow.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -37,9 +37,19 @@
   <div class="audio-player">
     <!-- Controles -->
     <div class="controls">
+      <button id="prevBtn" class="button is-primary">
+        <span class="icon">
+          <i class="fas fa-backward"></i>
+        </span>
+      </button>
       <button id="playPauseBtn" class="button is-primary is-large">
         <span class="icon">
           <i class="fas fa-play"></i>
+        </span>
+      </button>
+      <button id="nextBtn" class="button is-primary">
+        <span class="icon">
+          <i class="fas fa-forward"></i>
         </span>
       </button>
       <button id="shuffleBtn" class="button is-info">
@@ -48,7 +58,7 @@
         </span>
       </button>
     </div>
-  
+
     <!-- Barra de progreso -->
     <div class="progress-container">
       <div class="progress-bar" id="progressBar">
@@ -57,7 +67,7 @@
       <span class="time" id="currentTime">0:00</span>
       <span class="time" id="duration">0:00</span>
     </div>
-  
+
     <!-- Elemento audio oculto -->
     <audio id="audioElement" controls class="is-hidden"></audio>
   </div>

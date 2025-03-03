@@ -18,7 +18,7 @@ function getWindowConfig() {
   return {
     width: 400,
     height: 500,
-    resizable: true,
+    resizable: false,
     frame: false, // Sin marco de ventana
     center: false, // No centrar la ventana automáticamente
     maximizable: false, // Deshabilita la maximización
@@ -44,7 +44,7 @@ function createStartWindow() {
     startWindow = null;
   });
 
-  startWindow.webContents.openDevTools();
+  // startWindow.webContents.openDevTools();
 }
 
 // Crear ventana secundaria (songWindow)
@@ -61,7 +61,7 @@ function createSongWindow() {
     songWindow = null;
   });
 
-  songWindow.webContents.openDevTools();
+  // songWindow.webContents.openDevTools();
 }
 
 // Eventos IPC

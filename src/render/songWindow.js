@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
-    let songNameElement = document.getElementById('songName');
 
     async function initializePlayer() {
         try {
@@ -65,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Función para reproducir una canción específica
     function playSong(index) {
         console.log('[DEBUG] Intentando reproducir índice:', index);
-        const audioElement = document.getElementById('audioElement');
         if (!audioElement) {
             console.error('[ERROR] Elemento audio no encontrado');
             return;
@@ -139,6 +137,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
             }
         });
+    }
+
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', playNextSong);
+    }
+
+    // Función para retroceder a la canción anterior o reiniciar
+    function playPreviousSong() {
+        if (audioElement.currentTime > 5) {
+            // Reiniciar la canción actual si está avanzada más de 5 segundos
+            audioElement.currentTime = 0;
+        } else {
+            // Retroceder a la canción anterior
+            if (isShuffleEnabled) {
+                currentSongIndex = Math.floor(Math.random() * songs.length); // Canción aleatoria
+            } else {
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; // Canción anterior
+            }
+            playSong(currentSongIndex);
+        }
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', playPreviousSong);
     }
 
     const backBtn = document.getElementById('backBtn');
