@@ -1,14 +1,41 @@
+/// render_songWindow.js
+
 document.addEventListener("DOMContentLoaded", function () {
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
-    const audioElement = document.querySelector('audioElement');
     let songNameElement = document.getElementById('songName');
+
+    window.electronAPI.receiveSongs((_, data) => {
+        songs = data.songs;
+        if (songs.length > 0) playSong(currentSongIndex);
+    });
+
+    const audioElement = document.getElementById('audioElement');
+    if (!audioElement) {
+        console.error("Audio element no encontrado");
+        return;
+    }
+
+    const closeBtn = document.getElementById('closeBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            window.electronAPI.closeWindow();
+        });
+    }
+
+    const minimizeBtn = document.getElementById('minimizeBtn');
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', () => {
+            window.electronAPI.minimizeWindow();
+        });
+    }
 
     // Función para cargar la lista de canciones desde la carpeta local
     async function loadSongs(folder) {
         try {
             const response = await window.electronAPI.getSongsFromFolder(folder);
+            console.log('Canciones encontradas:', response);
             songs = response;
             if (songs.length > 0) {
                 playSong(currentSongIndex);
@@ -20,13 +47,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para reproducir una canción específica
     function playSong(index) {
+        if (!audioElement) {
+            console.error('Audio element no encontrado');
+            return;
+        }
+        
         if (songs[index]) {
             audioElement.src = songs[index];
-            audioElement.play();
+            audioElement.play().catch(error => {
+                console.error('Error de reproducción:', error);
+                showErrorNotification('Error al reproducir el archivo');
+            });
             updateSongName(songs[index]);
         }
     }
-
     // Función para actualizar el nombre de la canción
     function updateSongName(songPath) {
         const songName = songPath.split('/').pop(); // Obtener el nombre del archivo
@@ -77,20 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const closeBtn = document.getElementById('closeBtn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            window.electronAPI.closeWindow();
-        });
-    }
-
-    const minimizeBtn = document.getElementById('minimizeBtn');
-    if (minimizeBtn) {
-        minimizeBtn.addEventListener('click', () => {
-            window.electronAPI.minimizeWindow();
-        });
-    }
-
     const progressBar = document.getElementById('progressBar');
     const progress = document.getElementById('progress');
     const currentTime = document.getElementById('currentTime');
@@ -136,64 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
         shuffleBtn.addEventListener('click', () => {
             isShuffleEnabled = !isShuffleEnabled;
             shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
-        });
-    }
-
-    const modeInfo = document.getElementById('modeInfo');
-    if (modeInfo) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const mode = urlParams.get('mode');
-
-        if (mode === 'spotify') {
-            modeInfo.textContent = `Modo Spotify: ${urlParams.get('url')}`;
-            modeInfo.classList.add('is-info');
-            // Lógica específica de Spotify aquí
-        } else if (mode === 'local') {
-            modeInfo.textContent = `Modo Local: ${urlParams.get('folder')}`;
-            modeInfo.classList.add('is-primary');
-            // Lógica específica de carpeta local aquí
-        }
-    }
-
-    const localFolderBtn = document.getElementById('localFolderBtn');
-    if (localFolderBtn) {
-        localFolderBtn.addEventListener('click', async () => {
-            const folder = await window.electronAPI.selectFolder();
-            if (folder) {
-                window.electronAPI.setMode('local', folder);
-                loadSongs(folder);
-                window.electronAPI.openSongWindow();
-            }
-        });
-    }
-
-    const spotifyListBtn = document.getElementById('spotifyListBtn');
-
-    const spotifyModal = document.getElementById('spotifyModal');
-    const modalClose = document.getElementById('modalClose');
-    const cancelSpotify = document.getElementById('cancelSpotify');
-    const confirmSpotify = document.getElementById('confirmSpotify');
-
-    if (spotifyListBtn) {
-        spotifyListBtn.addEventListener('click', () => {
-            spotifyModal.classList.add('is-active');
-        });
-    }
-
-    if (modalClose && cancelSpotify) {
-        const closeModal = () => spotifyModal.classList.remove('is-active');
-        modalClose.addEventListener('click', closeModal);
-        cancelSpotify.addEventListener('click', closeModal);
-    }
-
-    if (confirmSpotify) {
-        confirmSpotify.addEventListener('click', () => {
-            const url = document.getElementById('spotifyUrl').value;
-            if (url) {
-                window.electronAPI.setMode('spotify', url);
-                spotifyModal.classList.remove('is-active');
-                window.electronAPI.openSongWindow();
-            }
         });
     }
 });

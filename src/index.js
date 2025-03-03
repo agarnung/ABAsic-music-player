@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron'); 
+const { pathToFileURL } = require('url'); 
 const path = require('node:path');
 const fs = require('fs');
 
@@ -17,7 +18,7 @@ function getWindowConfig() {
   return {
     width: 400,
     height: 500,
-    resizable: false,
+    resizable: true,
     frame: false, // Sin marco de ventana
     center: false, // No centrar la ventana automáticamente
     maximizable: false, // Deshabilita la maximización
@@ -61,6 +62,17 @@ function createSongWindow() {
   });
 }
 
+function getSongsFromFolder(folder) {
+  const files = fs.readdirSync(folder);
+  const songs = files.filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.mp3', '.wav', '.ogg'].includes(ext);
+  }).map(file => 
+      pathToFileURL(path.join(folder, file)).href // Convertir a URL
+  );
+  return songs;
+}
+
 // Eventos IPC
 
 ipcMain.on('open-song-window', () => {
@@ -100,8 +112,13 @@ ipcMain.handle('select-folder', async () => {
 ipcMain.on('set-mode', (_, { mode, data }) => {
   currentMode = mode;
   modeData = data;
-  createSongWindow(); // Crear la ventana de reproducción directamente
-  if (startWindow) startWindow.hide(); // Ocultar la ventana principal
+
+  if (mode === 'local') {
+      const songs = getSongsFromFolder(data); // Obtener canciones
+      if (songWindow) {
+          songWindow.webContents.send('update-songs', { songs }); // Enviar a la ventana
+      }
+  }
 });
 
 ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
@@ -111,7 +128,9 @@ ipcMain.handle('get-songs-from-folder', async (event, folder) => {
   const songs = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
       return ['.mp3', '.wav', '.ogg'].includes(ext);
-  }).map(file => path.join(folder, file));
+  }).map(file => 
+      pathToFileURL(path.join(folder, file)).href // Convertir a URL
+  );
   return songs;
 });
 
