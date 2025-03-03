@@ -7,13 +7,18 @@ Letra: Pixelify Sans
 - Conectar con spotify para reproducir la lista dada la URL 
 - https://www.youtube.com/@nashallery
 
+# Usage
+
+Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo) de ``abasic-music-player-win32-x64/abasic-music-player.exe`, ejecutalo y, ¡ya puedes disfrutar de tu reproductor de música favorito!
+
 # Tools
 
 - Usamos Electron JS para construir nuestra aplicación. Es una alternativa comúnmente criticada en términos de huella de memoria y rendimiento, pero es innegable que de cara a desarrolladores web a veces esto no es relevante, y la experiencia de usuario que proporciona el framework es innegablemente aceptable.
 - Usamos Electron Forge para distribuir nuestra aplicación al resto de usuarios, una vez completada.
 - Usamos el framework CSS [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) para el desarrollo de CSS.
+- Usamos la fuente variable [Pixelify Sans](https://gwfh.mranftl.com/fonts/pixelify-sans?subsets=latin) [Variable Font](https://fonts.google.com/selection) para mayor flexibilidad y poner modificar el peso de la fuente `wght`.
 
-# Tutorial
+# Tutorial (for developers)
 
 Se han seguido los siguientes tutoriales:
 - https://www.electronjs.org/docs/latest/tutorial/tutorial-prerequisites (Conjunto de 6 tutoriales sobre creación de apps en Eldectron JS y prerequisitos)

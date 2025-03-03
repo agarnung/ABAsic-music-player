@@ -1,7 +1,22 @@
+/* pixelify-sans-regular - latin */
+@font-face {
+  font-display: auto;
+  font-family: 'Pixelify Sans';
+  src: url('../assets/fonts/PixelifySans-VariableFont_wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400 500 600 700; 
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
+  font-family: 'Pixelify Sans', sans-serif;
+  font-weight: 400;
   max-width: 38rem;
   padding: 2rem;
+}
+
+h1 {
+  font-family: 'Pixelify Sans', sans-serif;
+  font-weight: 700;
+  font-size: 3rem; 
+  margin-bottom: 1rem; 
 }
