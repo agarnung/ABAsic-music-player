@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (audioElement) {
       const startBtn = document.querySelector('#startBtn');
       const stopBtn = document.querySelector('#stopBtn');
-      const restartBtn = document.querySelector('#restartBtn');
   
       function playMusic() {
         if (audioElement.paused) audioElement.play();
@@ -11,14 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
       function stopMusic() {
         if (!audioElement.paused) audioElement.pause();
       }
-      function restartMusic() {
-        audioElement.currentTime = 0;
-        if (audioElement.paused) audioElement.play();
-      }
   
       if (startBtn) startBtn.addEventListener("click", playMusic);
       if (stopBtn) stopBtn.addEventListener("click", stopMusic);
-      if (restartBtn) restartBtn.addEventListener("click", restartMusic);
     }
   
     const openSongWindowBtn = document.getElementById('openSongWindowBtn');
