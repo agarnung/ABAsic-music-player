@@ -42,7 +42,7 @@ function createStartWindow() {
     startWindow = null;
   });
 
-  // startWindow.webContents.openDevTools();
+  startWindow.webContents.openDevTools();
 }
 
 // Crear ventana secundaria (songWindow)
@@ -99,6 +99,15 @@ ipcMain.on('set-mode', (_, { mode, data }) => {
 });
 
 ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
+
+ipcMain.handle('get-songs-from-folder', async (event, folder) => {
+  const files = fs.readdirSync(folder);
+  const songs = files.filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.mp3', '.wav', '.ogg'].includes(ext);
+  }).map(file => path.join(folder, file));
+  return songs;
+});
 
 // Este método se llama cuando Electron ha terminado de inicializar
 app.whenReady().then(() => {

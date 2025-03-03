@@ -1,4 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
+    let isShuffleEnabled = false;
+    let currentSongIndex = 0;
+    let songs = [];
+
+    // Función para cargar la lista de canciones desde la carpeta local
+    async function loadSongs(folder) {
+        const response = await window.electronAPI.getSongsFromFolder(folder);
+        songs = response;
+        if (songs.length > 0) {
+            audioElement.src = songs[currentSongIndex];
+            audioElement.play();
+        }
+    }
+
+    // Función para avanzar a la siguiente canción
+    function playNextSong() {
+        if (isShuffleEnabled) {
+            currentSongIndex = Math.floor(Math.random() * songs.length);
+        } else {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+        }
+        audioElement.src = songs[currentSongIndex];
+        audioElement.play();
+    }
+
+    // Funciones de formato de tiempo
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Actualizar barra de progreso
+    function updateProgress() {
+        const percent = (audioElement.currentTime / audioElement.duration) * 100;
+        progress.style.width = `${percent}%`;
+        currentTime.textContent = formatTime(audioElement.currentTime);
+    }
+
     const audioElement = document.querySelector('audio');
     if (audioElement) {
         const playPauseBtn = document.getElementById('playPauseBtn');
@@ -41,20 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentTime = document.getElementById('currentTime');
     const duration = document.getElementById('duration');
 
-    // Funciones de formato de tiempo
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Actualizar barra de progreso
-    function updateProgress() {
-        const percent = (audioElement.currentTime / audioElement.duration) * 100;
-        progress.style.width = `${percent}%`;
-        currentTime.textContent = formatTime(audioElement.currentTime);
-    }
-
     // Event listeners para el audio
     if (audioElement) {
         audioElement.addEventListener('timeupdate', updateProgress);
@@ -75,7 +100,19 @@ document.addEventListener("DOMContentLoaded", function () {
         audioElement.addEventListener('ended', () => {
             playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
         });
+
+        // Event listener para cuando la canción termina
+        audioElement.addEventListener('ended', playNextSong);
     }
+
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    if (shuffleBtn) {
+      shuffleBtn.addEventListener('click', () => {
+        isShuffleEnabled = !isShuffleEnabled;
+        shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
+      });
+    }
+    
 
     const modeInfo = document.getElementById('modeInfo');
     if (modeInfo) {
@@ -94,6 +131,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const localFolderBtn = document.getElementById('localFolderBtn');
+    if (localFolderBtn) {
+        localFolderBtn.addEventListener('click', async () => {
+            const folder = await window.electronAPI.selectFolder();
+            if (folder) {
+                window.electronAPI.setMode('local', folder);
+                loadSongs(folder);
+                window.electronAPI.openSongWindow();
+            }
+        });
+    }
+
     const spotifyListBtn = document.getElementById('spotifyListBtn');
 
     const spotifyModal = document.getElementById('spotifyModal');

@@ -52,3 +52,4 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 - Compartir la app con amigos pulsando botón
 - Conectar con spotify para reproducir la lista dada la URL 
 - Si se da "para atrás" y la canción están más de 5 segundos avanzada, hace las veces de "botón de reiniciar esta canción". Si lleva menos de 5 segundos avanzada, vuelve a la canción anterior. Así nos olvidamos de "botón de reiniciar esta canción".
+- Implementar un desplegable en la ventana de canción para elegir la canción a escuchar, por orden alfabético. Y continuar en ese orden si no está el shuffle activado.
