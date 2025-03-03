@@ -36,10 +36,25 @@
       <button id="spotifyListBtn" class="button is-info">Lista de Spotify</button>
     </div>
   </div>
-  
-  <div>
-    <button id="openSongWindowBtn" class="button is-primary">Open songs</button>
+
+  <!-- Dentro del body, después del container -->
+  <div class="modal" id="spotifyModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Introduce URL de Spotify</p>
+        <button class="delete" aria-label="close" id="modalClose"></button>
+      </header>
+      <section class="modal-card-body">
+        <input class="input" type="text" placeholder="URL de la lista de Spotify" id="spotifyUrl">
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" id="confirmSpotify">Confirmar</button>
+        <button class="button" id="cancelSpotify">Cancelar</button>
+      </footer>
+    </div>
   </div>
+
 </body>
 
 </html>

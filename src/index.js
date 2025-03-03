@@ -1,8 +1,10 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron'); 
+const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron'); 
 const path = require('node:path');
 
 let startWindow;
 let songWindow;
+let currentMode = 'local';
+let modeData = null;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -46,7 +48,12 @@ function createStartWindow() {
 // Crear ventana secundaria (songWindow)
 function createSongWindow() {
   songWindow = new BrowserWindow(getWindowConfig());
-  songWindow.loadFile(path.join(__dirname, 'songWindow.html')); // Cargar la página HTML de la ventana secundaria
+
+  const query = { mode: currentMode };
+  if (currentMode === 'spotify') query.url = modeData;
+  if (currentMode === 'local') query.folder = modeData;
+
+  songWindow.loadFile(path.join(__dirname, 'songWindow.html'), { query });
 
   songWindow.on('closed', () => {
     songWindow = null;
@@ -54,14 +61,6 @@ function createSongWindow() {
 }
 
 // Eventos IPC
-
-// En main.js (modificar estos listeners)
-ipcMain.on('open-song-window', () => {
-  if (!songWindow) {
-      createSongWindow();
-  }
-  startWindow.hide();
-});
 
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
@@ -84,6 +83,22 @@ ipcMain.on('close-window', () => {
     songWindow.close(); 
   }
 });
+
+ipcMain.handle('select-folder', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory']
+  });
+  return result.filePaths[0];
+});
+
+ipcMain.on('set-mode', (_, { mode, data }) => {
+  currentMode = mode;
+  modeData = data;
+  createSongWindow(); // Crear la ventana de reproducción directamente
+  if (startWindow) startWindow.hide(); // Ocultar la ventana principal
+});
+
+ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
 
 // Este método se llama cuando Electron ha terminado de inicializar
 app.whenReady().then(() => {
