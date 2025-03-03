@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron'); 
 const path = require('node:path');
+const fs = require('fs');
 
 let startWindow;
 let songWindow;
@@ -61,6 +62,11 @@ function createSongWindow() {
 }
 
 // Eventos IPC
+
+ipcMain.on('open-song-window', () => {
+  createSongWindow();
+  if (startWindow) startWindow.hide();
+});
 
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
