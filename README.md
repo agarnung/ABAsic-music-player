@@ -1,11 +1,8 @@
 # ABAsic-music-player
 A basic nice music player
 
-Letra: Pixelify Sans
-
 - Compartir la app con amigos pulsando botón
 - Conectar con spotify para reproducir la lista dada la URL 
-- https://www.youtube.com/@nashallery
 
 # Usage
 
@@ -17,6 +14,7 @@ Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo)
 - Usamos Electron Forge para distribuir nuestra aplicación al resto de usuarios, una vez completada.
 - Usamos el framework CSS [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) para el desarrollo de CSS.
 - Usamos la fuente variable [Pixelify Sans](https://gwfh.mranftl.com/fonts/pixelify-sans?subsets=latin) [Variable Font](https://fonts.google.com/selection) para mayor flexibilidad y poner modificar el peso de la fuente `wght`.
+- Usamos [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker) para que nuestra app use un favicon.ico propio.
 
 # Tutorial (for developers)
 
@@ -51,3 +49,4 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 
 # References
 - https://www.youtube.com/watch?v=3yqDxhR2XxE&ab_channel=Fireship
+- https://www.youtube.com/@nashallery
