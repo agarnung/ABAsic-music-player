@@ -10,64 +10,74 @@
 </head>
 
 <body>
-  <header>
-    <div class="header-container">
-      <div class="draggable-container">
-        <button id="minimizeBtn" class="button">
-          <img src="../assets/icons/minimize symbol.svg" alt="Minimize"/>
-        </button>
-        <button id="closeBtn" class="button">
-          <img src="../assets/icons/cross icon.svg" alt="Close"/>
-        </button>
+  <div class="main-container">
+    <div class="app-container">
+      <header>
+        <div class="header-container">
+          <div class="draggable-container">
+            <button id="minimizeBtn" class="button">
+              <img src="../assets/icons/minimize symbol.svg" alt="Minimize" />
+            </button>
+            <button id="closeBtn" class="button">
+              <img src="../assets/icons/cross icon.svg" alt="Close" />
+            </button>
+          </div>
+          <h1 class="title">🎵 Song Window</h1>
+        </div>
+      </header>
+
+      <div class="song-name-container">
+        <img src="../assets/icons/Melo.svg" />
+        <div class="song-name" id="songName">Nombre de la canción</div>
+        <img src="../assets/icons/Cinnamoroll.svg" />
       </div>
-      <h1 class="title">🎵 Song Window</h1>
-    </div>
-  </header>
 
-  <div class="song-name-container">
-    <div class="song-name" id="songName">Nombre de la canción</div>
-  </div>
+      <p>This is the song window. Enjoy the music!</p>
 
-  <p>This is the song window. Enjoy the music!</p>
+      <div class="audio-player">
+        <!-- Controles -->
+        <div class="controls">
+          <button id="prevBtn" class="button">
+            <img src="../assets/icons/go back symbol.svg" alt="Prev" />
+          </button>
+          <button id="playPauseBtn" class="button">
+            <img src="../assets/icons/play.svg" alt="Play" />
+          </button>
+          <button id="nextBtn" class="button">
+            <img src="../assets/icons/Next song.svg" alt="Next" />
+          </button>
+          <button id="shuffleBtn" class="button">
+            <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
+          </button>
+          <button id="loopBtn" class="button">
+            <img src="../assets/icons/repeat.svg" alt="Loop" />
+          </button>
+        </div>
 
-  <div class="audio-player">
-    <!-- Controles -->
-    <div class="controls">
-      <button id="prevBtn" class="button">
-        <img src="../assets/icons/previous.svg" alt="Prev" />
-      </button>
-      <button id="playPauseBtn" class="button">
-        <img src="../assets/icons/play.svg" alt="Play" />
-      </button>
-      <button id="nextBtn" class="button">
-        <img src="../assets/icons/next.svg" alt="Next" />
-      </button>
-      <button id="shuffleBtn" class="button">
-        <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
-      </button>
-      <button id="loopBtn" class="button">
-        <img src="../assets/icons/repeat.svg" alt="Loop" />
-      </button>
-    </div>
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress" id="progress"></div>
+          </div>
+          <span class="time" id="currentTime">0:00</span>
+          <span class="time" id="duration">0:00</span>
+        </div>
 
-    <!-- Barra de progreso -->
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar">
-        <div class="progress" id="progress"></div>
+        <!-- Elemento audio oculto -->
+        <audio id="audioElement" controls class="is-hidden"></audio>
       </div>
-      <span class="time" id="currentTime">0:00</span>
-      <span class="time" id="duration">0:00</span>
+
+      <div>
+        <button id="backBtn" class="button">
+          <img src="../assets/icons/go back symbol.svg" alt="Prev" />
+        </button>
+        
+      </div>
+
     </div>
 
-    <!-- Elemento audio oculto -->
-    <audio id="audioElement" controls class="is-hidden"></audio>
   </div>
-  
-  <div>
-    <button id="backBtn" class="button">
-      <img src="../assets/icons/go back symbol.svg" alt="Prev"/>
-    </button>
-  </div>
+
 </body>
 
 </html>

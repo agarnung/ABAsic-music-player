@@ -133,13 +133,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("Reproduciendo canción");
                 audioElement.play();
                 // Cambiar la imagen del botón a 'Pause'
-                playPauseIcon.src = '../assets/icons/pause.svg';
+                playPauseIcon.src = '../assets/icons/Pause button.svg';
                 playPauseIcon.alt = 'Pause';
             } else {
                 console.log("Pausando canción");
                 audioElement.pause();
                 // Cambiar la imagen del botón a 'Play'
-                playPauseIcon.src = '../assets/icons/play.svg';
+                playPauseIcon.src = '../assets/icons/Play button.svg';
                 playPauseIcon.alt = 'Play';
             }
         });
@@ -185,10 +185,10 @@ document.addEventListener("DOMContentLoaded", function () {
             isLoopEnabled = !isLoopEnabled;
             loopBtn.classList.toggle('is-active', isLoopEnabled);
             if (isLoopEnabled) {
-                loopIcon.src = '../assets/icons/repeat-on.svg';
+                loopIcon.src = '../assets/icons/repeat song icon on.svg';
                 loopIcon.alt = 'Repeat On';
             } else {
-                loopIcon.src = '../assets/icons/repeat-off.svg';
+                loopIcon.src = '../assets/icons/repeat song icon off.svg';
                 loopIcon.alt = 'Repeat Off';
             }
         });
@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioElement.play();
             } else {
                 console.log("Canción terminada, reproduciendo siguiente canción");
-                playPauseIcon.src = '../assets/icons/play.svg';
+                playPauseIcon.src = '../assets/icons/Play button.svg';
                 playPauseIcon.alt = 'Play';
                 playNextSong();
             }
@@ -247,12 +247,11 @@ document.addEventListener("DOMContentLoaded", function () {
         shuffleBtn.addEventListener('click', () => {
             isShuffleEnabled = !isShuffleEnabled;
             shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
-            // Cambiar imagen según el estado del shuffle
             if (isShuffleEnabled) {
-                shuffleIcon.src = '../assets/icons/shuffle-on.svg';
+                shuffleIcon.src = '../assets/icons/shuffle icon on.svg';
                 shuffleIcon.alt = 'Shuffle On';
             } else {
-                shuffleIcon.src = '../assets/icons/shuffle-off.svg';
+                shuffleIcon.src = '../assets/icons/shuffle icon off.svg';
                 shuffleIcon.alt = 'Shuffle Off';
             }
         });

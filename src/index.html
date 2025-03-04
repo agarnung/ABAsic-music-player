@@ -10,46 +10,61 @@
 </head>
 
 <body>
-  <header>
-    <div class="header-container">
-      <div class="draggable-container">
-        <button id="minimizeBtn" class="button">
-          <img src="../assets/icons/minimize symbol.svg" alt="Minimize"/>
-        </button>
-        <button id="closeBtn" class="button">
-          <img src="../assets/icons/cross icon.svg" alt="Close"/>
-        </button>
-      </div>
-      <h1 class="title">🎵 Music Player</h1>
-    </div>
-  </header>
-
-  <p>Welcome to your favourite music player.</p>
-
-  <div class="container">
-    <h2 class="subtitle">Selecciona un modo de reproducción:</h2>
-    <div class="buttons">
-      <button id="localFolderBtn" class="button">Carpeta Local</button>
-      <button id="spotifyListBtn" class="button">Lista de Spotify</button>
-    </div>
-  </div>
-
-  <!-- Dentro del body, después del container -->
-  <div class="modal" id="spotifyModal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Introduce URL de Spotify</p>
-        <button class="delete" aria-label="close" id="modalClose"></button>
+  <div class="main-container">
+    <div class="app-container">
+      <header>
+        <div class="header-container">
+          <div class="draggable-container">
+            <button id="minimizeBtn" class="button">
+              <img src="../assets/icons/minimize symbol.svg" alt="Minimize" />
+            </button>
+            <button id="closeBtn" class="button">
+              <img src="../assets/icons/cross icon.svg" alt="Close" />
+            </button>
+          </div>
+          <h1 class="title">🎵 Music Player</h1>
+        </div>
       </header>
-      <section class="modal-card-body">
-        <input class="input" type="text" placeholder="URL de la lista de Spotify" id="spotifyUrl">
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button" id="confirmSpotify">Confirmar</button>
-        <button class="button" id="cancelSpotify">Cancelar</button>
-      </footer>
+
+      <!-- Contenedor centralizado con formato -->
+      <div class="interactive-container">
+        <!-- Contenedor con fondo y elemento SVG arrastrable -->
+        <div class="drag-area" style="background-image: url('../assets/icons/sky\ background.svg');">
+          <img id="draggable-svg" src="../assets/icons/Kako.svg" alt="Draggable SVG" class="draggable-icon">
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="buttons">
+          <button id="localFolderBtn" class="button">
+            <img src="../assets/icons/music file.svg" alt="Local"/>
+          </button>
+          <button id="spotifyListBtn" class="button">
+            <img src="../assets/icons/spotify.svg" alt="Spotify"/>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dentro del body, después del container -->
+      <!-- <div class="modal" id="spotifyModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Introduce URL de Spotify</p>
+            <button class="delete" aria-label="close" id="modalClose"></button>
+          </header>
+          <section class="modal-card-body">
+            <input class="input" type="text" placeholder="URL de la lista de Spotify" id="spotifyUrl">
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button" id="confirmSpotify">Confirmar</button>
+            <button class="button" id="cancelSpotify">Cancelar</button>
+          </footer>
+        </div>
+      </div> -->
+
     </div>
+
   </div>
 
 </body>

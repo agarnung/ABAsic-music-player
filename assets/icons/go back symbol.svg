@@ -1,21 +1,21 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g filter="url(#filter0_d_37_25)">
-<rect x="4" width="24" height="24" fill="url(#pattern0_37_25)" shape-rendering="crispEdges"/>
+<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g filter="url(#filter0_d_18_11)">
+<rect x="3.00804" y="0.603218" width="13.4477" height="13.4477" fill="url(#pattern0_18_11)" shape-rendering="crispEdges"/>
 </g>
 <defs>
-<filter id="filter0_d_37_25" x="0" y="0" width="32" height="32" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_18_11" x="0.766756" y="0.603218" width="17.9303" height="17.9303" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
+<feOffset dy="2.24129"/>
+<feGaussianBlur stdDeviation="1.12064"/>
 <feComposite in2="hardAlpha" operator="out"/>
 <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_37_25"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_37_25" result="shape"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_11"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_11" result="shape"/>
 </filter>
-<pattern id="pattern0_37_25" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_37_25" transform="scale(0.0416667)"/>
+<pattern id="pattern0_18_11" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_18_11" transform="scale(0.0416667)"/>
 </pattern>
-<image id="image0_37_25" width="24" height="24" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACttl6nAAAADnRSTlMABPiA/IhuapQ6e8HGDLdI1a0AAACFSURBVBjTY2DABwRxynQic14wIth5rxActnOvEBJ8jxActid+76AggSHnCYz9bjvDO793T5TA4N07Bla4xDsnBs6+J6+LjYGg+sk7kGnPwSaxPwJyBPoe8woKCsoyP3oCFJr6FOQCRmaQDAMDCkcARDByvWuAu4SR9ekEJM4DZG8J4AkZABVIQHWWPmYRAAAAAElFTkSuQmCC"/>
+<image id="image0_18_11" width="24" height="24" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACttl6nAAAADnRSTlMABPiA/IhuapQ6e8HGDLdI1a0AAACFSURBVBjTY2DABwRxynQic14wIth5rxActnOvEBJ8jxActid+76AggSHnCYz9bjvDO793T5TA4N07Bla4xDsnBs6+J6+LjYGg+sk7kGnPwSaxPwJyBPoe8woKCsoyP3oCFJr6FOQCRmaQDAMDCkcARDByvWuAu4SR9ekEJM4DZG8J4AkZABVIQHWWPmYRAAAAAElFTkSuQmCC"/>
 </defs>
 </svg>
