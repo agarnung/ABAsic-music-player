@@ -126,16 +126,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const playPauseBtn = document.getElementById('playPauseBtn');
+    const playPauseIcon = playPauseBtn.querySelector('img'); // Accedemos a la imagen del botón
     if (playPauseBtn) {
         playPauseBtn.addEventListener('click', () => {
             if (audioElement.paused) {
                 console.log("Reproduciendo canción");
                 audioElement.play();
-                playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-pause"></i></span>';
+                // Cambiar la imagen del botón a 'Pause'
+                playPauseIcon.src = '../assets/icons/pause.svg';
+                playPauseIcon.alt = 'Pause';
             } else {
                 console.log("Pausando canción");
                 audioElement.pause();
-                playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
+                // Cambiar la imagen del botón a 'Play'
+                playPauseIcon.src = '../assets/icons/play.svg';
+                playPauseIcon.alt = 'Play';
             }
         });
     }
@@ -174,14 +179,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const loopBtn = document.getElementById('loopBtn');
+    const loopIcon = loopBtn.querySelector('img');
     if (loopBtn) {
         loopBtn.addEventListener('click', () => {
             isLoopEnabled = !isLoopEnabled;
             loopBtn.classList.toggle('is-active', isLoopEnabled);
             if (isLoopEnabled) {
-                loopBtn.querySelector('img').src = '../../asset/icons/repeat_icon_on.svg';
+                loopIcon.src = '../assets/icons/repeat-on.svg';
+                loopIcon.alt = 'Repeat On';
             } else {
-                loopBtn.querySelector('img').src = '../../asset/icons/repeat_icon_off.svg';
+                loopIcon.src = '../assets/icons/repeat-off.svg';
+                loopIcon.alt = 'Repeat Off';
             }
         });
     }
@@ -226,17 +234,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioElement.play();
             } else {
                 console.log("Canción terminada, reproduciendo siguiente canción");
-                playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
+                playPauseIcon.src = '../assets/icons/play.svg';
+                playPauseIcon.alt = 'Play';
                 playNextSong();
             }
         });
     }
 
     const shuffleBtn = document.getElementById('shuffleBtn');
+    const shuffleIcon = shuffleBtn.querySelector('img');
     if (shuffleBtn) {
         shuffleBtn.addEventListener('click', () => {
             isShuffleEnabled = !isShuffleEnabled;
             shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
+            // Cambiar imagen según el estado del shuffle
+            if (isShuffleEnabled) {
+                shuffleIcon.src = '../assets/icons/shuffle-on.svg';
+                shuffleIcon.alt = 'Shuffle On';
+            } else {
+                shuffleIcon.src = '../assets/icons/shuffle-off.svg';
+                shuffleIcon.alt = 'Shuffle Off';
+            }
         });
     }
 });

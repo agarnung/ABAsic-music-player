@@ -20,7 +20,7 @@
   --font-weight-medium: 500;
   --font-weight-bold: 700;
 
-  --pink-background: rgba(202, 120, 194, 0.21);
+  --pink-background: rgba(202, 120, 194, 0.51);
 }
 
 /* Hacer solo el contenedor de los botones draggable */
@@ -71,10 +71,29 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Eliminar todos los estilos predeterminados del botón */
+.button {
+  all: unset; /* Elimina cualquier estilo predeterminado (fondo, borde, padding, etc.) */
+  display: inline-block; /* Permite que el botón se adapte al tamaño de la imagen */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  padding: 0; /* Asegura que no haya espaciado extra alrededor de la imagen */
+  border-radius: 0; /* Elimina los bordes redondeados del botón */
+}
+
+/* Asegúrate de que las imágenes ocupen todo el tamaño del botón sin cambiar sus dimensiones */
+.button img {
+  display: block; /* Elimina cualquier espacio extra debajo de la imagen */
+  width: auto; /* Deja que la imagen mantenga su tamaño original */
+  height: auto; /* Mantiene la altura original de la imagen */
+  max-width: 100%; /* Asegura que la imagen no se desborde */
+  max-height: 100%; /* Si el botón tiene un tamaño específico, asegura que la imagen no lo exceda */
+}
+
+/* Estilos adicionales para los controles */
 .controls {
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
+  gap: 15px; /* Separación entre los botones */
 }
 
 #playPauseBtn {

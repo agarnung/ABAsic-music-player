@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>ABAsic Music Player</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
   <script defer src="render/mainWindow.js"></script> <!-- defer attribute to make the JS load AFTER the HTML -->
 </head>
@@ -13,27 +12,25 @@
 <body>
   <header>
     <div class="header-container">
-      <div class="level is-mobile level-right draggable-container">
-        <div class="level-right">
-          <button id="minimizeBtn" class="level-item button is-light">
-            <img src="../assets/icons/minimize.png" alt="Minimize" width="20" />
-          </button>
-          <button id="closeBtn" class="level-item button is-light">
-            <img src="../assets/icons/close.png" alt="Close" width="20" />
-          </button>
-        </div>
+      <div class="draggable-container">
+        <button id="minimizeBtn" class="button">
+          <img src="../assets/icons/minimize symbol.svg" alt="Minimize"/>
+        </button>
+        <button id="closeBtn" class="button">
+          <img src="../assets/icons/cross icon.svg" alt="Close"/>
+        </button>
       </div>
-      <h1 class="has-text-centered">🎵 Music Player</h1>
+      <h1 class="title">🎵 Music Player</h1>
     </div>
   </header>
 
   <p>Welcome to your favourite music player.</p>
 
   <div class="container">
-    <h2 class="title is-4">Selecciona un modo de reproducción:</h2>
+    <h2 class="subtitle">Selecciona un modo de reproducción:</h2>
     <div class="buttons">
-      <button id="localFolderBtn" class="button is-primary">Carpeta Local</button>
-      <button id="spotifyListBtn" class="button is-info">Lista de Spotify</button>
+      <button id="localFolderBtn" class="button">Carpeta Local</button>
+      <button id="spotifyListBtn" class="button">Lista de Spotify</button>
     </div>
   </div>
 
@@ -49,7 +46,7 @@
         <input class="input" type="text" placeholder="URL de la lista de Spotify" id="spotifyUrl">
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" id="confirmSpotify">Confirmar</button>
+        <button class="button" id="confirmSpotify">Confirmar</button>
         <button class="button" id="cancelSpotify">Cancelar</button>
       </footer>
     </div>

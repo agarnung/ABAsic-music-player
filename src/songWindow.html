@@ -5,26 +5,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Song Window</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
   <script defer src="render/songWindow.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
   <header>
     <div class="header-container">
-      <div class="level is-mobile level-right draggable-container">
-        <div class="level-right">
-          <button id="minimizeBtn" class="level-item button is-light">
-            <img src="../assets/icons/minimize.png" alt="Minimize" width="20" />
-          </button>
-          <button id="closeBtn" class="level-item button is-light">
-            <img src="../assets/icons/close.png" alt="Close" width="20" />
-          </button>
-        </div>
+      <div class="draggable-container">
+        <button id="minimizeBtn" class="button">
+          <img src="../assets/icons/minimize symbol.svg" alt="Minimize"/>
+        </button>
+        <button id="closeBtn" class="button">
+          <img src="../assets/icons/cross icon.svg" alt="Close"/>
+        </button>
       </div>
-      <h1 class="has-text-centered">🎵 Song Window</h1>
+      <h1 class="title">🎵 Song Window</h1>
     </div>
   </header>
 
@@ -37,28 +33,20 @@
   <div class="audio-player">
     <!-- Controles -->
     <div class="controls">
-      <button id="prevBtn" class="button is-primary">
-        <span class="icon">
-          <i class="fas fa-backward"></i>
-        </span>
+      <button id="prevBtn" class="button">
+        <img src="../assets/icons/previous.svg" alt="Prev" />
       </button>
-      <button id="playPauseBtn" class="button is-primary is-large">
-        <span class="icon">
-          <i class="fas fa-play"></i>
-        </span>
+      <button id="playPauseBtn" class="button">
+        <img src="../assets/icons/play.svg" alt="Play" />
       </button>
-      <button id="nextBtn" class="button is-primary">
-        <span class="icon">
-          <i class="fas fa-forward"></i>
-        </span>
+      <button id="nextBtn" class="button">
+        <img src="../assets/icons/next.svg" alt="Next" />
       </button>
-      <button id="shuffleBtn" class="button is-info">
-        <span class="icon">
-          <i class="fas fa-random"></i>
-        </span>
+      <button id="shuffleBtn" class="button">
+        <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
       </button>
-      <button id="loopBtn" class="button is-warning">
-        <img src="../assets/icons/repeat icon_off.svg" alt="Loop"/>
+      <button id="loopBtn" class="button">
+        <img src="../assets/icons/repeat.svg" alt="Loop" />
       </button>
     </div>
 
@@ -74,9 +62,11 @@
     <!-- Elemento audio oculto -->
     <audio id="audioElement" controls class="is-hidden"></audio>
   </div>
-
+  
   <div>
-    <button id="backBtn" class="button is-primary">Back to Main</button>
+    <button id="backBtn" class="button">
+      <img src="../assets/icons/go back symbol.svg" alt="Prev"/>
+    </button>
   </div>
 </body>
 
