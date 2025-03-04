@@ -52,7 +52,7 @@ function createStartWindow() {
     startWindow = null;
   });
 
-  // startWindow.webContents.openDevTools();
+  startWindow.webContents.openDevTools();
 }
 
 // Crear ventana secundaria (songWindow)

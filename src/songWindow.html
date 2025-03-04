@@ -15,6 +15,9 @@
       <header>
         <div class="header-container">
           <div class="draggable-container">
+            <button id="backBtn" class="button">
+              <img src="../assets/icons/go back symbol.svg" alt="Prev" />
+            </button>
             <button id="minimizeBtn" class="button">
               <img src="../assets/icons/minimize symbol.svg" alt="Minimize" />
             </button>
@@ -28,17 +31,29 @@
 
       <div class="song-name-container">
         <img src="../assets/icons/Melo.svg" />
-        <div class="song-name" id="songName">Nombre de la canción</div>
+        <span><div class="song-name" id="songName">Nombre de la canción</div></span>
+        
         <img src="../assets/icons/Cinnamoroll.svg" />
+        
       </div>
 
-      <p>This is the song window. Enjoy the music!</p>
-
       <div class="audio-player">
+        <!-- Wallpaper y Barra de Progreso -->
+        <div class="progress-wrapper">
+          <img src="../assets/icons/wallpapers/sky image.svg" alt="Background Image" class="progress-image" />
+          <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+              <div class="progress" id="progress"></div>
+            </div>
+            <span class="time" id="currentTime">0:00</span>
+            <span class="time" id="duration">0:00</span>
+          </div>
+        </div>
+
         <!-- Controles -->
         <div class="controls">
           <button id="prevBtn" class="button">
-            <img src="../assets/icons/go back symbol.svg" alt="Prev" />
+            <img src="../assets/icons/Previous song.svg" alt="Prev" />
           </button>
           <button id="playPauseBtn" class="button">
             <img src="../assets/icons/play.svg" alt="Play" />
@@ -54,24 +69,8 @@
           </button>
         </div>
 
-        <!-- Barra de progreso -->
-        <div class="progress-container">
-          <div class="progress-bar" id="progressBar">
-            <div class="progress" id="progress"></div>
-          </div>
-          <span class="time" id="currentTime">0:00</span>
-          <span class="time" id="duration">0:00</span>
-        </div>
-
         <!-- Elemento audio oculto -->
         <audio id="audioElement" controls class="is-hidden"></audio>
-      </div>
-
-      <div>
-        <button id="backBtn" class="button">
-          <img src="../assets/icons/go back symbol.svg" alt="Prev" />
-        </button>
-        
       </div>
 
     </div>

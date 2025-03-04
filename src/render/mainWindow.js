@@ -28,23 +28,53 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Movimiento del personaje en la pantalla inicial
+    
     const draggableSvg = document.getElementById('draggable-svg');
     const dragArea = document.querySelector('.drag-area');
+    
+    // Coordenadas del personaje dentro del SVG
+    const rectX = 3;
+    const rectY = 77.9571;
+    const rectWidth = 115.458;
+    const rectHeight = 146.043;
     
     if (draggableSvg && dragArea) {
         let isDragging = false;
         let offsetX = 0, offsetY = 0;
     
-        // Iniciar el arrastre al hacer clic en el SVG
-        draggableSvg.addEventListener('mousedown', (e) => {
-            // Evitar que se propague el evento de arrastre
-            e.preventDefault();
+        // Cambiar el cursor a "grab" cuando el mouse esté sobre la zona específica
+        draggableSvg.addEventListener('mousemove', (e) => {
+            const svgRect = draggableSvg.getBoundingClientRect();
+            const xInSvg = e.clientX - svgRect.left;
+            const yInSvg = e.clientY - svgRect.top;
     
-            isDragging = true;
-            const rect = draggableSvg.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            draggableSvg.style.cursor = 'grabbing';  // Cambia el cursor mientras se arrastra
+            if (xInSvg >= rectX && xInSvg <= rectX + rectWidth && yInSvg >= rectY && yInSvg <= rectY + rectHeight) {
+                draggableSvg.style.cursor = 'grab';
+            } else {
+                draggableSvg.style.cursor = 'default'; // O cualquier otro cursor por defecto
+            }
+    
+            // Mientras esté arrastrando, mantener el cursor "grabbing"
+            if (isDragging) {
+                draggableSvg.style.cursor = 'grabbing';
+            }
+        });
+    
+        // Iniciar el arrastre al hacer clic en el SVG, solo si está dentro del área definida
+        draggableSvg.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const svgRect = draggableSvg.getBoundingClientRect();
+            const xInSvg = e.clientX - svgRect.left;
+            const yInSvg = e.clientY - svgRect.top;
+    
+            if (xInSvg >= rectX && xInSvg <= rectX + rectWidth && yInSvg >= rectY && yInSvg <= rectY + rectHeight) {
+                isDragging = true;
+                const rect = draggableSvg.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                draggableSvg.style.cursor = 'grabbing';  // Cambia el cursor mientras se arrastra
+            }
         });
     
         // Mover el SVG mientras el ratón se mueve
@@ -69,10 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Detener el arrastre cuando se suelta el ratón
         document.addEventListener('mouseup', () => {
             isDragging = false;
-            draggableSvg.style.cursor = 'grab';  // Restaurar el cursor
+            draggableSvg.style.cursor = 'grab';  // Restaurar el cursor a "grab"
         });
     }
-
+    
     const spotifyModal = document.getElementById('spotifyModal');
     const modalClose = document.getElementById('modalClose');
     const cancelSpotify = document.getElementById('cancelSpotify');
