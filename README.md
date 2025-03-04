@@ -60,3 +60,4 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 - Conectar con spotify para reproducir la lista dada la URL 
 - Implementar un desplegable en la ventana de canción para elegir la canción a escuchar, por orden alfabético. Y continuar en ese orden si no está el shuffle activado.
 - Botón de repetir la canción actual en bucle
+- Mover a la hello kitty por su cielo con el ratón pulsando en ella, solidaria a su bocadillo
