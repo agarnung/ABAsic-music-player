@@ -169,10 +169,41 @@ h1 {
   transition: all 0.3s ease;
 }
 
+/* Estilos para la barra de progreso y el wallpaper */
+.progress-wrapper {
+  position: relative;
+  width: 265px;
+  height: 265px;
+  margin-bottom: 20px; /* Esto da el margen inferior entre la barra de progreso y el borde */
+}
+
+.progress-image {
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho */
+  height: 100%; /* Asegura que la imagen ocupe toda la altura del contenedor */
+  position: absolute;
+  z-index: 1; /* Asegura que el wallpaper quede abajo */
+}
+
 .progress-container {
+  position: absolute;
+  bottom: 10px; /* Separación de la barra de progreso respecto al borde inferior */
+  left: 10px;
+  right: 10px;
+  z-index: 2; /* Esto asegura que la barra de progreso quede encima del fondo */
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+}
+
+/* El ícono que se mueve por la barra */
+.progress-icon {
+  position: absolute;
+  top: -8px; /* Ajustar para centrar el ícono verticalmente */
+  left: 0;
+  width: 25px; /* Tamaño del ícono */
+  height: 25px; /* Tamaño del ícono */
+  z-index: 3; /* Asegurarse de que esté encima de la barra de progreso */
+  pointer-events: none; /* Evita que el ícono interfiera con los eventos del ratón */
 }
 
 .progress-bar {
@@ -192,8 +223,19 @@ h1 {
 }
 
 .time {
-  font-size: 0.8em;
+  font-size: 1rem; /* Ajustar tamaño de la fuente */
   color: #666;
+  position: absolute;
+  top: -30px; /* Coloca los números arriba de la barra de progreso */
+  z-index: 4; /* Asegura que los números estén sobre la barra de progreso */
+}
+
+.time:first-child { /* Tiempo actual a la derecha */
+  left: 0;
+}
+
+.time:last-child { /* Tiempo total a la izquierda */
+  right: 0;
 }
 
 .is-hidden {
@@ -222,10 +264,10 @@ h1 {
 /* Animación de desplazamiento */
 @keyframes scrollText {
   0% {
-    transform: translateX(80%);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(-80%);
+    transform: translateX(-100%);
   }
 }
 

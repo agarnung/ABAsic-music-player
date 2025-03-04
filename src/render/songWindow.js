@@ -120,9 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Actualizar barra de progreso
     function updateProgress() {
-        const percent = (audioElement.currentTime / audioElement.duration) * 100;
-        progress.style.width = `${percent}%`;
+        const progressPercentage = (audioElement.currentTime / audioElement.duration) * 100;
+        progress.style.width = `${progressPercentage}%`;
         currentTime.textContent = formatTime(audioElement.currentTime);
+        progressIcon.style.left = `calc(${progressPercentage}% - 8px)`; // Ajuste para que el ícono esté centrado
     }
 
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -195,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const progressBar = document.getElementById('progressBar');
+    const progressIcon = document.getElementById('progressIcon');
     const progress = document.getElementById('progress');
     const currentTime = document.getElementById('currentTime');
     const duration = document.getElementById('duration');
@@ -202,6 +204,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listeners para el audio
     if (audioElement) {
         audioElement.addEventListener('timeupdate', updateProgress);
+
+        // Cuando el audio esté listo para reproducirse, configuramos la duración
         audioElement.addEventListener('loadedmetadata', () => {
             duration.textContent = formatTime(audioElement.duration);
         });

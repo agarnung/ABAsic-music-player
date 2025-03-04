@@ -31,49 +31,53 @@
 
       <div class="song-name-container">
         <img src="../assets/icons/Melo.svg" />
-        <span><div class="song-name" id="songName">Nombre de la canción</div></span>
-        
+        <span>
+          <div class="song-name" id="songName">Nombre de la canción</div>
+        </span>
+
         <img src="../assets/icons/Cinnamoroll.svg" />
-        
+
       </div>
 
-      <div class="audio-player">
-        <!-- Wallpaper y Barra de Progreso -->
-        <div class="progress-wrapper">
-          <img src="../assets/icons/wallpapers/sky image.svg" alt="Background Image" class="progress-image" />
-          <div class="progress-container">
-            <div class="progress-bar" id="progressBar">
-              <div class="progress" id="progress"></div>
+      <!-- Barra de progreso -->
+      <div class="progress-wrapper">
+        <img src="../assets/icons/wallpapers/sky image.svg" alt="Background Image" class="progress-image" />
+        <div class="progress-container">
+          <span class="time" id="currentTime">0:00</span>
+          <div class="progress-bar" id="progressBar">
+            <div class="progress" id="progress"></div>
+            <div class="progress-icon" id="progressIcon">
+              <img src="../assets/icons/heart icon.svg" alt="Heart Icon" />
             </div>
-            <span class="time" id="currentTime">0:00</span>
-            <span class="time" id="duration">0:00</span>
           </div>
+          <span class="time" id="duration">0:00</span>
         </div>
-
-        <!-- Controles -->
-        <div class="controls">
-          <button id="prevBtn" class="button">
-            <img src="../assets/icons/Previous song.svg" alt="Prev" />
-          </button>
-          <button id="playPauseBtn" class="button">
-            <img src="../assets/icons/play.svg" alt="Play" />
-          </button>
-          <button id="nextBtn" class="button">
-            <img src="../assets/icons/Next song.svg" alt="Next" />
-          </button>
-          <button id="shuffleBtn" class="button">
-            <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
-          </button>
-          <button id="loopBtn" class="button">
-            <img src="../assets/icons/repeat.svg" alt="Loop" />
-          </button>
-        </div>
-
-        <!-- Elemento audio oculto -->
-        <audio id="audioElement" controls class="is-hidden"></audio>
       </div>
 
+      <!-- Controles -->
+      <div class="controls">
+        <button id="prevBtn" class="button">
+          <img src="../assets/icons/Previous song.svg" alt="Prev" />
+        </button>
+        <button id="playPauseBtn" class="button">
+          <img src="../assets/icons/Play button.svg" alt="Play" />
+        </button>
+        <button id="nextBtn" class="button">
+          <img src="../assets/icons/Next song.svg" alt="Next" />
+        </button>
+        <button id="shuffleBtn" class="button">
+          <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
+        </button>
+        <button id="loopBtn" class="button">
+          <img src="../assets/icons/repeat.svg" alt="Loop" />
+        </button>
+      </div>
+
+      <!-- Elemento audio oculto -->
+      <audio id="audioElement" controls class="is-hidden"></audio>
     </div>
+
+  </div>
 
   </div>
 
