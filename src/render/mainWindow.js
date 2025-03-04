@@ -1,4 +1,4 @@
-/// render_mainWindow.js
+/// mainWindow.js
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM completamente cargado y analizado");

@@ -13,7 +13,6 @@ Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo)
 
 - Usamos Electron JS para construir nuestra aplicación. Es una alternativa comúnmente criticada en términos de huella de memoria y rendimiento, pero es innegable que de cara a desarrolladores web a veces esto no es relevante, y la experiencia de usuario que proporciona el framework es innegablemente aceptable.
 - Usamos Electron Forge para distribuir nuestra aplicación al resto de usuarios, una vez completada.
-- Usamos el framework CSS [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) para el desarrollo de CSS.
 - Usamos la fuente variable [Pixelify Sans](https://gwfh.mranftl.com/fonts/pixelify-sans?subsets=latin) [Variable Font](https://fonts.google.com/selection) para mayor flexibilidad y poner modificar el peso de la fuente `wght`.
 - Usamos [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker) para que nuestra app use un favicon.ico propio. See https://www.youtube.com/watch?v=dtk-v5vk8iA&ab_channel=tylerlaceby.
 
@@ -47,6 +46,10 @@ npm run make
 Now check the `out/` folder for the .exe (in Windows case) which you can distribute with your friends. Just marvelous ✨.
 
 Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un únic EXe file con el propósito de instalarse en el sistema del ususario, pero lo que no puede hcaer (debido a las limitaciones de Chromium) es, una vez instalado, tener únicamente un solo EXE que ejecute la aplicación. Debe estar acompañado de las librerías necesarias. Sin embergo, hay alternativas que compilarn un .exe de Windows portabler usando  [electron-builder](https://www.electron.build/)'s portable target (NSIS) under the hood (ver https://github.com/rabbit-hole-syndrome/electron-forge-maker-portable).
+
+# Comments
+
+- Se ha descubierto el útil framework CSS [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) para el desarrollo de estilos.
 
 # References
 - https://www.youtube.com/watch?v=3yqDxhR2XxE&ab_channel=Fireship

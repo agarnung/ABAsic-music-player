@@ -16,13 +16,21 @@ if (require('electron-squirrel-startup')) {
 // Configuración común para las ventanas
 function getWindowConfig() {
   return {
-    width: 400,
-    height: 500,
+    width: 595,
+    height: 842,
+    minWidth: 595, 
+    minHeight: 842,
+    maxWidth: 595, 
+    maxHeight: 842,
+    useContentSize: true, // Asegura que el tamaño especificado sea solo para el contenido
     resizable: false,
+    scrollBounce: false,
     frame: false, // Sin marco de ventana
     center: false, // No centrar la ventana automáticamente
     maximizable: false, // Deshabilita la maximización
     fullscreenable: false, // Deshabilita el modo pantalla completa
+    transparent: true,
+    backgroundColor: '#00000000',
     icon: path.join(__dirname, '../assets/icons/favicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

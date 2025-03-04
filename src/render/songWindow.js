@@ -1,8 +1,9 @@
-/// render_songWindow.js
+/// songWindow.js
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM completamente cargado y analizado en la ventana de canciones");
 
+    let isLoopEnabled = false;
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
@@ -68,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('[ERROR] Elemento audio no encontrado');
             return;
         }
-        
+
         if (songs[index]) {
             console.log('[DEBUG] Estableciendo fuente:', songs[index]);
             audioElement.src = songs[index];
@@ -85,10 +86,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateSongName(songPath) {
         // Decodificar la URL (por ejemplo, convierte "%20" de nuevo a espacios)
         const decodedPath = decodeURIComponent(songPath);
-    
+
         // Extraer el nombre del archivo (eliminar la ruta completa)
         const songName = decodedPath.split('/').pop(); // Obtener el nombre del archivo
-    
+
         // Actualizar el texto del elemento
         const songNameElement = document.getElementById('songName');
         if (songNameElement) {
@@ -172,6 +173,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const loopBtn = document.getElementById('loopBtn');
+    if (loopBtn) {
+        loopBtn.addEventListener('click', () => {
+            isLoopEnabled = !isLoopEnabled;
+            loopBtn.classList.toggle('is-active', isLoopEnabled);
+            if (isLoopEnabled) {
+                loopBtn.querySelector('img').src = '../../asset/icons/repeat_icon_on.svg';
+            } else {
+                loopBtn.querySelector('img').src = '../../asset/icons/repeat_icon_off.svg';
+            }
+        });
+    }
+
     const progressBar = document.getElementById('progressBar');
     const progress = document.getElementById('progress');
     const currentTime = document.getElementById('currentTime');
@@ -207,9 +221,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Cambiar el ícono cuando la canción termina
         audioElement.addEventListener('ended', () => {
-            console.log("Canción terminada, reproduciendo siguiente canción");
-            playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
-            playNextSong();
+            if (isLoopEnabled) {
+                audioElement.currentTime = 0;
+                audioElement.play();
+            } else {
+                console.log("Canción terminada, reproduciendo siguiente canción");
+                playPauseBtn.innerHTML = '<span class="icon"><i class="fas fa-play"></i></span>';
+                playNextSong();
+            }
         });
     }
 
