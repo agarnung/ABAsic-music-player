@@ -61,3 +61,4 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 - Implementar un desplegable en la ventana de canción para elegir la canción a escuchar, por orden alfabético. Y continuar en ese orden si no está el shuffle activado.
 - Botón de repetir la canción actual en bucle
 - Mover a la hello kitty por su cielo con el ratón pulsando en ella, solidaria a su bocadillo
+- Cuando canción parada, que también se pare de mover el texto de arriba

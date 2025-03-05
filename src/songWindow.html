@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Song Window</title>
-  <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
-  <script defer src="render/songWindow.js"></script>
+  <link rel="stylesheet" href="index.css" />
+  <script defer src="render/songWindow.js"></script> <!-- defer attribute to make the JS load AFTER the HTML -->
 </head>
 
 <body>
@@ -25,18 +25,15 @@
               <img src="../assets/icons/cross icon.svg" alt="Close" />
             </button>
           </div>
-          <h1 class="title">🎵 Song Window</h1>
         </div>
       </header>
 
-      <div class="song-name-container">
-        <img src="../assets/icons/Melo.svg" />
-        <span>
-          <div class="song-name" id="songName">Nombre de la canción</div>
-        </span>
-
-        <img src="../assets/icons/Cinnamoroll.svg" />
-
+      <div class="song-name-container-container">
+        <img src="../assets/icons/Melo.svg" alt="Melo" class="icon"/>
+        <div class="song-name-container">
+          <span class="song-name" id="songName">Nombre de la canción</span>
+        </div>
+        <img src="../assets/icons/Cinnamoroll.svg" alt="Cinnamonroll" class="icon"/>
       </div>
 
       <!-- Barra de progreso -->
@@ -56,6 +53,9 @@
 
       <!-- Controles -->
       <div class="controls">
+        <button id="shuffleBtn" class="button">
+          <img src="../assets/icons/shuffle icon off.svg" alt="Shuffle" />
+        </button>
         <button id="prevBtn" class="button">
           <img src="../assets/icons/Previous song.svg" alt="Prev" />
         </button>
@@ -65,11 +65,8 @@
         <button id="nextBtn" class="button">
           <img src="../assets/icons/Next song.svg" alt="Next" />
         </button>
-        <button id="shuffleBtn" class="button">
-          <img src="../assets/icons/shuffle.svg" alt="Shuffle" />
-        </button>
         <button id="loopBtn" class="button">
-          <img src="../assets/icons/repeat.svg" alt="Loop" />
+          <img src="../assets/icons/repeat song icon off.svg" alt="Loop" />
         </button>
       </div>
 

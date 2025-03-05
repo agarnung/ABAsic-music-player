@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>ABAsic Music Player</title>
-  <link rel="stylesheet" href="index.css" /> <!-- AFTER linking Bulma -->
+  <link rel="stylesheet" href="index.css" />
   <script defer src="render/mainWindow.js"></script> <!-- defer attribute to make the JS load AFTER the HTML -->
 </head>
 
@@ -22,25 +22,28 @@
               <img src="../assets/icons/cross icon.svg" alt="Close" />
             </button>
           </div>
-          <h1 class="title">🎵 Music Player</h1>
         </div>
       </header>
 
+      <h1 class="title">🎵 My Music Player</h1>
+
       <!-- Contenedor centralizado con formato -->
-      <div class="interactive-container">
-        <!-- Contenedor con fondo y elemento SVG arrastrable -->
-        <div class="drag-area" style="background-image: url('../assets/icons/sky\ background.svg');">
-          <img id="draggable-svg" src="../assets/icons/Kako.svg" alt="Draggable SVG" class="draggable-icon">
+      <div class="background-interactive-container">
+        <div class="interactive-container">
+          <!-- Contenedor con fondo y elemento SVG arrastrable -->
+          <div class="drag-area" style="background-image: url('../assets/icons/sky\ background.svg');">
+            <img id="draggable-svg" src="../assets/icons/Kako.svg" alt="Draggable SVG" class="draggable-icon">
+          </div>
         </div>
       </div>
 
-      <div class="container">
+      <div class="buttons-container">
         <div class="buttons">
           <button id="localFolderBtn" class="button">
-            <img src="../assets/icons/music file.svg" alt="Local"/>
+            <img src="../assets/icons/music file.svg" alt="Local" />
           </button>
           <button id="spotifyListBtn" class="button">
-            <img src="../assets/icons/spotify.svg" alt="Spotify"/>
+            <img src="../assets/icons/spotify.svg" alt="Spotify" />
           </button>
         </div>
       </div>

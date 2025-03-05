@@ -57,7 +57,17 @@ function createStartWindow() {
 
 // Crear ventana secundaria (songWindow)
 function createSongWindow() {
-  songWindow = new BrowserWindow(getWindowConfig());
+  const bounds = startWindow.getBounds(); // Obtener las coordenadas y dimensiones de la ventana principal
+
+  // Configurar la posición de la ventana secundaria
+  const x = bounds.x; // Ajusta la posición X según sea necesario
+  const y = bounds.y; // Ajusta la posición Y según sea necesario
+
+  songWindow = new BrowserWindow({
+    ...getWindowConfig(),
+    x: x,  // Posición X
+    y: y,  // Posición Y
+  });
 
   const query = { mode: currentMode };
   if (currentMode === 'spotify') query.url = modeData;
@@ -81,10 +91,19 @@ ipcMain.on('open-song-window', () => {
 
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
+    const songWindowBounds = songWindow.getBounds();
+    
     songWindow.close();
     songWindow = null;
+
+    if (startWindow) {
+      startWindow.setBounds(songWindowBounds);
+    }
   }
-  startWindow.show();
+
+  if (startWindow) {
+    startWindow.show();
+  }
 });
 
 ipcMain.on('minimize-window', (event) => {
