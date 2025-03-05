@@ -102,37 +102,4 @@ document.addEventListener("DOMContentLoaded", function () {
             draggableSvg.style.cursor = 'grab';  // Restaurar el cursor a "grab"
         });
     }
-    
-    const spotifyModal = document.getElementById('spotifyModal');
-    const modalClose = document.getElementById('modalClose');
-    const cancelSpotify = document.getElementById('cancelSpotify');
-
-    const spotifyListBtn = document.getElementById('spotifyListBtn');
-    if (spotifyListBtn) {
-        spotifyListBtn.addEventListener('click', () => {
-            console.log("Botón de lista de Spotify clickeado");
-            spotifyModal.classList.add('is-active');
-        });
-    }
-
-    if (modalClose && cancelSpotify) {
-        const closeModal = () => spotifyModal.classList.remove('is-active');
-        modalClose.addEventListener('click', closeModal);
-        cancelSpotify.addEventListener('click', closeModal);
-    }
-
-    const confirmSpotify = document.getElementById('confirmSpotify');
-    if (confirmSpotify) {
-        confirmSpotify.addEventListener('click', () => {
-            const url = document.getElementById('spotifyUrl').value;
-            if (url) {
-                console.log("URL de Spotify ingresada:", url);
-                window.electronAPI.setMode('spotify', url);
-                spotifyModal.classList.remove('is-active');
-                window.electronAPI.openSongWindow();
-            } else {
-                console.log("No se ingresó ninguna URL de Spotify");
-            }
-        });
-    }
 });

@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const { pathToFileURL } = require('url');
-const path = require('node:path');
 const fs = require('fs');
+const path = require('node:path');
 
 let startWindow;
 let songWindow;

@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (mode === 'local') {
                 await loadSongs(data);
             } else if (mode === 'spotify') {
-                // Lógica para Spotify (si es necesario)
                 console.log('Modo Spotify, URL:', data);
+                // ...
             }
         } catch (error) {
             console.error('Error inicializando reproductor:', error);
@@ -81,12 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     await loadSongs(folder);
                 }
             } else if (mode === 'spotify') {
-                // Aquí puedes abrir el modal para ingresar una nueva URL de Spotify
-                const spotifyModal = document.getElementById('spotifyModal');
-                if (spotifyModal) {
-                    spotifyModal.classList.add('is-active');
-                }
-            }
+                //...
+            } 
         });
     }
 

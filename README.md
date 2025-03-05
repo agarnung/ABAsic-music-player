@@ -57,8 +57,38 @@ Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un �
 
 # TODO 
 - Compartir la app con amigos pulsando botón
-- Conectar con spotify para reproducir la lista dada la URL 
 - Implementar un desplegable en la ventana de canción para elegir la canción a escuchar, por orden alfabético. Y continuar en ese orden si no está el shuffle activado.
 - Botón de repetir la canción actual en bucle
 - Mover a la hello kitty por su cielo con el ratón pulsando en ella, solidaria a su bocadillo
 - Cuando canción parada, que también se pare de mover el texto de arriba
+- Integrar YouTube (con una API como youtube-api-v3 o youtube-player)
+
+- Conectar con Spotify para reproducir la lista dada la URL
+
+Para conectar con Spotify y reproducir una lista, sigue estos pasos:
+
+1. **Registrar la aplicación en [Spotify Developer Dashboard](https://developer.spotify.com/):**
+   - Crear una nueva aplicación en el Spotify Developer Dashboard.
+   - Obtener el Client ID y Client Secret para autenticarte.
+
+2. **Configurar la autenticación con Spotify:**
+   - Implementar OAuth 2.0 para obtener un token de acceso que te permita interactuar con la API de Spotify.
+   - Usar la biblioteca `spotify-web-api-node` para facilitar la integración.
+
+3. **Obtener listas de reproducción y datos:**
+   - Usar el token de acceso para interactuar con la API de Spotify y obtener las listas de reproducción del usuario.
+
+4. **Integrar el Spotify Web Playback SDK:**
+   - Usar este SDK para permitir la reproducción de las canciones directamente en tu aplicación.
+   - Es necesario un token de acceso de usuario Premium para que funcione.
+
+5. **Frontend en Electron:**
+   - Solicitar el ID de la lista de reproducción a través de un modal y usa la API de Spotify para obtener las canciones.
+   - Mostrar las canciones y usar el Web Playback SDK para controlarlas.
+
+6. **Reproducir canciones:**
+   - Usar el URI de las canciones y la funcionalidad del SDK para reproducirlas.
+
+7. **Consideraciones adicionales:**
+   - Asegurarse de gestionar de forma segura los tokens de acceso.
+   - Manejar las limitaciones de la API (como el número máximo de solicitudes por minuto).

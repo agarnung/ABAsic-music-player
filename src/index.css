@@ -33,6 +33,7 @@
 
   --pink-background: rgba(238, 203, 234, 0.8);
   --border-background: #ca78c2;
+  --dark-pink-background: rgba(202, 120, 194, 0.21);
 }
 
 /* General Reset for HTML and Body */
@@ -88,20 +89,10 @@ header {
 .header-container {
   width: 100%; /* Ocupa todo el ancho disponible */
   height: 100%;
-}
-
-/* Hacer solo el contenedor de los botones draggable */
-.draggable-container {
-  -webkit-app-region: drag; /* Permite arrastrar la ventana desde este contenedor */
+  -webkit-app-region: drag; /* Evita que los botones sean draggables */
   cursor: move; /* Cambia el cursor al mover */
   display: flex;
   justify-content: flex-end;
-  width: 100%;
-}
-
-/* Excluir los botones del drag */
-.draggable-container button {
-  -webkit-app-region: no-drag; /* Evita que los botones sean draggables */
 }
 
 .background-interactive-container {
@@ -160,6 +151,7 @@ h1 {
   z-index: 2;
   pointer-events: auto;  /* Permite que los eventos de puntero (como el arrastre) se activen */
   -webkit-app-region: no-drag; /* Evita que los botones sean draggables */
+  stroke: none;
 }
 
 .buttons-container {
@@ -198,18 +190,6 @@ h1 {
   margin: 0 auto; /* Centra el contenedor horizontalmente */
 }
 
-/* Estilos para el botón del álbum/playlist */
-#albumPlaylistBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center; /* Centra el contenido del botón */
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 200px; /* Limita el ancho del botón */
-  position: relative;
-  margin: 0 auto; /* Centra el botón horizontalmente */
-}
-
 /* Ajustar el tamaño de las imágenes dentro del botón */
 #albumPlaylistBtn {
   display: inline-flex;
@@ -219,14 +199,12 @@ h1 {
   white-space: nowrap;
   max-width: 200px; /* Limita el ancho del botón */
   position: relative;
-  margin: 0 auto; /* Centra el botón horizontalmente */
+  border-radius: 0px;
 }
 
 /* Contenedor del texto animado dentro del botón */
 .album-playlist-wrapper {
   display: inline-flex;
-  overflow: hidden; /* Oculta lo que se salga del contenedor */
-  /* Eliminamos width: 100%; para permitir que el wrapper se extienda según el contenido */
   white-space: nowrap; /* Evita saltos de línea */
   animation: scrollAlbumPlaylistText linear infinite;
   position: absolute;
@@ -266,18 +244,18 @@ h1 {
   transform: scale(1.1); /* Agranda los botones un 10% */
 }
 
-/* Estilos para los botones prev, playPause, next, localFolder y spotifyList */
-#prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #spotifyListBtn {
+/* Estilos para los botones prev, playPause, next, localFolder y spotifyBtn */
+#prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #spotifyBtn {
   transition: transform 0.3s ease; /* Efecto de transición para el hover */
 }
 
-/* Agrandar los botones prev, playPause, next, localFolder y spotifyList al hacer hover */
-#prevBtn:hover, #playPauseBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyListBtn:hover {
+/* Agrandar los botones prev, playPause, next, localFolder y spotifyBtn al hacer hover */
+#prevBtn:hover, #playPauseBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyBtn:hover {
   transform: scale(1.05); /* Agranda los botones un 5% */
 }
 
 /* Si solo quieres que los íconos dentro de los botones crezcan */
-#prevBtn img:hover, #playPauseBtn img:hover, #nextBtn img:hover, #localFolderBtn img:hover, #spotifyListBtn img:hover {
+#prevBtn img:hover, #playPauseBtn img:hover, #nextBtn img:hover, #localFolderBtn img:hover, #spotifyBtn img:hover {
   transform: scale(1.05);
 }
 
