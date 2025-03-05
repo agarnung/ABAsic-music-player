@@ -34,6 +34,7 @@
   --pink-background: rgba(238, 203, 234, 0.8);
   --border-background: #ca78c2;
   --dark-pink-background: rgba(202, 120, 194, 0.21);
+  --scrollbar: #ff91f4;
 }
 
 /* General Reset for HTML and Body */
@@ -241,12 +242,20 @@ h1 {
 #shuffleBtn, #loopBtn {
   scale: 0.9;
   margin-top: 25px; /* Mueve los botones hacia abajo */
-  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+  transition: transform 0.1s ease; /* Efecto de transición para el hover */
 }
 
 #nextBtn, #prevBtn {
   margin-bottom: 20px; /* Mueve los botones hacia abajo */
-  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+  transition: transform 0.1s ease; /* Efecto de transición para el hover */
+}
+
+#nextBtn {
+  margin-left: 8px;
+}
+
+#playPauseBtn {
+  margin-bottom: 5px;
 }
 
 #backBtn #minimizeBtn #closeBtn {
@@ -256,7 +265,7 @@ h1 {
 }
 
 #shuffleBtn, #loopBtn, #minimizeBtn, #closeBtn, #backBtn {
-  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+  transition: transform 0.1s ease; /* Efecto de transición para el hover */
 }
 
 /* Agrandar los botones shuffle, repeat, minimize, close y back al hacer hover */
@@ -266,12 +275,17 @@ h1 {
 
 /* Estilos para los botones prev, playPause, next, localFolder y spotifyBtn */
 #prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #spotifyBtn {
-  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+  transition: transform 0.1s ease; /* Efecto de transición para el hover */
 }
 
 /* Agrandar los botones prev, playPause, next, localFolder y spotifyBtn al hacer hover */
-#prevBtn:hover, #playPauseBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyBtn:hover {
+#prevBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyBtn:hover {
   transform: scale(1.05); /* Agranda los botones un 5% */
+}
+
+/* Agrandar los botones prev, playPause, next, localFolder y spotifyBtn al hacer hover */
+#playPauseBtn:hover {
+  transform: scale(1.025); /* Agranda los botones un 5% */
 }
 
 /* Si solo quieres que los íconos dentro de los botones crezcan */
@@ -367,7 +381,7 @@ h1 {
 
 .progress {
   height: 100%;
-  background: #3273dc;
+  background: var(--scrollbar);
   border-radius: 4px;
   width: 0%;
 }

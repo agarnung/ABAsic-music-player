@@ -4,6 +4,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: 'assets/icons/favicon', // https://www.electronforge.io/guides/create-and-add-icons
   },
   rebuildConfig: {},
   makers: [

@@ -3,7 +3,7 @@ A basic nice music player
 
 # Usage
 
-Descarga [este zip](ENLACE) y crea un enlace directo al escritorio (por ejemplo) de ``abasic-music-player-win32-x64/abasic-music-player.exe`, ejecutalo y, ¡ya puedes disfrutar de tu reproductor de música favorito!
+Descarga [este zip](ENLACE), descomprímelo y mueve toda la carpeta `abasic-music-player-win32-x64` a `C:\Program Files` o tu ruta preferida y crea un enlace directo al escritorio (por ejemplo) del ejecutable `abasic-music-player.exe`, ejecutalo. ¡Ya puedes disfrutar de tu reproductor de música favorito!
 
 ## Features
 
@@ -45,7 +45,7 @@ npm run make
 ```
 Now check the `out/` folder for the .exe (in Windows case) which you can distribute with your friends. Just marvelous ✨.
 
-Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un únic EXe file con el propósito de instalarse en el sistema del ususario, pero lo que no puede hcaer (debido a las limitaciones de Chromium) es, una vez instalado, tener únicamente un solo EXE que ejecute la aplicación. Debe estar acompañado de las librerías necesarias. Sin embergo, hay alternativas que compilarn un .exe de Windows portabler usando  [electron-builder](https://www.electron.build/)'s portable target (NSIS) under the hood (ver https://github.com/rabbit-hole-syndrome/electron-forge-maker-portable).
+Ahora bien, hay que distinguir las limitaciones: Electron Forge puede crear un únic EXe file con el propósito de instalarse en el sistema del ususario, pero lo que no puede hcaer (debido a las limitaciones de Chromium) es, una vez instalado, tener únicamente un solo EXE que ejecute la aplicación. Debe estar acompañado de las librerías necesarias. Sin embergo, hay alternativas que compilarn un .exe de Windows portabler usando  [electron-builder](https://www.electron.build/)'s portable target (NSIS) under the hood (ver https://github.com/rabbit-hole-syndrome/electron-forge-maker-portable) (`npm run make` hará `electron-forge make`).
 
 # Comments
 

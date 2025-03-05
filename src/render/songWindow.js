@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
+    let playPauseIcon;
 
     async function initializePlayer() {
         try {
@@ -99,13 +100,13 @@ document.addEventListener("DOMContentLoaded", function () {
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
-    
+
             setTimeout(() => {
                 window.electronAPI.closeWindow();
-            }, 200); 
+            }, 200);
         });
     }
-    
+
     const minimizeBtn = document.getElementById('minimizeBtn');
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
@@ -127,6 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
             audioElement.play().catch(error => {
                 console.error('[ERROR] Error de reproducción:', error);
             });
+            playPauseIcon.src = '../assets/icons/Pause button.svg';
+            playPauseIcon.alt = 'Pause';
             updateSongName(songs[index]);
         } else {
             console.error('[ERROR] Índice inválido o canción no existe');
@@ -185,21 +188,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const playPauseBtn = document.getElementById('playPauseBtn');
-    const playPauseIcon = playPauseBtn.querySelector('img'); // Accedemos a la imagen del botón
     if (playPauseBtn) {
+        playPauseIcon = playPauseBtn.querySelector('img'); // Asignar la referencia
         playPauseBtn.addEventListener('click', () => {
             if (audioElement.paused) {
-                console.log("Reproduciendo canción");
                 audioElement.play();
-                // Cambiar la imagen del botón a 'Pause'
                 playPauseIcon.src = '../assets/icons/Pause button.svg';
-                playPauseIcon.alt = 'Pause';
+                playPauseIcon.alt = 'Pause'; // Corregir texto alternativo
             } else {
-                console.log("Pausando canción");
                 audioElement.pause();
-                // Cambiar la imagen del botón a 'Play'
                 playPauseIcon.src = '../assets/icons/Play button.svg';
-                playPauseIcon.alt = 'Play';
+                playPauseIcon.alt = 'Play'; // Corregir texto alternativo
             }
         });
     }
@@ -237,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
-    
+
             setTimeout(() => {
                 window.electronAPI.closeSongWindow();
             }, 200);
@@ -303,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioElement.play();
             } else {
                 console.log("Canción terminada, reproduciendo siguiente canción");
-                playPauseIcon.src = '../assets/icons/Play button.svg';
+                playPauseIcon.src = '../assets/icons/Pause button.svg';
                 playPauseIcon.alt = 'Play';
                 playNextSong();
             }
