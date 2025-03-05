@@ -53,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
             span.textContent = text;
             wrapper.appendChild(span);
         }
-    
+
         // Calcular duración de la animación
         const textWidth = wrapper.firstChild.offsetWidth;
         const containerWidth = wrapper.parentElement.offsetWidth;
-        
+
         // Solo animar si el texto es más largo que el contenedor
         if (textWidth > containerWidth) {
             const speed = 40; // Pixeles por segundo 
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.style.animation = 'none';
         }
     }
-    
+
     const albumPlaylistBtn = document.getElementById('albumPlaylistBtn');
     if (albumPlaylistBtn) {
         albumPlaylistBtn.addEventListener('click', async () => {
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             } else if (mode === 'spotify') {
                 //...
-            } 
+            }
         });
     }
 
@@ -95,10 +95,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-            window.electronAPI.closeWindow();
+            const clickSound = document.getElementById('click-sound');
+            clickSound.play().catch((error) => {
+                console.error('Error al reproducir el sonido:', error);
+            });
+    
+            setTimeout(() => {
+                window.electronAPI.closeWindow();
+            }, 200); 
         });
     }
-
+    
     const minimizeBtn = document.getElementById('minimizeBtn');
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
@@ -129,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateSongName(songPath) {
         const decodedPath = decodeURIComponent(songPath);
         const songName = decodedPath.split('/').pop();
-        
+
         const wrapper = document.querySelector('.song-name-wrapper');
         if (!wrapper) return;
         wrapper.innerHTML = '';
@@ -139,17 +146,17 @@ document.addEventListener("DOMContentLoaded", function () {
             span.textContent = songName;
             wrapper.appendChild(span);
         }
-    
+
         // Calcular duración basada en el ancho real del texto
         const textWidth = wrapper.firstChild.offsetWidth;
-        
+
         // Ajustar velocidad para mantener ritmo constante
         const speed = 40; // Pixeles por segundo 
         const duration = textWidth / speed;
-        
+
         wrapper.style.animationDuration = `${duration}s`;
     }
-    
+
     initializePlayer();
 
     // Función para avanzar a la siguiente canción
@@ -174,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const progressPercentage = (audioElement.currentTime / audioElement.duration) * 100;
         progress.style.width = `${progressPercentage}%`;
         currentTime.textContent = formatTime(audioElement.currentTime);
-        progressIcon.style.left = `calc(${progressPercentage}% - 8px)`; // Ajuste para que el ícono esté centrado
+        progressIcon.style.left = `calc(${progressPercentage}% - 12px)`; // Ajuste para que el ícono esté centrado
     }
 
     const playPauseBtn = document.getElementById('playPauseBtn');
@@ -226,7 +233,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const backBtn = document.getElementById('backBtn');
     if (backBtn) {
         backBtn.addEventListener('click', () => {
-            window.electronAPI.closeSongWindow();
+            const clickSound = document.getElementById('click-sound');
+            clickSound.play().catch((error) => {
+                console.error('Error al reproducir el sonido:', error);
+            });
+    
+            setTimeout(() => {
+                window.electronAPI.closeSongWindow();
+            }, 200);
         });
     }
 
@@ -311,4 +325,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // Obtener todos los botones en la página
+    const buttons = document.querySelectorAll('button');
+    const clickSound = document.getElementById('click-sound');
+    clickSound.addEventListener('canplaythrough', () => {
+        console.log('Sonido cargado y listo para reproducirse');
+    });
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            clickSound.play().catch((error) => {
+                console.error('Error al reproducir el sonido:', error);
+            });
+        });
+    });
 });

@@ -6,10 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-            window.electronAPI.closeWindow();
+            const clickSound = document.getElementById('click-sound');
+            clickSound.play().catch((error) => {
+                console.error('Error al reproducir el sonido:', error);
+            });
+    
+            setTimeout(() => {
+                window.electronAPI.closeWindow();
+            }, 200); 
         });
     }
-
+    
     const minimizeBtn = document.getElementById('minimizeBtn');
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
@@ -102,4 +109,18 @@ document.addEventListener("DOMContentLoaded", function () {
             draggableSvg.style.cursor = 'grab';  // Restaurar el cursor a "grab"
         });
     }
+
+    // Obtener todos los botones en la página
+    const buttons = document.querySelectorAll('button');
+    const clickSound = document.getElementById('click-sound');
+    clickSound.addEventListener('canplaythrough', () => {
+        console.log('Sonido cargado y listo para reproducirse');
+    });
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            clickSound.play().catch((error) => {
+                console.error('Error al reproducir el sonido:', error);
+            });
+        });
+    });
 });

@@ -86,6 +86,16 @@ header {
   justify-content: flex-end;
 }
 
+.header-container-main {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  height: 100%;
+  -webkit-app-region: drag; /* Evita que los botones sean draggables */
+  cursor: move; /* Cambia el cursor al mover */
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 7px;
+}
+
 .header-container {
   width: 100%; /* Ocupa todo el ancho disponible */
   height: 100%;
@@ -230,7 +240,7 @@ h1 {
 
 #shuffleBtn, #loopBtn {
   scale: 0.9;
-  margin-top: 20px; /* Mueve los botones hacia abajo */
+  margin-top: 25px; /* Mueve los botones hacia abajo */
   transition: transform 0.3s ease; /* Efecto de transición para el hover */
 }
 
@@ -239,8 +249,10 @@ h1 {
   transition: transform 0.3s ease; /* Efecto de transición para el hover */
 }
 
-#backBtn {
+#backBtn #minimizeBtn #closeBtn {
   margin-right: auto;
+  min-height: 13px;
+  min-width: 13px;
 }
 
 #shuffleBtn, #loopBtn, #minimizeBtn, #closeBtn, #backBtn {
@@ -272,8 +284,6 @@ h1 {
   display: block; /* Elimina cualquier espacio extra debajo de la imagen */
   width: auto; /* Deja que la imagen mantenga su tamaño original */
   height: auto; /* Mantiene la altura original de la imagen */
-  max-width: 100%; /* Asegura que la imagen no se desborde */
-  max-height: 100%; /* Si el botón tiene un tamaño específico, asegura que la imagen no lo exceda */
 }
 
 /* Estilos adicionales para los controles */
@@ -338,10 +348,10 @@ h1 {
 /* El ícono que se mueve por la barra */
 .progress-icon {
   position: absolute;
-  top: -8px; /* Ajustar para centrar el ícono verticalmente */
+  top: -8.5px; /* Ajustar para centrar el ícono verticalmente */
   left: 0;
-  width: 25px; /* Tamaño del ícono */
-  height: 25px; /* Tamaño del ícono */
+  width: 23px; /* Tamaño del ícono */
+  height: 23px; /* Tamaño del ícono */
   z-index: 3; /* Asegurarse de que esté encima de la barra de progreso */
   pointer-events: none; /* Evita que el ícono interfiera con los eventos del ratón */
 }
@@ -364,9 +374,9 @@ h1 {
 
 .time {
   font-size: 1rem; /* Ajustar tamaño de la fuente */
-  color: #666;
+  color: #ffffff;
   position: absolute;
-  top: -30px; /* Coloca los números arriba de la barra de progreso */
+  top: -25px; /* Coloca los números arriba de la barra de progreso */
   z-index: 4; /* Asegura que los números estén sobre la barra de progreso */
 }
 
