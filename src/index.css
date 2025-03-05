@@ -199,7 +199,11 @@ h1 {
   white-space: nowrap;
   max-width: 200px; /* Limita el ancho del botón */
   position: relative;
-  border-radius: 0px;
+  margin-left: 12.5px;
+  
+  border-radius: 5px; /* Ajusta el borde del botón */
+  border: 1px solid var(--border-background);
+  background-color: var(--border-background);
 }
 
 /* Contenedor del texto animado dentro del botón */
@@ -208,6 +212,10 @@ h1 {
   white-space: nowrap; /* Evita saltos de línea */
   animation: scrollAlbumPlaylistText linear infinite;
   position: absolute;
+
+  border-radius: 5px; /* Ajusta el borde del botón */
+  border: 1px solid var(--border-background);
+  background-color: var(--border-background);
 }
 
 /* Estilos para el texto dentro del contenedor */
