@@ -189,32 +189,57 @@ h1 {
   border-radius: 0;
 }
 
+/* Asegurarse de que el contenedor del botón esté centrado */
+.album-playlist-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+}
+
 /* Estilos para el botón del álbum/playlist */
 #albumPlaylistBtn {
-  display: flex;
-  margin: auto;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden; /* Para que el texto no se salga del botón */
-  width: fit-content; /* Ajusta el tamaño del botón al contenido */
-  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
-  width: 100%;
-}
-
-/* Contenedor del texto animado */
-.album-playlist-wrapper {
-  display: inline-flex; /* Adapta el ancho al contenido */
+  justify-content: center; /* Centra el contenido del botón */
+  overflow: hidden;
   white-space: nowrap;
-  animation: scrollAlbumPlaylistText linear infinite;
+  max-width: 200px; /* Limita el ancho del botón */
+  position: relative;
+  margin: 0 auto; /* Centra el botón horizontalmente */
 }
 
-/* Estilos para el texto dentro del botón */
+/* Ajustar el tamaño de las imágenes dentro del botón */
+#albumPlaylistBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido del botón */
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 200px; /* Limita el ancho del botón */
+  position: relative;
+  margin: 0 auto; /* Centra el botón horizontalmente */
+}
+
+/* Contenedor del texto animado dentro del botón */
+.album-playlist-wrapper {
+  display: inline-flex;
+  overflow: hidden; /* Oculta lo que se salga del contenedor */
+  /* Eliminamos width: 100%; para permitir que el wrapper se extienda según el contenido */
+  white-space: nowrap; /* Evita saltos de línea */
+  animation: scrollAlbumPlaylistText linear infinite;
+  position: absolute;
+}
+
+/* Estilos para el texto dentro del contenedor */
 .album-playlist-text {
-  color: black; /* O cualquier color que contraste con el fondo */
+  color: black;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
-  padding: 0 1rem; /* Espacio dinámico entre el texto duplicado */
-  flex-shrink: 0; /* Evita que se encoja */
+  padding: 0 1.5rem; /* Espacio dinámico entre el texto duplicado */
+  flex-shrink: 0;  /* Evita que el texto se encoja */
+  white-space: nowrap; /* Evita que el texto se divida */
 }
 
 #shuffleBtn, #loopBtn {
@@ -432,12 +457,12 @@ h1 {
     transform: translateX(-50%); /* Desplaza exactamente medio contenedor */
   }
 }
-
+/* Valores empíricos para lograr el efecto de uróboros */
 @keyframes scrollAlbumPlaylistText {
   0% {
-    transform: translateX(0);
+    transform: translateX(25%); /* Comienza desde la posición inicial */
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-25%);
   }
 }
