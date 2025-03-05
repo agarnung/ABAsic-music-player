@@ -27,7 +27,7 @@
   --font-weight-medium: 500;
   --font-weight-bold: 700;
 
-  --pink-background: rgba(238, 203, 234, 0.659);
+  --pink-background: rgba(238, 203, 234, 0.8);
   --border-background: #ca78c2;
 }
 
@@ -65,8 +65,8 @@ body {
   width: 100%;
   height: 100%;
   background: var(--pink-background); /* Fondo rosita */
-  border-radius: 40px; /* Asegura que el fondo esté contenido dentro de los bordes */
-  padding: 10px;
+  border-radius: 35px; /* Asegura que el fondo esté contenido dentro de los bordes */
+  padding: 20px;
   border: 1.12px solid var(--border-background);
 }
 
@@ -103,7 +103,7 @@ header {
   justify-content: center; /* Centra el contenido horizontalmente */
   align-items: center; /* Centra el contenido verticalmente */
   border: 1.12px solid var(--border-background);  /* Borde alrededor del contenedor */
-  border-radius: 25px;  /* Bordes redondeados */
+  border-radius: 30px;  /* Bordes redondeados */
   width: auto;
   height: auto;
   max-width: 245px;
@@ -170,12 +170,41 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Eliminar todos los estilos predeterminados del botón */
+/* Estilos generales de los botones */
 .button {
-  all: unset; /* Elimina cualquier estilo predeterminado (fondo, borde, padding, etc.) */
-  display: inline-block; /* Permite que el botón se adapte al tamaño de la imagen */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  border-radius: 0; /* Elimina los bordes redondeados del botón */
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+#shuffleBtn, #loopBtn {
+  margin-top: 10px; /* Mueve los botones hacia abajo */
+  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+}
+
+#shuffleBtn, #loopBtn, #minimizeBtn, #closeBtn, #backBtn {
+  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+}
+
+/* Agrandar los botones shuffle, repeat, minimize, close y back al hacer hover */
+#shuffleBtn:hover, #loopBtn:hover, #minimizeBtn:hover, #closeBtn:hover, #backBtn:hover {
+  transform: scale(1.1); /* Agranda los botones un 10% */
+}
+
+/* Estilos para los botones prev, playPause, next, localFolder y spotifyList */
+#prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #spotifyListBtn {
+  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+}
+
+/* Agrandar los botones prev, playPause, next, localFolder y spotifyList al hacer hover */
+#prevBtn:hover, #playPauseBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyListBtn:hover {
+  transform: scale(1.05); /* Agranda los botones un 5% */
+}
+
+/* Si solo quieres que los íconos dentro de los botones crezcan */
+#prevBtn img:hover, #playPauseBtn img:hover, #nextBtn img:hover, #localFolderBtn img:hover, #spotifyListBtn img:hover {
+  transform: scale(1.05);
 }
 
 /* Asegúrate de que las imágenes ocupen todo el tamaño del botón sin cambiar sus dimensiones */
@@ -189,9 +218,15 @@ h1 {
 
 /* Estilos adicionales para los controles */
 .controls {
+  background-image: url('../assets/icons/Controls\ box.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
   display: flex;
   justify-content: center;
-  gap: 15px; /* Separación entre los botones */
+  gap: 5px;
+  align-items: center; /* Alinea los botones verticalmente */
 }
 
 .title {
@@ -212,8 +247,7 @@ h1 {
   position: relative;
   width: 265px;
   height: 265px;
-  margin: 0 auto; /* Centra el contenedor horizontalmente */
-  margin-bottom: 20px; /* Esto da el margen inferior entre la barra de progreso y el borde */
+  margin-bottom: 10px; /* Esto da el margen inferior entre la barra de progreso y el borde */
   justify-content: center; /* Centra el contenido horizontalmente */
   align-items: center; /* Centra el contenido verticalmente */
 }

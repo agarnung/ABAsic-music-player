@@ -17,11 +17,11 @@ if (require('electron-squirrel-startup')) {
 function getWindowConfig() {
   return {
     width: 333,
-    height: 471,
+    height: 461,
     minWidth: 333, 
-    minHeight: 471,
+    minHeight: 461,
     maxWidth: 333, 
-    maxHeight: 471,
+    maxHeight: 461,
     useContentSize: true, // Asegura que el tamaño especificado sea solo para el contenido
     resizable: false,
     scrollBounce: false,
