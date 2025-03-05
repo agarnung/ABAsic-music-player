@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-app-region: no-drag;
 }
 
 /* pixelify-sans-regular - latin */
@@ -54,6 +55,7 @@ body {
   overflow: hidden; /* Oculta cualquier cosa fuera del borde redondeado */
   box-shadow: 0 0 10px rgba(133, 105, 136, 0.2); /* Sombra externa */
   padding: 1px;
+  -webkit-app-region: drag; /* Permite arrastrar la ventana desde este contenedor */
 }
 
 /* Inner container with pink background */
@@ -68,6 +70,7 @@ body {
   border-radius: 35px; /* Asegura que el fondo esté contenido dentro de los bordes */
   padding: 20px;
   border: 1.12px solid var(--border-background);
+  -webkit-app-region: drag; /* Permite arrastrar la ventana desde este contenedor */
 }
 
 header {
@@ -178,9 +181,37 @@ h1 {
   border-radius: 0;
 }
 
+/* Estilos para el botón del álbum/playlist */
+#albumPlaylistBtn {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra horizontalmente */
+  position: relative;
+  overflow: hidden; /* Para que el texto no se salga del botón */
+  width: fit-content; /* Ajusta el tamaño del botón al contenido */
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+}
+
+/* Estilos para el texto dentro del botón */
+.album-playlist-text {
+  display: inline-block;
+  position: absolute; /* Para moverse dentro del botón */
+  animation: scrollAlbumPlaylistText 10s linear infinite;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 #shuffleBtn, #loopBtn {
-  margin-top: 10px; /* Mueve los botones hacia abajo */
+  scale: 0.9;
+  margin-top: 20px; /* Mueve los botones hacia abajo */
   transition: transform 0.3s ease; /* Efecto de transición para el hover */
+}
+
+#backBtn {
+  margin-right: auto;
 }
 
 #shuffleBtn, #loopBtn, #minimizeBtn, #closeBtn, #backBtn {
@@ -317,13 +348,12 @@ h1 {
   display: none !important;
 }
 
-/* Estilo para el contenedor que envuelve todo */
-.song-name-container-container {
-  display: flex; /* Alinea los elementos horizontalmente */
-  justify-content: center; /* Centra los elementos horizontalmente */
-  align-items: center; /* Centra los elementos verticalmente */
-  width: 100%; /* Ocupa todo el ancho disponible */
-  height: 100px; /* Ajusta la altura del contenedor */
+/* Estilos para las imágenes */
+.icon {
+  width: 42px; /* Ajusta el tamaño de las imágenes */
+  height: 42px; /* Ajusta la altura de las imágenes */
+  background-color: transparent; /* Fondo transparente para las imágenes */
+  fill: transparent; /* Asegura que el color de relleno del SVG sea transparente */
 }
 
 /* Estilo para el contenedor que envuelve todo */
@@ -337,48 +367,50 @@ h1 {
 
 /* Estilo para el contenedor del nombre de la canción */
 .song-name-container {
-  display: flex; /* Usamos flexbox para que los elementos se alineen en una fila */
-  align-items: center; /* Centra el texto verticalmente */
-  justify-content: center; /* Centra el texto horizontalmente */
-  width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
-  height: 35px; /* Ajusta la altura para que no esté comprimido */
-  background: #f5f5f5; /* Fondo F5F5F5 para el contenedor */
-  padding: 0 10px; /* Añade algo de espacio a los lados */
-  border: 2px solid var(--border-background); /* Borde rosa */
-  overflow: hidden; /* Evita que el texto se desborde */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 35px;
+  background: #f5f5f5;
+  padding: 0 10px;
+  border: 2px solid var(--border-background);
+  overflow: hidden;
   border-radius: 28px;
   fill: #f5f5f5;
   stroke-width: 1.12px;
-  stroke: #ca78c2;
+  stroke: var(--border-background);
 }
 
-/* Estilos para las imágenes */
-.icon {
-  width: 42px; /* Ajusta el tamaño de las imágenes */
-  height: 42px; /* Ajusta la altura de las imágenes */
-  background-color: transparent; /* Fondo transparente para las imágenes */
-  fill: transparent; /* Asegura que el color de relleno del SVG sea transparente */
+/* Contenedor que envuelve el texto duplicado */
+.song-name-wrapper {
+  display: flex;
+  white-space: nowrap;
+  animation: scrollText  linear infinite; /* Duración fija de 10 segundos */
 }
 
 /* Estilos para el texto */
 .song-name {
-  flex-grow: 1; /* Hace que el texto ocupe el espacio restante */
-  text-align: center; /* Centra el texto horizontalmente */
-  font-size: 1rem; /* Ajusta el tamaño de la fuente */
-  font-weight: var(--font-weight-bold); /* Asegura que el texto sea negrita */
-  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
-  animation: scrollText 7.5s linear infinite; /* Animación de desplazamiento */
-  overflow: hidden; /* Asegura que el texto no se desborde */
-  text-overflow: ellipsis; /* Muestra los puntos suspensivos si el texto es demasiado largo */
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  padding-right: 20px; /* Espacio entre el texto duplicado */
 }
 
 /* Animación de desplazamiento */
 @keyframes scrollText {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0); /* Comienza desde la posición inicial */
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%); /* Desplaza el texto a la izquierda */
   }
 }
 
+@keyframes scrollAlbumPlaylistText {
+  0% {
+    transform: translateX(calc(250% + 20px)); /* Comienza desde el borde derecho */
+  }
+  100% {
+    transform: translateX(calc(-250% - 20px)); /* Que el texto recorre más distancia */
+  }
+}

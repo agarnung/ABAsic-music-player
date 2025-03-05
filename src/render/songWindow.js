@@ -28,7 +28,16 @@ document.addEventListener("DOMContentLoaded", function () {
     async function loadSongs(folder) {
         console.log('[DEBUG] Cargando canciones desde:', folder);
         try {
-            const response = await window.electronAPI.getSongsFromFolder(folder);
+            try {
+                const albumPlaylistText = document.getElementById('album-playlist-text');
+                if (albumPlaylistText) {
+                    albumPlaylistText.textContent = folder;
+                } else {
+                    console.error('Elemento albumPlaylistText no encontrado');
+                }
+            } catch (error) {
+                console.error('Error al actualizar el texto del botón:', error);
+            } const response = await window.electronAPI.getSongsFromFolder(folder);
             console.log('[DEBUG] Canciones recibidas:', response);
             songs = response;
             if (songs.length > 0) {
@@ -40,6 +49,28 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error('[ERROR] Fallo al cargar canciones:', error);
         }
+    }
+
+    const albumPlaylistBtn = document.getElementById('albumPlaylistBtn');
+    if (albumPlaylistBtn) {
+        albumPlaylistBtn.addEventListener('click', async () => {
+            const { mode } = await window.electronAPI.getMode();
+            if (mode === 'local') {
+                const folder = await window.electronAPI.selectFolder();
+                if (folder) {
+                    // Primero establecer el modo
+                    window.electronAPI.setMode('local', folder);
+                    // Luego cargar las canciones
+                    await loadSongs(folder);
+                }
+            } else if (mode === 'spotify') {
+                // Aquí puedes abrir el modal para ingresar una nueva URL de Spotify
+                const spotifyModal = document.getElementById('spotifyModal');
+                if (spotifyModal) {
+                    spotifyModal.classList.add('is-active');
+                }
+            }
+        });
     }
 
     const audioElement = document.getElementById('audioElement');
@@ -90,12 +121,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // Extraer el nombre del archivo (eliminar la ruta completa)
         const songName = decodedPath.split('/').pop(); // Obtener el nombre del archivo
 
-        // Actualizar el texto del elemento
-        const songNameElement = document.getElementById('songName');
-        if (songNameElement) {
-            songNameElement.textContent = songName;
+        // Actualizar todos los elementos con la clase .song-name
+        const songNameElements = document.querySelectorAll('.song-name');
+        if (songNameElements.length > 0) {
+            songNameElements.forEach(element => {
+                element.textContent = songName;
+            });
         } else {
-            console.error('Elemento songName no encontrado');
+            console.error('Elementos .song-name no encontrados');
         }
     }
 
