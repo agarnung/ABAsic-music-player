@@ -384,16 +384,17 @@ h1 {
 
 /* Contenedor que envuelve el texto duplicado */
 .song-name-wrapper {
-  display: flex;
+  display: inline-flex; /* Adapta el ancho al contenido */
   white-space: nowrap;
-  animation: scrollText  linear infinite; /* Duración fija de 10 segundos */
+  animation: scrollText linear infinite; /* Duración fija de 10 segundos */
 }
 
 /* Estilos para el texto */
 .song-name {
   font-size: 1rem;
   font-weight: var(--font-weight-bold);
-  padding-right: 20px; /* Espacio entre el texto duplicado */
+  padding: 0 1.5rem; /* Espacio dinámico entre el texto duplicado */
+  flex-shrink: 0; /* Evita que se encoja */
 }
 
 /* Animación de desplazamiento */
@@ -402,7 +403,7 @@ h1 {
     transform: translateX(0); /* Comienza desde la posición inicial */
   }
   100% {
-    transform: translateX(-50%); /* Desplaza el texto a la izquierda */
+    transform: translateX(-50%); /* Desplaza exactamente medio contenedor */
   }
 }
 

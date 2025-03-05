@@ -113,25 +113,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Función para actualizar el nombre de la canción
     function updateSongName(songPath) {
-        // Decodificar la URL (por ejemplo, convierte "%20" de nuevo a espacios)
         const decodedPath = decodeURIComponent(songPath);
-
-        // Extraer el nombre del archivo (eliminar la ruta completa)
-        const songName = decodedPath.split('/').pop(); // Obtener el nombre del archivo
-
-        // Actualizar todos los elementos con la clase .song-name
-        const songNameElements = document.querySelectorAll('.song-name');
-        if (songNameElements.length > 0) {
-            songNameElements.forEach(element => {
-                element.textContent = songName;
-            });
-        } else {
-            console.error('Elementos .song-name no encontrados');
+        const songName = decodedPath.split('/').pop();
+        const wrapper = document.querySelector('.song-name-wrapper');
+    
+        // Limpiar y duplicar el texto
+        wrapper.innerHTML = '';
+        for (let i = 0; i < 2; i++) {
+            const span = document.createElement('span');
+            span.className = 'song-name';
+            span.textContent = songName;
+            wrapper.appendChild(span);
         }
+    
+        // Calcular duración basada en el ancho real del texto
+        const textWidth = wrapper.firstChild.offsetWidth;
+        const containerWidth = wrapper.parentElement.offsetWidth;
+        
+        // Ajustar velocidad para mantener ritmo constante
+        const speed = 40; // Pixeles por segundo (ajusta según necesites)
+        const duration = textWidth / speed;
+        
+        wrapper.style.animationDuration = `${duration}s`;
     }
-
+    
     initializePlayer();
 
     // Función para avanzar a la siguiente canción
