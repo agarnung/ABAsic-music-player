@@ -28,16 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     async function loadSongs(folder) {
         console.log('[DEBUG] Cargando canciones desde:', folder);
         try {
-            try {
-                const albumPlaylistText = document.getElementById('album-playlist-text');
-                if (albumPlaylistText) {
-                    albumPlaylistText.textContent = folder;
-                } else {
-                    console.error('Elemento albumPlaylistText no encontrado');
-                }
-            } catch (error) {
-                console.error('Error al actualizar el texto del botón:', error);
-            } const response = await window.electronAPI.getSongsFromFolder(folder);
+            updateAlbumPlaylistText(folder);
+            const response = await window.electronAPI.getSongsFromFolder(folder);
             console.log('[DEBUG] Canciones recibidas:', response);
             songs = response;
             if (songs.length > 0) {
@@ -51,6 +43,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function updateAlbumPlaylistText(text) {
+        const wrapper = document.querySelector('.album-playlist-wrapper');
+        if (!wrapper) return;
+        wrapper.innerHTML = '';
+        for (let i = 0; i < 2; i++) {
+            const span = document.createElement('span');
+            span.className = 'album-playlist-text';
+            span.textContent = text;
+            wrapper.appendChild(span);
+        }
+    
+        // Calcular duración de la animación
+        const textWidth = wrapper.firstChild.offsetWidth;
+        const containerWidth = wrapper.parentElement.offsetWidth;
+        
+        // Solo animar si el texto es más largo que el contenedor
+        if (textWidth > containerWidth) {
+            const speed = 40; // Pixeles por segundo 
+            const duration = textWidth / speed;
+            wrapper.style.animationDuration = `${duration}s`;
+        } else {
+            wrapper.style.animation = 'none';
+        }
+    }
+    
     const albumPlaylistBtn = document.getElementById('albumPlaylistBtn');
     if (albumPlaylistBtn) {
         albumPlaylistBtn.addEventListener('click', async () => {
@@ -116,9 +133,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateSongName(songPath) {
         const decodedPath = decodeURIComponent(songPath);
         const songName = decodedPath.split('/').pop();
+        
         const wrapper = document.querySelector('.song-name-wrapper');
-    
-        // Limpiar y duplicar el texto
+        if (!wrapper) return;
         wrapper.innerHTML = '';
         for (let i = 0; i < 2; i++) {
             const span = document.createElement('span');
@@ -129,10 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
     
         // Calcular duración basada en el ancho real del texto
         const textWidth = wrapper.firstChild.offsetWidth;
-        const containerWidth = wrapper.parentElement.offsetWidth;
         
         // Ajustar velocidad para mantener ritmo constante
-        const speed = 40; // Pixeles por segundo (ajusta según necesites)
+        const speed = 40; // Pixeles por segundo 
         const duration = textWidth / speed;
         
         wrapper.style.animationDuration = `${duration}s`;

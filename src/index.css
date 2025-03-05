@@ -4,6 +4,9 @@
   padding: 0;
   box-sizing: border-box;
   -webkit-app-region: no-drag;
+  user-select: none; /* Previene que cualquier elemento sea seleccionado */
+  -webkit-user-select: none; /* Para Safari */
+  -moz-user-select: none; /* Para Firefox */
 }
 
 /* pixelify-sans-regular - latin */
@@ -128,6 +131,11 @@ h1 {
   font-family: var(--font-family);
   font-size: var(--font-size-xlarge);
   font-weight: var(--font-weight-bold);
+  color: white;  /* Color blanco para el texto */
+  -webkit-text-stroke: 1px black;  /* Borde negro para el texto */
+  user-select: text;          /* Habilitar la selección */
+  -webkit-user-select: text;  /* Safari y Chrome antiguos */
+  -moz-user-select: text;     /* Firefox antiguo */
 }
 
 /* Estilo para el área de arrastre */
@@ -183,30 +191,40 @@ h1 {
 
 /* Estilos para el botón del álbum/playlist */
 #albumPlaylistBtn {
-  margin: auto;
   display: flex;
+  margin: auto;
   align-items: center;
-  justify-content: center; /* Centra horizontalmente */
-  position: relative;
+  justify-content: center;
   overflow: hidden; /* Para que el texto no se salga del botón */
   width: fit-content; /* Ajusta el tamaño del botón al contenido */
   white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+  width: 100%;
+}
+
+/* Contenedor del texto animado */
+.album-playlist-wrapper {
+  display: inline-flex; /* Adapta el ancho al contenido */
+  white-space: nowrap;
+  animation: scrollAlbumPlaylistText linear infinite;
 }
 
 /* Estilos para el texto dentro del botón */
 .album-playlist-text {
-  display: inline-block;
-  position: absolute; /* Para moverse dentro del botón */
-  animation: scrollAlbumPlaylistText 10s linear infinite;
+  color: black; /* O cualquier color que contraste con el fondo */
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  padding: 0 1rem; /* Espacio dinámico entre el texto duplicado */
+  flex-shrink: 0; /* Evita que se encoja */
 }
 
 #shuffleBtn, #loopBtn {
   scale: 0.9;
   margin-top: 20px; /* Mueve los botones hacia abajo */
+  transition: transform 0.3s ease; /* Efecto de transición para el hover */
+}
+
+#nextBtn, #prevBtn {
+  margin-bottom: 20px; /* Mueve los botones hacia abajo */
   transition: transform 0.3s ease; /* Efecto de transición para el hover */
 }
 
@@ -264,6 +282,11 @@ h1 {
   font-family: var(--font-family);
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
+  color: white;  /* Color blanco para el texto */
+  -webkit-text-stroke: 1px black;  /* Borde negro para el texto */
+  user-select: text;          /* Habilitar la selección */
+  -webkit-user-select: text;  /* Safari y Chrome antiguos */
+  -moz-user-select: text;     /* Firefox antiguo */
 }
 
 #playPauseBtn {
@@ -386,7 +409,7 @@ h1 {
 .song-name-wrapper {
   display: inline-flex; /* Adapta el ancho al contenido */
   white-space: nowrap;
-  animation: scrollText linear infinite; /* Duración fija de 10 segundos */
+  animation: scrollText linear infinite;
 }
 
 /* Estilos para el texto */
@@ -395,6 +418,9 @@ h1 {
   font-weight: var(--font-weight-bold);
   padding: 0 1.5rem; /* Espacio dinámico entre el texto duplicado */
   flex-shrink: 0; /* Evita que se encoja */
+  user-select: text;          /* Habilitar la selección */
+  -webkit-user-select: text;  /* Safari y Chrome antiguos */
+  -moz-user-select: text;     /* Firefox antiguo */
 }
 
 /* Animación de desplazamiento */
@@ -409,9 +435,9 @@ h1 {
 
 @keyframes scrollAlbumPlaylistText {
   0% {
-    transform: translateX(calc(250% + 20px)); /* Comienza desde el borde derecho */
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-250% - 20px)); /* Que el texto recorre más distancia */
+    transform: translateX(-50%);
   }
 }
