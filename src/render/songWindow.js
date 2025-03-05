@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isShuffleEnabled = false;
     let currentSongIndex = 0;
     let songs = [];
+    let images = [];
     let playPauseIcon;
 
     async function initializePlayer() {
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (mode === 'local') {
                 await loadSongs(data);
+                await loadImages('./assets/wallpapers');
             } else if (mode === 'spotify') {
                 console.log('Modo Spotify, URL:', data);
                 // ...
@@ -41,6 +43,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } catch (error) {
             console.error('[ERROR] Fallo al cargar canciones:', error);
+        }
+    }
+
+    // Función para cargar imágenes desde la misma carpeta
+    async function loadImages(folder) {
+        console.log('[DEBUG] Cargando imágenes desde:', folder);
+        try {
+            const response = await window.electronAPI.getImagesFromFolder(folder);
+            console.log('[DEBUG] Imágenes recibidas:', response);
+            images = response;
+            setRandomBackgroundImage(); // Establecer una imagen aleatoria como fondo
+        } catch (error) {
+            console.error('[ERROR] Fallo al cargar imágenes:', error);
+        }
+    }
+
+    // Función para establecer una imagen aleatoria como fondo
+    function setRandomBackgroundImage() {
+        if (images.length === 0) return;  // No hay imágenes disponibles
+
+        // Seleccionar una imagen aleatoria
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+    
+        // Aplicar la imagen como fuente (src) de la imagen
+        const progressImageElement = document.querySelector('.progress-image');
+        if (progressImageElement) {
+            progressImageElement.src = randomImage;
         }
     }
 
@@ -131,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
             playPauseIcon.src = '../assets/icons/Pause button.svg';
             playPauseIcon.alt = 'Pause';
             updateSongName(songs[index]);
+            setRandomBackgroundImage();
         } else {
             console.error('[ERROR] Índice inválido o canción no existe');
         }

@@ -1,3 +1,5 @@
+/// preload.js
+
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
@@ -12,5 +14,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectFolder: () => ipcRenderer.invoke('select-folder'),
     getMode: () => ipcRenderer.invoke('get-mode'),
     openSongWindow: () => ipcRenderer.send('open-song-window'),
-    getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder)
+    getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder),
+    getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder)
 });

@@ -141,6 +141,20 @@ ipcMain.handle('get-songs-from-folder', async (event, folder) => {
   return songs;
 });
 
+ipcMain.handle('get-images-from-folder', async (event, folder) => {
+  console.log('[MAIN] Obteniendo imágenes desde la carpeta:', folder);
+  const files = fs.readdirSync(folder);
+  const images = files.filter(file => {
+    const ext = path.extname(file).toLowerCase();
+    return ['.jpg', '.jpeg', '.png', '.gif', '.svg'].includes(ext); 
+  }).map(file => {
+    const fullPath = path.join(folder, file);
+    console.log('[MAIN] Convirtiendo a URL:', fullPath);
+    return pathToFileURL(fullPath).href;
+  });
+  return images;
+});
+
 ipcMain.on('set-mode', (_, { mode, data }) => {
   console.log(`Modo establecido: ${mode}, Datos: ${data}`); // Log para verificar el modo y los datos
   currentMode = mode;
