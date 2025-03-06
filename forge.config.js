@@ -5,6 +5,7 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: 'assets/icons/favicon', // https://www.electronforge.io/guides/create-and-add-icons
+    extraResource: ['assets/wallpapers']
   },
   rebuildConfig: {},
   makers: [

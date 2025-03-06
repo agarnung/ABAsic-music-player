@@ -141,17 +141,40 @@ ipcMain.handle('get-songs-from-folder', async (event, folder) => {
   return songs;
 });
 
-ipcMain.handle('get-images-from-folder', async (event, folder) => {
-  console.log('[MAIN] Obteniendo imágenes desde la carpeta:', folder);
-  const files = fs.readdirSync(folder);
-  const images = files.filter(file => {
-    const ext = path.extname(file).toLowerCase();
-    return ['.jpg', '.jpeg', '.png', '.gif', '.svg'].includes(ext); 
-  }).map(file => {
-    const fullPath = path.join(folder, file);
-    console.log('[MAIN] Convirtiendo a URL:', fullPath);
-    return pathToFileURL(fullPath).href;
-  });
+ipcMain.handle('get-images-from-folder', async () => {
+  // Ruta a la carpeta de wallpapers
+  let wallpapersFolder;
+
+  if (app.isPackaged) {
+    // En producción: usa process.resourcesPath
+    wallpapersFolder = path.join(process.resourcesPath, 'wallpapers');
+  } else {
+    // En desarrollo: usa __dirname para apuntar a la carpeta correcta
+    wallpapersFolder = path.join(__dirname, '../assets/wallpapers');
+  }
+
+  console.log('Buscando imágenes en:', wallpapersFolder);
+
+  // Si la carpeta no existe, la creamos
+  if (!fs.existsSync(wallpapersFolder)) {
+    fs.mkdirSync(wallpapersFolder, { recursive: true });
+    console.log('Carpeta de wallpapers creada:', wallpapersFolder);
+    return []; // Retorna un array vacío si la carpeta no existe
+  }
+
+  // Leer archivos y filtrar imágenes
+  const files = fs.readdirSync(wallpapersFolder);
+  const images = files
+    .filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.jpg', '.jpeg', '.png'].includes(ext);
+    })
+    .map(file => {
+      const fullPath = path.join(wallpapersFolder, file);
+      return `file://${fullPath}`;
+    });
+
+  console.log('Imágenes encontradas:', images);
   return images;
 });
 

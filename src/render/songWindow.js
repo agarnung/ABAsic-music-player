@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (mode === 'local') {
                 await loadSongs(data);
-                await loadImages('./assets/wallpapers');
+                await loadImages();
             } else if (mode === 'spotify') {
                 console.log('Modo Spotify, URL:', data);
                 // ...
@@ -47,13 +47,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Función para cargar imágenes desde la misma carpeta
-    async function loadImages(folder) {
-        console.log('[DEBUG] Cargando imágenes desde:', folder);
+    async function loadImages() {
         try {
-            const response = await window.electronAPI.getImagesFromFolder(folder);
-            console.log('[DEBUG] Imágenes recibidas:', response);
-            images = response;
-            setRandomBackgroundImage(); // Establecer una imagen aleatoria como fondo
+            images = await window.electronAPI.getImagesFromFolder();
+            console.log('Imágenes cargadas:', images); // Depuración
+            if (images.length > 0) {
+                setRandomBackgroundImage();
+            } else {
+                console.warn('No se encontraron imágenes en la carpeta de wallpapers.');
+            }
         } catch (error) {
             console.error('[ERROR] Fallo al cargar imágenes:', error);
         }
@@ -65,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Seleccionar una imagen aleatoria
         const randomImage = images[Math.floor(Math.random() * images.length)];
-    
+
         // Aplicar la imagen como fuente (src) de la imagen
         const progressImageElement = document.querySelector('.progress-image');
         if (progressImageElement) {
