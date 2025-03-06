@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (xInSvg >= rectX && xInSvg <= rectX + rectWidth && yInSvg >= rectY && yInSvg <= rectY + rectHeight) {
                 draggableSvg.style.cursor = 'grab';
             } else {
-                draggableSvg.style.cursor = 'default'; // O cualquier otro cursor por defecto
+                draggableSvg.style.cursor = 'default'; 
             }
     
             // Mientras esté arrastrando, mantener el cursor "grabbing"
