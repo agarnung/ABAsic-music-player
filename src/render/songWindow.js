@@ -10,6 +10,58 @@ document.addEventListener("DOMContentLoaded", function () {
     let images = [];
     let playPauseIcon;
 
+    let spotifyPlayer = null;
+
+    // Nueva función para inicializar Spotify
+    async function initSpotifyPlayer(token) {
+        // Cargar SDK de Spotify
+        const script = document.createElement('script');
+        script.src = 'https://sdk.scdn.co/spotify-player.js';
+        document.head.appendChild(script);
+
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            spotifyPlayer = new Spotify.Player({
+                name: 'Your Music Player',
+                getOAuthToken: cb => { cb(token); },
+                volume: 0.5
+            });
+
+            spotifyPlayer.addListener('ready', ({ device_id }) => {
+                spotifyDeviceId = device_id;
+                // Transferir la reproducción a este dispositivo
+                fetch('https://api.spotify.com/v1/me/player', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ device_ids: [device_id] })
+                });
+            });
+
+            spotifyPlayer.addListener('player_state_changed', state => {
+                updatePlayerState(state);
+            });
+
+            spotifyPlayer.connect();
+        };
+    }
+
+    // Función para actualizar la UI con el estado de Spotify
+    function updatePlayerState(state) {
+        const playPauseIcon = document.getElementById('playPauseBtn').querySelector('img');
+
+        if (state.paused) {
+            playPauseIcon.src = '../assets/icons/Play button.svg';
+        } else {
+            playPauseIcon.src = '../assets/icons/Pause button.svg';
+        }
+
+        // Actualizar progreso de la canción
+        const progress = (state.position / state.duration) * 100;
+        document.getElementById('progress').style.width = `${progress}%`;
+    }
+
     async function initializePlayer() {
         try {
             const { mode, data } = await window.electronAPI.getMode();
@@ -20,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 await loadImages();
             } else if (mode === 'spotify') {
                 console.log('Modo Spotify, URL:', data);
-                // ...
+                await initSpotifyPlayer(data);
             }
         } catch (error) {
             console.error('Error inicializando reproductor:', error);
@@ -196,12 +248,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para avanzar a la siguiente canción
     function playNextSong() {
-        if (isShuffleEnabled) {
-            currentSongIndex = Math.floor(Math.random() * songs.length);
+        if (currentMode === 'spotify') {
+            window.electronAPI.spotifyControl('next');
         } else {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            if (isShuffleEnabled) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
+            playSong(currentSongIndex);
         }
-        playSong(currentSongIndex);
     }
 
     // Funciones de formato de tiempo

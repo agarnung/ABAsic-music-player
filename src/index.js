@@ -3,6 +3,12 @@ const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('node:path');
 
+require('dotenv').config();
+
+const SpotifyWebApi = require('spotify-web-api-node');
+let spotifyPlayer = null;
+let spotifyDeviceId = null;
+
 let startWindow;
 let songWindow;
 let currentMode = 'local';
@@ -13,14 +19,23 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+// Registrar el protocolo personalizado
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('abasic-music-player', process.execPath, [path.resolve(process.argv[1])]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('abasic-music-player');
+}
+
 // Configuración común para las ventanas
 function getWindowConfig() {
   return {
     width: 333,
     height: 461,
-    minWidth: 333, 
+    minWidth: 333,
     minHeight: 461,
-    maxWidth: 333, 
+    maxWidth: 333,
     maxHeight: 461,
     useContentSize: true, // Asegura que el tamaño especificado sea solo para el contenido
     resizable: false,
@@ -52,7 +67,7 @@ function createStartWindow() {
     startWindow = null;
   });
 
-  // startWindow.webContents.openDevTools();
+  startWindow.webContents.openDevTools();
 }
 
 // Crear ventana secundaria (songWindow)
@@ -82,6 +97,13 @@ function createSongWindow() {
   // songWindow.webContents.openDevTools();
 }
 
+// Configuración de Spotify
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+});
+
 // Eventos IPC
 
 ipcMain.on('open-song-window', () => {
@@ -92,7 +114,7 @@ ipcMain.on('open-song-window', () => {
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
     const songWindowBounds = songWindow.getBounds();
-    
+
     songWindow.close();
     songWindow = null;
 
@@ -186,6 +208,80 @@ ipcMain.on('set-mode', (_, { mode, data }) => {
 
 ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
 
+ipcMain.handle('open-spotify-auth', async () => {
+  const authWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  // Manejar redirección al protocolo personalizado
+  authWindow.webContents.on('will-redirect', (event, url) => {
+    if (url.startsWith(process.env.SPOTIFY_REDIRECT_URI)) {
+      event.preventDefault();
+      const hash = new URL(url).hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get('access_token');
+
+      if (accessToken) {
+        authWindow.close();
+        return accessToken;
+      }
+    }
+  });
+
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(process.env.SPOTIFY_REDIRECT_URI)}&scope=user-read-playback-state user-modify-playback-state&show_dialog=true`;
+
+  await authWindow.loadURL(authUrl);
+
+  return new Promise((resolve, reject) => {
+    authWindow.on('closed', () => {
+      reject(new Error('Auth window closed'));
+    });
+
+    authWindow.webContents.on('did-fail-load', (event, errorCode, errorDesc) => {
+      reject(new Error(errorDesc));
+    });
+  });
+});
+
+// Handlers para Spotify
+ipcMain.handle('store-spotify-token', async (_, token) => {
+  spotifyApi.setAccessToken(token);
+  return true;
+});
+
+ipcMain.handle('spotify-control', async (_, action) => {
+  if (!spotifyPlayer) return;
+
+  switch (action) {
+    case 'play':
+      await spotifyApi.play({ device_id: spotifyDeviceId });
+      break;
+    case 'pause':
+      await spotifyApi.pause({ device_id: spotifyDeviceId });
+      break;
+    case 'next':
+      await spotifyApi.skipToNext({ device_id: spotifyDeviceId });
+      break;
+    case 'previous':
+      await spotifyApi.skipToPrevious({ device_id: spotifyDeviceId });
+      break;
+    case 'shuffle':
+      const shuffleState = !(await spotifyApi.getShuffle()).body;
+      await spotifyApi.setShuffle(shuffleState, { device_id: spotifyDeviceId });
+      break;
+    case 'loop':
+      const currentState = (await spotifyApi.getRepeatMode()).body;
+      const newState = currentState === 'context' ? 'off' : 'context';
+      await spotifyApi.setRepeat(newState, { device_id: spotifyDeviceId });
+      break;
+  }
+});
+
 // Este método se llama cuando Electron ha terminado de inicializar
 app.whenReady().then(() => {
   createStartWindow(); // Crear la ventana principal al iniciar
@@ -204,3 +300,5 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+

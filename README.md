@@ -73,30 +73,39 @@ Now, it’s important to note the limitations: Electron Forge can create a singl
 
 - Connect to Spotify to play a playlist given its URL.
 
-To connect to Spotify and play a playlist, follow these steps:
+To connect to Spotify and play a playlist, follow these steps: (https://chat.deepseek.com/a/chat/s/adff0462-079b-409b-8bf8-3868ea08af47)
 
-1. **Register the application on the [Spotify Developer Dashboard](https://developer.spotify.com/):**
-   - Create a new application on the Spotify Developer Dashboard.
-   - Get the Client ID and Client Secret to authenticate yourself.
+Cuenta de Spotify Developer:
+   Registra tu aplicación en [Spotify Developer Dashboard](https://developer.spotify.com/)
+   En "Redirect URIs" agrega: http://localhost:3000/callback y your-app://callback. Mejor, en lugar de usar localhost, se puede utilizar un URI personalizado como protocolo (por ejemplo, myapp://callback) para manejar la redirección sin necesidad de un servidor local, pues esto es una aplicación de escritorio.
+   Marca la casilla "Web Playback SDK"
+   Guarda los cambios y copia tu Client ID (en Settings)
 
-2. **Set up authentication with Spotify:**
-   - Implement OAuth 2.0 to obtain an access token that allows interaction with the Spotify API.
-   - Use the spotify-web-api-node library to facilitate integration.
+Deberá haber un modo de leer el token de spotify para usarlo y también de guardarlo y, naturalmente, de manejar los controles de spotify usando nuestra app GUI como "intermediario". Para esto se exponen esas funciones en `preload.js`.
 
-3. **Get playlists and data:**
-   - Use the access token to interact with the Spotify API and get the user’s playlists.
+Como es necesario especificar el clientId y el clientSecret, se usa `dotenv` para proporcionarlo al código de manera segura:
+1. `npm install dotenv`
+2. Crea un archivo `.env` en la raíz de tu proyecto y agrega tus credenciales:
+```
+SPOTIFY_CLIENT_ID=tu_client_id
+SPOTIFY_CLIENT_SECRET=tu_client_secret
+SPOTIFY_REDIRECT_URI=http://localhost:3000/callback
+```
+3. Ahora se puede acceder desde el index.js se manera segura:
+```js
+require('dotenv').config();
+const SpotifyWebApi = require('spotify-web-api-node');
 
-4. **Integrate the Spotify Web Playback SDK:**
-   - Use this SDK to allow playing songs directly in your app.
-   - A Premium user access token is required for it to work.
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+});
+```
+4. Asegurarse de no subir el archivo `.env` a Github! Añadirlo al `.gitignore`.
 
-5. **Frontend in Electron:**
-   - Request the playlist ID via a modal and use the Spotify API to retrieve the songs.
-   - Display the songs and use the Web Playback SDK to control them.
 
-6. **Play songs:**
-   - Use the song URI and SDK functionality to play them.
 
-7. **Additional considerations:**
-   - Make sure to manage the access tokens securely.
-   - Handle the API limitations (such as the maximum number of requests per minute).
+Se emplea la libería `react-spotify-web-playback-sdk`. Instalar dependencias: `npm install react-spotify-web-playback-sdk spotify-web-api-node @react-oauth/google`.
+
+

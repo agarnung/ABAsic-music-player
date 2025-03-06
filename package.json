@@ -17,8 +17,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "bulma": "^1.0.3",
-    "electron-squirrel-startup": "^1.0.1"
+    "dotenv": "^16.4.7",
+    "electron-squirrel-startup": "^1.0.1",
+    "react-spotify-web-playback-sdk": "^3.0.2",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",

@@ -15,5 +15,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getMode: () => ipcRenderer.invoke('get-mode'),
     openSongWindow: () => ipcRenderer.send('open-song-window'),
     getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder),
-    getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder)
+    getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder),
+    openSpotifyAuth: () => ipcRenderer.invoke('open-spotify-auth'),
+    getSpotifyToken: () => ipcRenderer.invoke('get-spotify-token'),
+    storeSpotifyToken: (token) => ipcRenderer.invoke('store-spotify-token', token),
+    spotifyControl: (action) => ipcRenderer.invoke('spotify-control', action)
 });
