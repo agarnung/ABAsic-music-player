@@ -88,13 +88,16 @@ header {
 }
 
 .header-container-main {
-  width: 100%; /* Ocupa todo el ancho disponible */
+  width: 100%;
   height: 100%;
-  -webkit-app-region: drag; /* Evita que los botones sean draggables */
-  cursor: move; /* Cambia el cursor al mover */
+  -webkit-app-region: drag;
+  cursor: move;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 7px;
+  justify-content: flex-end; /* Alinea el contenido a la derecha */
+  align-items: center; /* Alinea verticalmente */
+  gap: 10px; /* Espacio entre los elementos */
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .header-container {
@@ -262,10 +265,14 @@ h1 {
   margin-bottom: 5px;
 }
 
-#backBtn #minimizeBtn #closeBtn {
-  margin-right: auto;
+#backBtn #closeBtn {
   min-height: 13px;
   min-width: 13px;
+}
+
+#minimizeBtn {
+  min-height: 13px;
+  min-width: 18px;
 }
 
 #shuffleBtn, #loopBtn, #minimizeBtn, #closeBtn, #backBtn {
@@ -315,6 +322,22 @@ h1 {
   justify-content: center;
   gap: 5px;
   align-items: center; /* Alinea los botones verticalmente */
+}
+
+.title-container {
+  display: flex; /* Usa flexbox */
+  align-items: center; /* Alinea verticalmente */
+  gap: 8px; /* Espacio entre el icono y el texto */
+  padding: 20px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.title-icon {
+  width: 30px;
+  height: 30px;
 }
 
 .title {
