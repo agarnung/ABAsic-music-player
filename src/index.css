@@ -170,9 +170,10 @@ h1 {
   stroke: none;
   margin: 0;
   padding: 0;
-  padding-top: 5px;
-  padding-right: 2px;
-  padding-bottom: 2px;
+  padding-top: 6px;
+  padding-right: 6px;
+  padding-bottom: 4px;
+  padding-left: 2px;
   top: 90px; 
   left: 30px;
 }
