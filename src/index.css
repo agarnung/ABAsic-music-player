@@ -511,3 +511,87 @@ h1 {
     transform: translateX(-25%);
   }
 }
+
+/* Modal oculto inicialmente */
+.modal {
+  display: none; /* Inicialmente está oculto */
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centra el modal en la pantalla */
+  width: 300px; /* Ancho más pequeño */
+  height: auto;
+  background-color: var(--pink-background); /* Fondo oscuro semi-transparente */
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1.12px solid var(--border-background); /* Borde con el color definido */
+}
+
+.modal.show {
+  display: flex; /* Solo se muestra cuando tiene la clase 'show' */
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: var(--dark-pink-background);
+  padding: 15px;
+  border-radius: 10px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  font-size: 1rem;
+  border: 1.12px solid var(--border-background);
+  width: 100%;
+}
+
+/* Botón de cerrar el modal */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.close:hover {
+  transform: scale(1.05);
+  min-height: 13px;
+  min-width: 13px;
+}
+
+/* Transición para mostrar el modal */
+.modal.show {
+  display: flex;
+  animation: showModal 0.5s ease-out;
+}
+
+@keyframes showModal {
+  0% {
+    transform: translate(-50%, -40%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+/* Transición para ocultar el modal */
+@keyframes hideModal {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -60%);
+    opacity: 0;
+  }
+}
+
+.modal.hide {
+  animation: hideModal 0.5s ease-out;
+  pointer-events: none;
+}

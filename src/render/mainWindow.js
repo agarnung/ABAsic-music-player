@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
-    
+
             setTimeout(() => {
                 window.electronAPI.closeWindow();
-            }, 200); 
+            }, 200);
         });
     }
-    
+
     const minimizeBtn = document.getElementById('minimizeBtn');
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
@@ -36,45 +36,45 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Movimiento del personaje en la pantalla inicial
-    
+
     const draggableSvg = document.getElementById('draggable-svg');
     const dragArea = document.querySelector('.drag-area');
-    
+
     // Coordenadas del personaje dentro del SVG
     const rectX = 3;
     const rectY = 77.9571;
     const rectWidth = 115.458;
     const rectHeight = 146.043;
-    
+
     if (draggableSvg && dragArea) {
         let isDragging = false;
         let offsetX = 0, offsetY = 0;
-    
+
         // Cambiar el cursor a "grab" cuando el mouse esté sobre la zona específica
         draggableSvg.addEventListener('mousemove', (e) => {
             const svgRect = draggableSvg.getBoundingClientRect();
             const xInSvg = e.clientX - svgRect.left;
             const yInSvg = e.clientY - svgRect.top;
-    
+
             if (xInSvg >= rectX && xInSvg <= rectX + rectWidth && yInSvg >= rectY && yInSvg <= rectY + rectHeight) {
                 draggableSvg.style.cursor = 'grab';
             } else {
-                draggableSvg.style.cursor = 'default'; 
+                draggableSvg.style.cursor = 'default';
             }
-    
+
             // Mientras esté arrastrando, mantener el cursor "grabbing"
             if (isDragging) {
                 draggableSvg.style.cursor = 'grabbing';
             }
         });
-    
+
         // Iniciar el arrastre al hacer clic en el SVG, solo si está dentro del área definida
         draggableSvg.addEventListener('mousedown', (e) => {
             e.preventDefault();
             const svgRect = draggableSvg.getBoundingClientRect();
             const xInSvg = e.clientX - svgRect.left;
             const yInSvg = e.clientY - svgRect.top;
-    
+
             if (xInSvg >= rectX && xInSvg <= rectX + rectWidth && yInSvg >= rectY && yInSvg <= rectY + rectHeight) {
                 isDragging = true;
                 const rect = draggableSvg.getBoundingClientRect();
@@ -83,26 +83,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 draggableSvg.style.cursor = 'grabbing';  // Cambia el cursor mientras se arrastra
             }
         });
-    
+
         // Mover el SVG mientras el ratón se mueve
         document.addEventListener('mousemove', (e) => {
             if (isDragging) {
                 const dragAreaRect = dragArea.getBoundingClientRect();
                 const maxX = dragAreaRect.width - draggableSvg.offsetWidth;
                 const maxY = dragAreaRect.height - draggableSvg.offsetHeight;
-    
+
                 let newX = e.clientX - offsetX - dragAreaRect.left;
                 let newY = e.clientY - offsetY - dragAreaRect.top;
-    
+
                 // Limitar el arrastre del SVG a los bordes del área de arrastre
                 newX = Math.max(0, Math.min(maxX, newX));
                 newY = Math.max(0, Math.min(maxY, newY));
-    
+
                 draggableSvg.style.left = `${newX}px`;
                 draggableSvg.style.top = `${newY}px`;
             }
         });
-    
+
         // Detener el arrastre cuando se suelta el ratón
         document.addEventListener('mouseup', () => {
             isDragging = false;
@@ -123,4 +123,37 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+
+    // Seleccionar el modal y el botón de cerrar
+    const closeModalBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('workInProgressModal');
+
+    closeModalBtn.addEventListener('click', () => {
+        clickSound.play().catch((error) => {
+            console.error('Error al reproducir el sonido:', error);
+        });
+    });
+
+    // Botón de Spotify (abrir modal)
+    if (spotifyBtn) {
+        spotifyBtn.addEventListener('click', () => {
+            console.log('[SPOTIFY] Botón clickeado, abriendo modal...');
+            if (modal) {
+                modal.classList.add('show'); // Mostrar el modal
+            }
+        });
+    }
+
+    // Botón de cerrar el modal
+    if (closeModalBtn && modal) {
+        closeModalBtn.addEventListener('click', () => {
+            console.log('[MODAL] Cerrando modal...');
+            modal.classList.add('hide'); 
+        
+            setTimeout(() => {
+                modal.classList.remove('show', 'hide'); 
+            }, 400);
+        });
+        
+    }
 });
