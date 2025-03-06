@@ -19,14 +19,14 @@ app.on('second-instance', (event, commandLine) => {
 // Función para procesar la URL
 function handleAuthRedirect(url) {
   console.log('[MAIN] Manejando redirección de autenticación. URL:', url);
-  
+
   if (url.startsWith(process.env.SPOTIFY_REDIRECT_URI)) {
     try {
       const hash = new URL(url).hash.substring(1);
       const params = new URLSearchParams(hash);
       const token = params.get('access_token');
-      
-      console.debug('[MAIN] Parámetros obtenidos:', { 
+
+      console.debug('[MAIN] Parámetros obtenidos:', {
         token: !!token,
         expiresIn: params.get('expires_in'),
         tokenType: params.get('token_type')
@@ -40,7 +40,7 @@ function handleAuthRedirect(url) {
       } else {
         console.warn('[MAIN] Ventana principal no disponible para enviar token');
       }
-      
+
     } catch (error) {
       console.error('[MAIN] Error procesando autenticación:', error);
     }
@@ -110,6 +110,9 @@ function getWindowConfig() {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
+      nodeIntegration: true,
+      webSecurity: false,
+      allowRunningInsecureContent: true
     },
   };
 }
@@ -287,7 +290,9 @@ ipcMain.handle('open-spotify-auth', async () => {
       nodeIntegration: false,
       contextIsolation: true,
       partition: 'persist:spotify-auth',
-      sandbox: true
+      sandbox: true,
+      webSecurity: false,
+      allowRunningInsecureContent: true
     },
     show: false // Ocultar ventana de auth inicialmente
   });
@@ -313,7 +318,9 @@ ipcMain.handle('open-spotify-auth', async () => {
 
     authWindow.on('closed', () => {
       console.log('[MAIN] Ventana de auth cerrada');
-      authWindow.webContents.session.clearCache();
+      authWindow.webContents.session.clearStorageData({
+        storages: ['cookies', 'localstorage']
+      });
     });
 
     authWindow.webContents.on('did-fail-load', (event, code, desc) => {
@@ -326,11 +333,7 @@ ipcMain.handle('open-spotify-auth', async () => {
     });
 
     // En main.js (proceso principal)
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID
-      }&response_type=token&redirect_uri=${encodeURIComponent(
-        process.env.SPOTIFY_REDIRECT_URI // Debe ser abasic-music-player://callback
-      )}&scope=user-read-playback-state%20user-modify-playback-state&show_dialog=true`;
-    authWindow.loadURL(authUrl);
+    const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(process.env.SPOTIFY_REDIRECT_URI)}&scope=user-read-playback-state%20user-modify-playback-state%20streaming&show_dialog=true`; authWindow.loadURL(authUrl);
     authWindow.once('ready-to-show', () => {
       console.log('[MAIN] Mostrando ventana de auth');
       authWindow.show();
@@ -353,6 +356,19 @@ ipcMain.handle('get-playlist-input', async () => {
   return null;
 });
 
+ipcMain.on('set-spotify-device-id', (_, deviceId) => {
+  console.log('[MAIN] Device ID actualizado:', deviceId);
+  spotifyDeviceId = deviceId;
+
+  // Configurar API principal con el device_id
+  // spotifyApi.resetCredentials({
+  //   accessToken: modeData?.token || '',
+  //   clientId: process.env.SPOTIFY_CLIENT_ID,
+  //   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  //   redirectUri: process.env.SPOTIFY_REDIRECT_URI
+  // });
+});
+
 function parseSpotifyUri(input) {
   // Convertir URL a URI
   const urlMatch = input.match(/open\.spotify\.com\/playlist\/(\w+)/);
@@ -373,6 +389,13 @@ ipcMain.handle('store-spotify-token', async (_, token) => {
 ipcMain.handle('spotify-control', async (_, action, data) => {
   try {
     if (!spotifyPlayer) throw new Error('Reproductor no inicializado');
+    if (!spotifyDeviceId) throw new Error('Device ID no configurado');
+
+    console.log('[SPOTIFY CONTROL] Ejecutando acción:', action);
+    await spotifyApi[action]({ 
+      device_id: spotifyDeviceId,
+      ...data 
+    });
 
     switch (action) {
       case 'play':
@@ -397,10 +420,6 @@ ipcMain.handle('spotify-control', async (_, action, data) => {
         await spotifyApi.setRepeat(newState, { device_id: spotifyDeviceId });
         break;
       case 'play-playlist':
-        // Verificar token y URI
-        if (!data.uri || !modeData.token) {
-          throw new Error('Faltan datos para reproducir');
-        }
         await spotifyApi.play({
           device_id: spotifyDeviceId,
           context_uri: data.uri

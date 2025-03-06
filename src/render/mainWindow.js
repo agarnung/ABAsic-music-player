@@ -5,51 +5,52 @@ let authWindow = null; // Referencia a la ventana de autenticación
 
 // Función principal
 function handleSpotifyAuthSuccess(token) {
-  console.log('[RENDERER] Autenticación exitosa. Token recibido:', token ? '✔' : '❌');
-  
-  // 1. Cerrar ventana de auth si existe
-  if (authWindow && !authWindow.isDestroyed()) {
-    console.debug('[RENDERER] Cerrando ventana de autenticación');
-    authWindow.destroy();
-    authWindow = null;
-  }
+    console.log('[RENDERER] Autenticación exitosa. Token recibido:', token ? '✔' : '❌');
+    console.log('[AUTH] Token recibido en renderer:', token ? `Válido (${token.slice(0, 15)}...)` : 'Inválido');
 
-  // 2. Mostrar modal de playlist
-  const modal = document.getElementById('spotifyModal');
-  if (!modal) {
-    console.error('[RENDERER] Modal no encontrado');
-    return;
-  }
-  
-  console.debug('[RENDERER] Mostrando modal de playlist');
-  modal.style.display = 'flex';
-
-  // 3. Configurar lógica del modal
-  const playlistInput = document.getElementById('playlistInput');
-  const modalConfirm = document.getElementById('modalConfirm');
-  
-  modalConfirm.onclick = async () => {
-    console.log('[RENDERER] Botón confirmar clickeado. Valor input:', playlistInput.value);
-    
-    try {
-      const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value.trim());
-      console.debug('[RENDERER] URI parseada:', uri);
-
-      await window.electronAPI.setMode('spotify', {
-        token: token,
-        uri: uri
-      });
-      
-      console.log('[RENDERER] Modo Spotify configurado. Abriendo ventana...');
-      window.electronAPI.openSongWindow();
-      
-    } catch (error) {
-      console.error('[RENDERER] Error al procesar playlist:', error);
-      alert(`Error: ${error.message}`);
-    } finally {
-      modal.style.display = 'none';
+    // 1. Cerrar ventana de auth si existe
+    if (authWindow && !authWindow.isDestroyed()) {
+        console.debug('[RENDERER] Cerrando ventana de autenticación');
+        authWindow.destroy();
+        authWindow = null;
     }
-  };
+
+    // 2. Mostrar modal de playlist
+    const modal = document.getElementById('spotifyModal');
+    if (!modal) {
+        console.error('[RENDERER] Modal no encontrado');
+        return;
+    }
+
+    console.debug('[RENDERER] Mostrando modal de playlist');
+    modal.style.display = 'flex';
+
+    // 3. Configurar lógica del modal
+    const playlistInput = document.getElementById('playlistInput');
+    const modalConfirm = document.getElementById('modalConfirm');
+
+    modalConfirm.onclick = async () => {
+        console.log('[RENDERER] Botón confirmar clickeado. Valor input:', playlistInput.value);
+
+        try {
+            const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value.trim());
+            console.debug('[RENDERER] URI parseada:', uri);
+
+            await window.electronAPI.setMode('spotify', {
+                token: token,
+                uri: uri
+            });
+
+            console.log('[RENDERER] Modo Spotify configurado. Abriendo ventana...');
+            window.electronAPI.openSongWindow();
+
+        } catch (error) {
+            console.error('[RENDERER] Error al procesar playlist:', error);
+            alert(`Error: ${error.message}`);
+        } finally {
+            modal.style.display = 'none';
+        }
+    };
 }
 
 // Registrar el handler
