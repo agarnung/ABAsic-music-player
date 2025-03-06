@@ -6,6 +6,8 @@ A basic nice music player
     <img src="./assets/app2.png" alt="App 2"height="450">
 </div>
 
+Although it may seem so, the design was not made by me but by my girlfriend.
+
 # Usage
 
 Download [this zip](LINK), unzip it, and move the entire abasic-music-player-win32-x64 folder to C:\Program Files or your preferred path, then create a shortcut to the desktop (for example) of the executable abasic-music-player.exe, and run it. You can now enjoy your favorite music player!
