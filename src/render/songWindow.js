@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let spotifyPlayer = null;
 
     // Nueva función para inicializar Spotify
-    async function initSpotifyPlayer(token) {
+    async function initSpotifyPlayer(token, uri) {
         // Cargar SDK de Spotify
         const script = document.createElement('script');
         script.src = 'https://sdk.scdn.co/spotify-player.js';
@@ -26,17 +26,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 volume: 0.5
             });
 
+            // Listener único para el evento ready
             spotifyPlayer.addListener('ready', ({ device_id }) => {
                 spotifyDeviceId = device_id;
-                // Transferir la reproducción a este dispositivo
-                fetch('https://api.spotify.com/v1/me/player', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ device_ids: [device_id] })
-                });
+
+                // Reproducir playlist después de 1 segundo (esperar inicialización)
+                setTimeout(() => {
+                    window.electronAPI.spotifyControl('play-playlist', { uri: uri })
+                        .catch(error => console.error('Error al reproducir:', error));
+                }, 1000);
+
+                // Actualizar UI
+                updateAlbumPlaylistText(uri.split(':')[2]);
             });
 
             spotifyPlayer.addListener('player_state_changed', state => {
@@ -72,7 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 await loadImages();
             } else if (mode === 'spotify') {
                 console.log('Modo Spotify, URL:', data);
-                await initSpotifyPlayer(data);
+                const { token, uri } = data;
+                await initSpotifyPlayer(token, uri);
             }
         } catch (error) {
             console.error('Error inicializando reproductor:', error);
@@ -127,24 +129,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Cambiar el contenido de la función a:
     function updateAlbumPlaylistText(text) {
         const wrapper = document.querySelector('.album-playlist-wrapper');
         if (!wrapper) return;
-        wrapper.innerHTML = '';
-        for (let i = 0; i < 2; i++) {
-            const span = document.createElement('span');
-            span.className = 'album-playlist-text';
-            span.textContent = text;
-            wrapper.appendChild(span);
+
+        const isSpotify = text.startsWith('spotify:playlist:');
+        let content = '';
+
+        if (isSpotify) {
+            const playlistId = text.split(':')[2];
+            content = `
+            <span class="album-playlist-text spotify-label">Playlist de Spotify</span>
+            <span class="album-playlist-text spotify-id">ID: ${playlistId}</span>
+        `;
+        } else {
+            content = `
+            <span class="album-playlist-text">${text}</span>
+            <span class="album-playlist-text">${text}</span>
+        `;
         }
 
-        // Calcular duración de la animación
+        wrapper.innerHTML = content;
+
+        // Animación
         const textWidth = wrapper.firstChild.offsetWidth;
         const containerWidth = wrapper.parentElement.offsetWidth;
 
-        // Solo animar si el texto es más largo que el contenedor
         if (textWidth > containerWidth) {
-            const speed = 40; // Pixeles por segundo 
+            const speed = 40;
             const duration = textWidth / speed;
             wrapper.style.animationDuration = `${duration}s`;
         } else {

@@ -492,6 +492,54 @@ h1 {
   -moz-user-select: text;     /* Firefox antiguo */
 }
 
+/* Spotify modal */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header img {
+  width: 40px;
+  height: 40px;
+}
+
+.modal-header h3 {
+  color: white;
+  margin: 0;
+}
+
+#playlistInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #404040;
+  background: #1a1a1a;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 /* Animación de desplazamiento */
 @keyframes scrollText {
   0% {

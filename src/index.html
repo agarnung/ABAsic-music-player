@@ -15,10 +15,10 @@
       <header>
         <div class="header-container-main">
           <button id="minimizeBtn" class="button" style="align-items: center; margin-top: 12px;">
-            <img src="../assets/icons/minimize symbol.svg" alt="Minimize"/>
+            <img src="../assets/icons/minimize symbol.svg" alt="Minimize" />
           </button>
           <button id="closeBtn" class="button" style="align-items: center; margin-top: 10px;">
-            <img src="../assets/icons/cross icon.svg" alt="Close"/>
+            <img src="../assets/icons/cross icon.svg" alt="Close" />
           </button>
         </div>
       </header>
@@ -49,15 +49,27 @@
         </div>
       </div>
 
-      <!-- Modal para ingresar URL de la lista de Spotify -->
-      <!-- ... -->
-
     </div>
 
   </div>
 
-    <!-- Elemento de audio oculto -->
-    <audio id="click-sound" src="../assets/sounds/mouse-click.mp3" preload="auto" volume="1.0"></audio>
+  <!-- Modal para ingresar URL de la lista de Spotify -->
+  <div id="spotifyModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <img src="../assets/icons/spotify.svg" alt="Spotify" class="modal-icon">
+        <h3>Introduce la Playlist</h3>
+      </div>
+      <input type="text" id="playlistInput" placeholder="Pega la URL de Spotify">
+      <div class="modal-buttons">
+        <button id="modalCancel" class="button">Cancelar</button>
+        <button id="modalConfirm" class="button">Cargar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Elemento de audio oculto -->
+  <audio id="click-sound" src="../assets/sounds/mouse-click.mp3" preload="auto" volume="1.0"></audio>
 
 </body>
 

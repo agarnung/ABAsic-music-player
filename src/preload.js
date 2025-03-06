@@ -10,14 +10,36 @@ contextBridge.exposeInMainWorld('electronAPI', {
     closeSongWindow: () => ipcRenderer.send('close-song-window'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),
-    setMode: (mode, data) => ipcRenderer.send('set-mode', { mode, data }),
+    setMode: (mode, data) => {
+        console.log(`[PRELOAD] setMode: ${mode}`, data);
+        ipcRenderer.send('set-mode', { mode, data });
+    },
     selectFolder: () => ipcRenderer.invoke('select-folder'),
     getMode: () => ipcRenderer.invoke('get-mode'),
     openSongWindow: () => ipcRenderer.send('open-song-window'),
     getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder),
     getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder),
-    openSpotifyAuth: () => ipcRenderer.invoke('open-spotify-auth'),
+    openSpotifyAuth: () => {
+        console.log('[PRELOAD] Invocando openSpotifyAuth');
+        return ipcRenderer.invoke('open-spotify-auth');
+    },
+    onSpotifyAuthSuccess: (callback) => {
+        console.debug('[PRELOAD] Registrando listener para spotify-auth-success');
+        ipcRenderer.on('spotify-auth-success', (event, token) => {
+            console.debug('[PRELOAD] Evento spotify-auth-success recibido');
+            try {
+                if (!token) {
+                    throw new Error('Token vacío recibido');
+                }
+                callback(token);
+            } catch (error) {
+                console.error('[PRELOAD] Error en callback de autenticación:', error);
+            }
+        });
+    },
+    getPlaylistInput: () => ipcRenderer.invoke('get-playlist-input'),
     getSpotifyToken: () => ipcRenderer.invoke('get-spotify-token'),
     storeSpotifyToken: (token) => ipcRenderer.invoke('store-spotify-token', token),
-    spotifyControl: (action) => ipcRenderer.invoke('spotify-control', action)
+    spotifyControl: (action, data) => ipcRenderer.invoke('spotify-control', action, data),
+    parseSpotifyUri: (input) => ipcRenderer.invoke('parse-spotify-uri', input)
 });
