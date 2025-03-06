@@ -33,5 +33,14 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.7.0",
     "@electron-forge/plugin-fuses": "^7.7.0",
     "electron": "34.3.0"
+  },
+  "build": {
+    "protocols": {
+      "name": "abasic-music-player",
+      "schemes": [
+        "abasic-music-player"
+      ],
+      "role": "Editor"
+    }
   }
 }

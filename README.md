@@ -104,8 +104,11 @@ const spotifyApi = new SpotifyWebApi({
 ```
 4. Asegurarse de no subir el archivo `.env` a Github! Añadirlo al `.gitignore`.
 
+- Registrar el protocolo: npx electron . --register-protocol=abasic-music-player
 
+Se recomienda también consultar la libería `react-spotify-web-playback-sdk`. Instalar dependencias: `npm install react-spotify-web-playback-sdk spotify-web-api-node @react-oauth/google`.
 
-Se emplea la libería `react-spotify-web-playback-sdk`. Instalar dependencias: `npm install react-spotify-web-playback-sdk spotify-web-api-node @react-oauth/google`.
+# Troubleshooting
 
+Limpia caché de Electron: `rm -rf node_modules` y luego puedes volver a la normalidad con `npm install`.
 
