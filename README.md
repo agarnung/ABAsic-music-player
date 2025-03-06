@@ -1,9 +1,10 @@
 # ABAsic-music-player
 A basic nice music player
 
-![app1](./assets/app1.png)
-
-![app2](./assets/app2.png)
+<div>
+    <img src="./assets/app1.png" alt="App 1" height="450">
+    <img src="./assets/app2.png" alt="App 2"height="450">
+</div>
 
 # Usage
 
