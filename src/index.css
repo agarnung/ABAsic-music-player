@@ -223,7 +223,8 @@ h1 {
   white-space: nowrap;
   max-width: 200px; /* Limita el ancho del botón */
   position: relative;
-  margin-left: 12.5px;
+  margin-left: 35.5px;
+  margin-top: 10.5px;
   
   border-radius: 5px; /* Ajusta el borde del botón */
   border: 1px solid var(--border-background);
