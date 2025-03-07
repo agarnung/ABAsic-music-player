@@ -6,7 +6,7 @@ A basic and nice music player.
     <img src="./assets/app2.png" alt="App 2" height="450">
 </div>
 
-Although it may seem so, the design was not made by me but by my girlfriend.
+Although it may seem so, the design was not made by me, but by my girlfriend.
 
 ---
 
