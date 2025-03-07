@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Coordenadas del personaje dentro del SVG
     const rectX = 3;
-    const rectY = 77.9571;
+    const rectY = 57.9571;
     const rectWidth = 115.458;
-    const rectHeight = 146.043;
+    const rectHeight = 166.043;
 
     if (draggableSvg && dragArea) {
         let isDragging = false;

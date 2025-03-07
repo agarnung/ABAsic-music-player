@@ -101,13 +101,17 @@ config: {
   "name": "abasic-music-player",
   "setupExe": "ABAsicMusicPlayerSetup.exe",
   "setupIcon": "assets/icons/favicon.ico",
-  "noMsi": true
+  "noMsi": true,
+  "loadingGif": "assets/loading.gif", // Replace electron forge's default GIF
+  "portable": true,
+  "createDesktopShortcut": true, // Create a desktop shortcut
+  "createStartMenuShortcut": true // Optionally create a start menu shortcut
 },
 ```
 
 Luego, simplemente `npm run make` y el instalable estará en `C:\Users\Alejandro\Documents\Git\ABAsic-music-player\out\make\squirrel.windows\x64\ABAsicMusicPlayerSetup.exe`, que se podrá distribuit y el usuario, ejecutándolo, gaurdará toda dependencia automáticamente.
 
-Es necesario en este caso eliminar la dependencia de `electron-squirrel-startup` dle package.json (npm uninstall electron-squirrel-startup).
+Es necesario en este caso npm install electron-squirrel-startup --save.
 
 ## Otras opciones:
 AppImage, Enigma Virtual Box, NSIS (Nullsoft Scriptable Install System), etc.

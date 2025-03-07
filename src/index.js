@@ -3,6 +3,7 @@ const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('node:path');
 
+// Manejar eventos de Squirrel (instalación/actualización)
 if (require('electron-squirrel-startup')) app.quit(); // https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
 
 const handleSquirrelEvent = () => {
@@ -14,6 +15,12 @@ const handleSquirrelEvent = () => {
       setTimeout(() => {
         app.quit();
       }, 3000); // Cierra la app después de 3 segundos
+      return true;
+    } else if (arg === '--squirrel-uninstall') {
+      app.quit();
+      return true;
+    } else if (arg === '--squirrel-obsolete') {
+      app.quit();
       return true;
     }
   }
@@ -30,7 +37,7 @@ const showInstallDialog = () => {
 };
 
 if (handleSquirrelEvent()) {
-  return;
+  app.quit();
 }
 
 let startWindow;
