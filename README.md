@@ -71,7 +71,7 @@ It’s worth mentioning that this isn’t equipped with "hot reloading," meaning
 
 ## How to Ship the App
 
-To package the app for different OS (Windows, Linux, macOS), we use *Electron Forge*, which automatically handles this for us. The following command will detect the OS and build the distributable file:
+To package the app for different OS (Windows, Linux, macOS), we use **Electron Forge**, which automatically handles this for us. The following command will detect the OS and build the distributable file:
 
 ```
 npm run make
@@ -87,7 +87,7 @@ Now check the `out/` folder for the `.exe` (in the case of Windows), which you c
 
 You can use `npm run make`, which packages the application into a structure under `out/app-x64` with all the libraries and resources, including the `.exe` file. This is the zip file that you need to distribute to your friends to share the application.
 
-*Instructions:*
+**Instructions:**
 1. Download the zip file.
 2. Unzip it and move the entire `abasic-music-player-win32-x64` folder to `C:\Program Files` or your preferred directory.
 3. Create a shortcut to the desktop (for example) pointing to the executable `abasic-music-player.exe`.
