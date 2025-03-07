@@ -196,12 +196,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para avanzar a la siguiente canción
     function playNextSong() {
-        if (isShuffleEnabled) {
-            currentSongIndex = Math.floor(Math.random() * songs.length);
+        if (isLoopEnabled) {
+            audioElement.currentTime = 0;
+            audioElement.play();
         } else {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            if (isShuffleEnabled) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
+            playSong(currentSongIndex);
         }
-        playSong(currentSongIndex);
     }
 
     // Funciones de formato de tiempo
