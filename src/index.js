@@ -3,6 +3,36 @@ const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('node:path');
 
+if (require('electron-squirrel-startup')) app.quit(); // https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
+
+const handleSquirrelEvent = () => {
+  if (process.argv.length > 1) {
+    const arg = process.argv[1];
+
+    if (arg === '--squirrel-installed' || arg === '--squirrel-updated') {
+      showInstallDialog();
+      setTimeout(() => {
+        app.quit();
+      }, 3000); // Cierra la app después de 3 segundos
+      return true;
+    }
+  }
+  return false;
+};
+
+const showInstallDialog = () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Installation Complete',
+    message: 'The app has been successfully installed!\n\nShortcuts have been created on the desktop and start menu.\nYou can delete the file ABAsicMusicPlayerSetup.exe.',
+    buttons: ['OK']
+  });
+};
+
+if (handleSquirrelEvent()) {
+  return;
+}
+
 let startWindow;
 let songWindow;
 let currentMode = 'local';
