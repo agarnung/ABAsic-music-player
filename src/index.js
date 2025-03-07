@@ -11,22 +11,46 @@ const handleSquirrelEvent = () => {
     const arg = process.argv[1];
 
     if (arg === '--squirrel-installed' || arg === '--squirrel-updated') {
+      // Mostrar el diálogo de instalación completada
       showInstallDialog();
-      setTimeout(() => {
-        app.quit();
-      }, 3000); // Cierra la app después de 3 segundos
-      return true;
+      return true; // Indica que se manejó un evento Squirrel
     } else if (arg === '--squirrel-uninstall') {
+      // Aquí puedes agregar lógica para la desinstalación si es necesario
       app.quit();
       return true;
     } else if (arg === '--squirrel-obsolete') {
+      // Aquí puedes agregar lógica para la obsolescencia si es necesario
       app.quit();
       return true;
     }
   }
-  return false;
+  return false; // No se manejó ningún evento Squirrel
 };
 
+// Crear un archivo de configuración para almacenar el estado de la primera ejecución
+// En Windows, se guardará en C:\Users\<Usuario>\AppData\Roaming\<NombreDeApp>
+const configPath = path.join(app.getPath('userData'), 'config.json');
+console.log('Ruta del archivo config.json:', configPath);
+
+// Función para cargar la configuración
+const loadConfig = () => {
+  if (fs.existsSync(configPath)) {
+    const data = fs.readFileSync(configPath, 'utf-8');
+    return JSON.parse(data);
+  }
+  return { firstRun: true }; // Por defecto, es la primera ejecución
+};
+
+// Función para guardar la configuración
+const saveConfig = (config) => {
+  fs.writeFileSync(configPath, JSON.stringify(config), 'utf-8');
+};
+
+if (handleSquirrelEvent()) {
+  app.quit();
+}
+
+// Mostrar el diálogo de instalación completada
 const showInstallDialog = () => {
   dialog.showMessageBox({
     type: 'info',
@@ -36,9 +60,27 @@ const showInstallDialog = () => {
   });
 };
 
-if (handleSquirrelEvent()) {
-  app.quit();
-}
+// Verificar si es la primera ejecución
+app.whenReady().then(() => {
+  if (handleSquirrelEvent()) {
+    // Si se manejó un evento Squirrel, no continuar con la lógica normal
+    return;
+  }
+
+  const config = loadConfig();
+
+  if (config.firstRun) {
+    // Mostrar el diálogo
+    showInstallDialog();
+
+    // Actualizar la configuración para indicar que ya no es la primera ejecución
+    config.firstRun = false;
+    saveConfig(config);
+  }
+
+  // Crear la ventana principal
+  createStartWindow();
+});
 
 let startWindow;
 let songWindow;
@@ -222,18 +264,6 @@ ipcMain.on('set-mode', (_, { mode, data }) => {
 });
 
 ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
-
-// Este método se llama cuando Electron ha terminado de inicializar
-app.whenReady().then(() => {
-  createStartWindow(); // Crear la ventana principal al iniciar
-
-  // On OS X it's common to re-create a window in the app when the dock icon is clicked and there are no other windows open.
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createStartWindow(); // Re-crear la ventana principal si no hay ventanas abiertas
-    }
-  });
-});
 
 // Cerrar la aplicación cuando todas las ventanas se cierren
 app.on('window-all-closed', () => {
