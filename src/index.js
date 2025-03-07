@@ -2,65 +2,34 @@ const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('node:path');
-const log = require('electron-log');
-log.initialize();
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
-// Si no tuvieramos un diálogo personalizado habría que descomentar esta línea, pues fuerza el cierre de la app antes de nada
-// if (require('electron-squirrel-startup')) app.quit(); 
-
-if (process.argv.some(arg => arg.startsWith('--squirrel-'))) {
-  app.setAppUserModelId('abasic-music-player');
-  app.allowRendererProcessReuse = false;
-}
+if (require('electron-squirrel-startup')) app.quit(); // https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
 
 const handleSquirrelEvent = () => {
-  log.info('Procesando evento Squirrel:', squirrelEvent);
+  if (process.argv.length > 1) {
+    const arg = process.argv[1];
 
-  if (process.argv.length === 1) return false;
-
-  const squirrelEvent = process.argv[1];
-  switch (squirrelEvent) {
-    case '--squirrel-installed':
-    case '--squirrel-updated':
+    if (arg === '--squirrel-installed' || arg === '--squirrel-updated') {
+      showInstallDialog();
       setTimeout(() => {
-        const hiddenWindow = new BrowserWindow({
-          show: false,
-          webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-          }
-        });
-
-        hiddenWindow.loadURL('data:text/html,<script>window.close()</script>').then(() => {
-          log.error('Cargando ventana oculta:');
-          dialog.showMessageBox({
-            type: 'info',
-            title: 'Instalación Completada',
-            message: '¡La aplicación se instaló correctamente!',
-            detail: 'Los accesos directos se han creado en el escritorio y el menú de inicio.',
-            buttons: ['OK']
-          }).then(() => {
-            app.quit();
-          });
-        });
-      }, 1000); // Da tiempo a Squirrel para crear los accesos
+        app.quit();
+      }, 3000); // Cierra la app después de 3 segundos
       return true;
-
-    case '--squirrel-uninstall':
-    case '--squirrel-obsolete':
-      app.quit();
-      return true;
-
-    default:
-      return false;
+    }
   }
+  return false;
 };
 
-// Debe ser lo PRIMERO en ejecutarse
+const showInstallDialog = () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Installation Complete',
+    message: 'The app has been successfully installed!\n\nShortcuts have been created on the desktop and start menu.\nYou can delete the file ABAsicMusicPlayerSetup.exe.',
+    buttons: ['OK']
+  });
+};
+
 if (handleSquirrelEvent()) {
-  // No continuar con la ejecución normal
   return;
 }
 
@@ -69,14 +38,19 @@ let songWindow;
 let currentMode = 'local';
 let modeData = null;
 
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
+
 // Configuración común para las ventanas
 function getWindowConfig() {
   return {
     width: 333,
     height: 461,
-    minWidth: 333,
+    minWidth: 333, 
     minHeight: 461,
-    maxWidth: 333,
+    maxWidth: 333, 
     maxHeight: 461,
     useContentSize: true, // Asegura que el tamaño especificado sea solo para el contenido
     resizable: false,
@@ -148,7 +122,7 @@ ipcMain.on('open-song-window', () => {
 ipcMain.on('close-song-window', () => {
   if (songWindow) {
     const songWindowBounds = songWindow.getBounds();
-
+    
     songWindow.close();
     songWindow = null;
 
@@ -244,21 +218,19 @@ ipcMain.handle('get-mode', () => ({ mode: currentMode, data: modeData }));
 
 // Este método se llama cuando Electron ha terminado de inicializar
 app.whenReady().then(() => {
-  // Solo crear ventana si no es un evento Squirrel
-  if (!process.argv.some(arg => arg.startsWith('--squirrel-'))) {
-    createStartWindow();
-  }
+  createStartWindow(); // Crear la ventana principal al iniciar
 
+  // On OS X it's common to re-create a window in the app when the dock icon is clicked and there are no other windows open.
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0 && !process.argv.some(arg => arg.startsWith('--squirrel-'))) {
-      createStartWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createStartWindow(); // Re-crear la ventana principal si no hay ventanas abiertas
     }
   });
 });
 
 // Cerrar la aplicación cuando todas las ventanas se cierren
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin' && !process.argv.some(arg => arg.startsWith('--squirrel-'))) {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });
