@@ -10,6 +10,17 @@ Although it may seem so, the design was not made by me, but by my girlfriend.
 
 ---
 
+# Plataforms
+
+Currently, the application is only available for 64-bit Windows operating systems.
+
+My machine (tested) is:
+- **Operating System**: Microsoft Windows 10 Pro
+- **OS Version**: 10.0.19045 N/D Build 19045
+- **System Model**: ASUS TUF Dash F15 FX517ZE_FX517ZE
+- **System Type**: x64-based PC
+- **Processor**: Intel64 Family 6 Model 154 Stepping 3 GenuineIntel ~2300 MHz
+
 # Usage
 
 If you want to add different wallpapers, go to `C:\Users\Alejandro\AppData\Local\abasic-music-player\app-1.0.0\resources\wallpapers` (or a similar path) and add the ones you want. That's it! You can use any common image format and size.
