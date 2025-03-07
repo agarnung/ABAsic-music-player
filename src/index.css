@@ -47,12 +47,12 @@ html, body {
 
 body {
   font-family: var(--font-family);
-  background: transparent; /* Avoid background here */
+  background: transparent; 
 }
 
 /* Outer container with rounded corners and shadow */
 .main-container {
-  display: flex;  /* Asegúrate de usar flexbox */
+  display: flex;  
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -71,7 +71,7 @@ body {
   align-items: center;  /* Alinea el contenido al centro verticalmente */
   width: 100%;
   height: 100%;
-  background: var(--pink-background); /* Fondo rosita */
+  background: var(--pink-background); 
   border-radius: 35px; /* Asegura que el fondo esté contenido dentro de los bordes */
   padding: 20px;
   border: 1.12px solid var(--border-background);
@@ -149,12 +149,12 @@ h1 {
 .drag-area {
   position: relative;
   display: inline-block;
-  width: 230px; /* Haz que el div tome el ancho completo del contenedor */
-  height: 338px; /* Ajusta esto para el tamaño de tu imagen */
-  background-size: contain; /* Ajusta la imagen de fondo dentro del área */
+  width: 230px;
+  height: 338px; 
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  -webkit-app-region: no-drag; /* Evita que los botones sean draggables */
+  -webkit-app-region: no-drag; 
   margin: 0;
   padding: 0;
 }
@@ -165,8 +165,8 @@ h1 {
   width: 150px;
   height: 170px;
   z-index: 2;
-  pointer-events: auto;  /* Permite que los eventos de puntero (como el arrastre) se activen */
-  -webkit-app-region: no-drag; /* Evita que los botones sean draggables */
+  pointer-events: auto; 
+  -webkit-app-region: no-drag;
   stroke: none;
   margin: 0;
   padding: 0;
@@ -336,7 +336,7 @@ h1 {
 }
 
 .title-container {
-  display: flex; /* Usa flexbox */
+  display: flex; 
   align-items: center; /* Alinea verticalmente */
   gap: 8px; /* Espacio entre el icono y el texto */
   padding: 20px;
@@ -403,8 +403,8 @@ h1 {
   position: absolute;
   top: -8.5px; /* Ajustar para centrar el ícono verticalmente */
   left: 0;
-  width: 23px; /* Tamaño del ícono */
-  height: 23px; /* Tamaño del ícono */
+  width: 23px; 
+  height: 23px;
   z-index: 3; /* Asegurarse de que esté encima de la barra de progreso */
   pointer-events: none; /* Evita que el ícono interfiera con los eventos del ratón */
 }
@@ -447,8 +447,8 @@ h1 {
 
 /* Estilos para las imágenes */
 .icon {
-  width: 42px; /* Ajusta el tamaño de las imágenes */
-  height: 42px; /* Ajusta la altura de las imágenes */
+  width: 42px; 
+  height: 42px; 
   background-color: transparent; /* Fondo transparente para las imágenes */
   fill: transparent; /* Asegura que el color de relleno del SVG sea transparente */
 }
@@ -481,7 +481,7 @@ h1 {
 
 /* Contenedor que envuelve el texto duplicado */
 .song-name-wrapper {
-  display: inline-flex; /* Adapta el ancho al contenido */
+  display: inline-flex; 
   white-space: nowrap;
   animation: scrollText linear infinite;
 }
@@ -524,7 +524,7 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Centra el modal en la pantalla */
-  width: 300px; /* Ancho más pequeño */
+  width: 300px; 
   height: auto;
   background-color: var(--pink-background); /* Fondo oscuro semi-transparente */
   justify-content: center;
