@@ -15,11 +15,9 @@ const handleSquirrelEvent = () => {
       showInstallDialog();
       return true; // Indica que se manejó un evento Squirrel
     } else if (arg === '--squirrel-uninstall') {
-      // Aquí puedes agregar lógica para la desinstalación si es necesario
       app.quit();
       return true;
     } else if (arg === '--squirrel-obsolete') {
-      // Aquí puedes agregar lógica para la obsolescencia si es necesario
       app.quit();
       return true;
     }
