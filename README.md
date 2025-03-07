@@ -23,6 +23,8 @@ My machine (tested) is:
 
 # Usage
 
+Just download the installer [form here](https://github.com/agarnung/ABAsic-music-player/releases/download/v1.0.0/ABAsicMusicPlayerSetup.exe) and run it.
+
 If you want to add different wallpapers, go to `C:\Users\Alejandro\AppData\Local\abasic-music-player\app-1.0.0\resources\wallpapers` (or a similar path) and add the ones you want. That's it! You can use any common image format and size.
 
 ---
