@@ -10,7 +10,7 @@ Although it may seem so, the design was not made by me but by my girlfriend.
 
 # Usage
 
-Download [this zip](LINK), unzip it, and move the entire abasic-music-player-win32-x64 folder to C:\Program Files or your preferred path, then create a shortcut to the desktop (for example) of the executable abasic-music-player.exe, and run it. You can now enjoy your favorite music player!
+BLABLABLA
 
 If you want to add different wallpapers, go to `resources\wallpapers` and add whichever ones you want! You can use any common image format and any size.
 
@@ -55,6 +55,63 @@ Now check the out/ folder for the .exe (in the case of Windows), which you can d
 
 Now, it’s important to note the limitations: Electron Forge can create a single EXE file for the purpose of installing the app on the user’s system, but what it cannot do (due to Chromium’s limitations) is, once installed, have only one EXE that launches the application. It must be accompanied by the necessary libraries. However, there are alternatives that can compile a portable Windows .exe using [electron-builder](https://www.electron.build/)'s portable target (NSIS) under the hood (see https://github.com/rabbit-hole-syndrome/electron-forge-maker-portable) (npm run make will run electron-forge make).
 
+# Packaging
+
+## ZIP container 
+
+Uno puede usar npm run make, que empaqueta la aplicación en una estructuraout/app-x64 con todas las librerías y recursos, y el .exe dentro, al cual puedo crear un enlace directo. Es este zip el que debo distribuir a mis amigos para mandarles la aplicación.
+
+Then download the zip, unzip it, and move the entire abasic-music-player-win32-x64 folder to C:\Program Files or your preferred path, then create a shortcut to the desktop (for example) of the executable abasic-music-player.exe, and run it. You can now enjoy your favorite music player!
+
+## Instalable executable
+
+Es necesario instalar `npm install electron-builder --save-dev`.
+
+`electron-builder` se puede usar para empaquetarla en un solo ejecutable portable con instalador: `npm install electron-builder --save-dev`. Luego, en package.json, agrega un script:
+
+```json
+"scripts": {
+  "dist": "electron-builder"
+}
+```
+
+Y ejecutar `npm run dist`
+
+## Ejecutable portable
+
+Configuración para un solo .exe portable portable que incluye todas las dependencias en un solo archivo. Tras añadir el script anterior, hacer:
+
+```
+"build": {
+  "win": {
+    "target": "portable"
+  }
+}
+```
+
+Luego, ejecutar npm run dist.
+
+## Elctron foge
+
+Si ya tenemos electron-forge bien configurado, lo más sencillo es eliminar electron-builder y solo usar Forge. Añadir al grupo `makers` de `forge.config.js`:
+
+```
+name: '@electron-forge/maker-squirrel',
+config: {
+  "name": "abasic-music-player",
+  "setupExe": "ABAsicMusicPlayerSetup.exe",
+  "setupIcon": "assets/icons/favicon.ico",
+  "noMsi": true
+},
+```
+
+Luego, simplemente `npm run make` y el instalable estará en `C:\Users\Alejandro\Documents\Git\ABAsic-music-player\out\make\squirrel.windows\x64\ABAsicMusicPlayerSetup.exe`, que se podrá distribuit y el usuario, ejecutándolo, gaurdará toda dependencia automáticamente.
+
+Es necesario en este caso eliminar la dependencia de `electron-squirrel-startup` dle package.json (npm uninstall electron-squirrel-startup).
+
+## Otras opciones:
+AppImage, Enigma Virtual Box, NSIS (Nullsoft Scriptable Install System), etc.
+
 # Comments
 
 - We discovered the useful CSS framework [Bulma](https://versions.bulma.io/0.7.0/documentation/overview/start/) for style development.
@@ -62,6 +119,7 @@ Now, it’s important to note the limitations: Electron Forge can create a singl
 # References
 - https://www.youtube.com/watch?v=3yqDxhR2XxE&ab_channel=Fireship
 - https://www.youtube.com/@nashallery
+- https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
 
 # TODO 
 - Share the app with friends by clicking a button.
@@ -70,33 +128,4 @@ Now, it’s important to note the limitations: Electron Forge can create a singl
 - Move the Hello Kitty in the sky with the mouse when clicked, attached to her speech bubble.
 - When the song is stopped, also stop the movement of the text above.
 - Integrate YouTube (with an API like youtube-api-v3 or youtube-player).
-
 - Connect to Spotify to play a playlist given its URL.
-
-To connect to Spotify and play a playlist, follow these steps:
-
-1. **Register the application on the [Spotify Developer Dashboard](https://developer.spotify.com/):**
-   - Create a new application on the Spotify Developer Dashboard.
-   - Get the Client ID and Client Secret to authenticate yourself.
-
-2. **Set up authentication with Spotify:**
-   - Implement OAuth 2.0 to obtain an access token that allows interaction with the Spotify API.
-   - Use the spotify-web-api-node library to facilitate integration.
-
-3. **Get playlists and data:**
-   - Use the access token to interact with the Spotify API and get the user’s playlists.
-
-4. **Integrate the Spotify Web Playback SDK:**
-   - Use this SDK to allow playing songs directly in your app.
-   - A Premium user access token is required for it to work.
-
-5. **Frontend in Electron:**
-   - Request the playlist ID via a modal and use the Spotify API to retrieve the songs.
-   - Display the songs and use the Web Playback SDK to control them.
-
-6. **Play songs:**
-   - Use the song URI and SDK functionality to play them.
-
-7. **Additional considerations:**
-   - Make sure to manage the access tokens securely.
-   - Handle the API limitations (such as the maximum number of requests per minute).

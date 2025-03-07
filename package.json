@@ -17,8 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bulma": "^1.0.3",
-    "electron-squirrel-startup": "^1.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",

@@ -11,7 +11,16 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        "name": "abasic-music-player",
+        "setupExe": "ABAsicMusicPlayerSetup.exe", 
+        "setupIcon": "assets/icons/favicon.ico",
+        "noMsi": true,
+        "loadingGif": "assets/loading.gif", // Replace electron forge's default GIF
+        "portable": true,
+        "createDesktopShortcut": true, // Create a desktop shortcut
+        "createStartMenuShortcut": true // Optionally create a start menu shortcut
+      },
     },
     {
       name: '@electron-forge/maker-zip',
