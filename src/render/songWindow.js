@@ -127,11 +127,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById('closeBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-            const clickSound = document.getElementById('click-sound');
+            const clickSound = document.getElementById('unclick-sound');
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
-
             setTimeout(() => {
                 window.electronAPI.closeWindow();
             }, 200);
@@ -228,6 +227,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (playPauseBtn) {
         playPauseIcon = playPauseBtn.querySelector('img'); // Asignar la referencia
         playPauseBtn.addEventListener('click', () => {
+            const isPaused = audioElement.paused;
+            const sound = isPaused ? 'click-sound' : 'unclick-sound';
+            document.getElementById(sound).play().catch(console.error);
+
             if (audioElement.paused) {
                 audioElement.play();
                 playPauseIcon.src = '../assets/icons/Pause button.svg';
@@ -283,16 +286,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const loopBtn = document.getElementById('loopBtn');
     const loopIcon = loopBtn.querySelector('img');
     if (loopBtn) {
+        // Loop Button
         loopBtn.addEventListener('click', () => {
+            const sound = isLoopEnabled ? 'unclick-sound' : 'click-sound';
+            document.getElementById(sound).play().catch(console.error);
+
             isLoopEnabled = !isLoopEnabled;
-            loopBtn.classList.toggle('is-active', isLoopEnabled);
-            if (isLoopEnabled) {
-                loopIcon.src = '../assets/icons/repeat song icon on.svg';
-                loopIcon.alt = 'Repeat On';
-            } else {
-                loopIcon.src = '../assets/icons/repeat song icon off.svg';
-                loopIcon.alt = 'Repeat Off';
-            }
+            loopIcon.src = isLoopEnabled ?
+                '../assets/icons/repeat song icon on.svg' :
+                '../assets/icons/repeat song icon off.svg';
         });
     }
 
@@ -350,29 +352,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const shuffleIcon = shuffleBtn.querySelector('img');
     if (shuffleBtn) {
         shuffleBtn.addEventListener('click', () => {
+            const sound = isShuffleEnabled ? 'unclick-sound' : 'click-sound';
+            document.getElementById(sound).play().catch(console.error);
+
             isShuffleEnabled = !isShuffleEnabled;
-            shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
-            if (isShuffleEnabled) {
-                shuffleIcon.src = '../assets/icons/shuffle icon on.svg';
-                shuffleIcon.alt = 'Shuffle On';
-            } else {
-                shuffleIcon.src = '../assets/icons/shuffle icon off.svg';
-                shuffleIcon.alt = 'Shuffle Off';
-            }
+            shuffleIcon.src = isShuffleEnabled ?
+                '../assets/icons/shuffle icon on.svg' :
+                '../assets/icons/shuffle icon off.svg';
         });
     }
 
-    // Obtener todos los botones en la página
-    const buttons = document.querySelectorAll('button');
-    const clickSound = document.getElementById('click-sound');
-    clickSound.addEventListener('canplaythrough', () => {
-        console.log('Sonido cargado y listo para reproducirse');
+    // Botones que usan click-sound (on/activos)
+    document.querySelectorAll('#albumPlaylistBtn, #prevBtn, #nextBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(console.error);
+        });
     });
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            clickSound.play().catch((error) => {
-                console.error('Error al reproducir el sonido:', error);
-            });
+
+    // Botones que usan unclick-sound (off/inactivos)
+    document.querySelectorAll('#minimizeBtn, #backBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('unclick-sound').play().catch(console.error);
         });
     });
 });

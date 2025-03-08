@@ -3,14 +3,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM completamente cargado y analizado");
 
+    const clickSound = document.getElementById('click-sound');
+    const unclickSound = document.getElementById('unclick-sound');
+
     const closeBtn = document.getElementById('closeBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-            const clickSound = document.getElementById('click-sound');
-            clickSound.play().catch((error) => {
-                console.error('Error al reproducir el sonido:', error);
-            });
-
             setTimeout(() => {
                 window.electronAPI.closeWindow();
             }, 200);
@@ -26,6 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // render_mainWindow.js (al seleccionar carpeta)
     localFolderBtn.addEventListener('click', async () => {
+        clickSound.play().catch((error) => {
+            console.error('Error al reproducir el sonido:', error);
+        });
+
         const folder = await window.electronAPI.selectFolder();
         if (folder) {
             // Primero establecer el modo
@@ -111,32 +113,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Obtener todos los botones en la página
-    const buttons = document.querySelectorAll('button');
-    const clickSound = document.getElementById('click-sound');
     clickSound.addEventListener('canplaythrough', () => {
         console.log('Sonido cargado y listo para reproducirse');
     });
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
+
+    // Botón de Spotify (abrir modal)
+    const modal = document.getElementById('workInProgressModal');
+    if (spotifyBtn) {
+        spotifyBtn.addEventListener('click', () => {
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
-        });
-    });
 
-    // Seleccionar el modal y el botón de cerrar
-    const closeModalBtn = document.getElementById('closeModal');
-    const modal = document.getElementById('workInProgressModal');
-
-    closeModalBtn.addEventListener('click', () => {
-        clickSound.play().catch((error) => {
-            console.error('Error al reproducir el sonido:', error);
-        });
-    });
-
-    // Botón de Spotify (abrir modal)
-    if (spotifyBtn) {
-        spotifyBtn.addEventListener('click', () => {
             console.log('[SPOTIFY] Botón clickeado, abriendo modal...');
             if (modal) {
                 modal.classList.add('show'); // Mostrar el modal
@@ -145,15 +133,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Botón de cerrar el modal
+    const closeModalBtn = document.getElementById('closeModal');
     if (closeModalBtn && modal) {
         closeModalBtn.addEventListener('click', () => {
             console.log('[MODAL] Cerrando modal...');
-            modal.classList.add('hide'); 
-        
+            modal.classList.add('hide');
+
             setTimeout(() => {
-                modal.classList.remove('show', 'hide'); 
+                modal.classList.remove('show', 'hide');
             }, 400);
         });
-        
     }
+
+    // Botones que usan unclick-sound (off/inactivos)
+    document.querySelectorAll('#minimizeBtn, #closeBtn, #closeModal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('unclick-sound').play().catch(console.error);
+        });
+    });
 });
