@@ -91,5 +91,6 @@ typings/
 # Electron-Forge (packaged app)
 out/
 
-# Packaging
+# Other
 dist/
+assets/music/
