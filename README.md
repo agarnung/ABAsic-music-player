@@ -26,7 +26,7 @@ My machine (tested) is:
 - Just download the installer [form here](https://github.com/agarnung/ABAsic-music-player/releases/download/v1.0.0/ABAsicMusicPlayerSetup.exe) and run it!
 
 > [!NOTE]
-> When the installation is complete, you will see a popup saying:
+> When the installation is complete, you should see a popup saying:
 > 
 > "Installation Complete. The app has been successfully installed!
 > 
