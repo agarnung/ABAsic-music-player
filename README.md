@@ -185,8 +185,6 @@ These alternatives provide different ways to package and distribute an applicati
 
 - Share the app with friends by clicking a button.
 - Implement a dropdown in the song window to choose which song to play, in alphabetical order. Continue in that order if shuffle is not enabled.
-- Button to repeat the current song in a loop.
-- Move the Hello Kitty in the sky with the mouse when clicked, attached to her speech bubble.
 - When the song is stopped, also stop the movement of the text above.
 - Integrate YouTube (with an API like youtube-api-v3 or youtube-player).
 - Connect to Spotify to play a playlist given its URL.
