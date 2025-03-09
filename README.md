@@ -1,6 +1,11 @@
 # ABAsic Music Player
 A basic and nice music player.
 
+<div>
+    <img src="./assets/app1.png" alt="App 1" height="450">
+    <img src="./assets/app2.png" alt="App 2" height="450">
+</div>
+
 Although it may seem so, the design was not made by me, but by my girlfriend.
 
 ---
@@ -46,7 +51,7 @@ My machine (tested) is:
 - **Electron Forge**: Used to distribute the application once completed.
 - **Pixelify Sans**: A variable font for greater flexibility, allowing adjustments to font weight (wght). [Link](https://gwfh.mranftl.com/fonts/pixelify-sans?subsets=latin) | [Variable Font](https://fonts.google.com/selection).
 - **electron-icon-maker**: Used to create a custom `favicon.ico` for the app. [Tutorial](https://www.youtube.com/watch?v=dtk-v5vk8iA&ab_channel=tylerlaceby).
-
+- [**Figma**](https://www.figma.com/) for the app design.
 ---
 
 # Tutorial (for Developers)
