@@ -93,8 +93,11 @@ ipcMain.handle('get-youtube-audio', async (_, url) => {
 
       // Obtén la información del video
       const info = await play.video_info(url);
+      console.log('Información del video:', info);
 
       const stream = await play.stream_from_info(info);
+      console.log('URL del stream de audio:', stream.url);
+      
       return {
           title: info.video_details.title,
           audioStream: stream.url,
@@ -159,6 +162,7 @@ function getWindowConfig() {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
+      webSecurity: false
     },
   };
 }

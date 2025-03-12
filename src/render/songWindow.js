@@ -59,9 +59,16 @@ document.addEventListener("DOMContentLoaded", function () {
     async function loadYoutubeAudio(url) {
         try {
             const { title, audioUrl } = await window.electronAPI.getYoutubeAudio(url);
+            console.log('URL de audio obtenida:', audioUrl);
 
             // Crea un nuevo elemento de audio
             currentAudioElement = new Audio(audioUrl);
+            currentAudioElement.addEventListener('error', (e) => {
+                console.error('Error en el elemento de audio:', e);
+            });
+            currentAudioElement.play().catch(error => {
+                console.error('Error al reproducir el audio:', error);
+            });
 
             // Asocia los controles de reproducción
             setupAudioControls(currentAudioElement);
@@ -78,7 +85,47 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setupAudioControls(audioElement) {
-        // Asocia los controles de reproducción
+        console.log('Configurando controles de audio');
+
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTime = document.getElementById('currentTime');
+        const duration = document.getElementById('duration');
+
+        audioElement.addEventListener('timeupdate', () => {
+            console.log('Actualizando tiempo de reproducción');
+            const progressPercentage = (audioElement.currentTime / audioElement.duration) * 100;
+            progress.style.width = `${progressPercentage}%`;
+            currentTime.textContent = formatTime(audioElement.currentTime);
+        });
+
+        audioElement.addEventListener('loadedmetadata', () => {
+            console.log('Metadatos cargados');
+            duration.textContent = formatTime(audioElement.duration);
+        });
+
+        audioElement.addEventListener('ended', () => {
+            console.log('Audio terminado');
+            if (currentPlaylist.length > 0) {
+                // Reproduce el siguiente video al finalizar
+                nextBtn.click();
+            }
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            console.log('Barra de progreso clickeada');
+            const rect = progressBar.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const width = rect.width;
+            const percent = offsetX / width;
+            audioElement.currentTime = percent * audioElement.duration;
+        });
+
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = playPauseBtn.querySelector('img');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
         playPauseBtn.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -91,7 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         nextBtn.addEventListener('click', () => {
             if (currentPlaylist.length > 0) {
-                // Reproduce el siguiente video de la lista
                 currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
                 loadYoutubeAudio(currentPlaylist[currentTrackIndex].url);
             }
@@ -99,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         prevBtn.addEventListener('click', () => {
             if (currentPlaylist.length > 0) {
-                // Reproduce el video anterior de la lista
                 currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
                 loadYoutubeAudio(currentPlaylist[currentTrackIndex].url);
             }
@@ -107,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         audioElement.addEventListener('ended', () => {
             if (currentPlaylist.length > 0) {
-                // Reproduce el siguiente video al finalizar
                 nextBtn.click();
             }
         });
