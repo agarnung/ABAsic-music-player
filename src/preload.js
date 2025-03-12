@@ -44,5 +44,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     parseSpotifyUri: (input) => ipcRenderer.invoke('parse-spotify-uri', input),
     sendSpotifyDeviceId: (deviceId) => ipcRenderer.send('set-spotify-device-id', deviceId),
     onPlayerStateChanged: (callback) => ipcRenderer.on('player-state-changed', callback),
-    getSpotifyPlaylistTracks: (uri, token) => ipcRenderer.invoke('get-spotify-playlist-tracks', uri, token)
+    getSpotifyPlaylistTracks: (uri, token) => ipcRenderer.invoke('get-spotify-playlist-tracks', uri, token),
 });

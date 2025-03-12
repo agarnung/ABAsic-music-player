@@ -148,6 +148,7 @@ function createSongWindow() {
 
   const query = { mode: currentMode };
   if (currentMode === 'spotify') {
+    console.log(modeData)
     query.token = modeData.token; // Añade el token a los query params
     query.uri = modeData.uri;
   }
@@ -323,9 +324,27 @@ ipcMain.handle('open-spotify-auth', async () => {
       });
     });
 
-    authWindow.webContents.on('did-fail-load', (event, code, desc) => {
-      console.error(`[MAIN] Error de carga: ${code} - ${desc}`);
-      reject(new Error(desc));
+    authWindow.webContents.on('did-finish-load', () => {
+      const url = authWindow.webContents.getURL();
+      if (url.includes('accounts.spotify.com')) return;
+
+      // Verificar URL de redirección
+      if (url.startsWith(process.env.SPOTIFY_REDIRECT_URI)) {
+        const hash = new URL(url).hash.substring(1);
+        const params = new URLSearchParams(hash);
+        const token = params.get('access_token');
+
+        if (token) {
+          // Verificar token válido
+          spotifyApi.setAccessToken(token);
+          const valid = spotifyApi.getMe().then(() => true).catch(() => false);
+
+          if (valid) {
+            authWindow.destroy();
+            resolve(token);
+          }
+        }
+      }
     });
 
     authWindow.webContents.on('did-finish-load', () => {
@@ -372,6 +391,7 @@ ipcMain.on('set-spotify-device-id', (_, deviceId) => {
 // Handlers para Spotify
 ipcMain.handle('store-spotify-token', async (_, token) => {
   spotifyApi.setAccessToken(token); // Para`poder hacer las llamadas a la API
+  console.log('[SPOTIFY] Token almacenado:', token ? 'OK' : 'FALLO');
   return true;
 });
 
@@ -407,47 +427,74 @@ ipcMain.handle('get-spotify-playlist-tracks', async (_, uri, token) => {
 // Modificar el handler de control de Spotify
 ipcMain.handle('spotify-control', async (_, action, data) => {
   try {
-    if (!spotifyDeviceId) throw new Error('Device ID no configurado');
+    if (!modeData?.token) throw new Error('Token no disponible');
+    spotifyApi.setAccessToken(modeData.token);
 
     console.log('[SPOTIFY CONTROL] Ejecutando acción:', action);
 
-    switch (action) {
-      case 'play':
-        await spotifyApi.play({ device_id: spotifyDeviceId });
-        break;
-      case 'pause':
-        await spotifyApi.pause({ device_id: spotifyDeviceId });
-        break;
-      case 'next':
-        await spotifyApi.skipToNext({ device_id: spotifyDeviceId });
-        break;
-      case 'previous':
-        await spotifyApi.skipToPrevious({ device_id: spotifyDeviceId });
-        break;
-      case 'shuffle':
-        await spotifyApi.setShuffle(data.state, { device_id: spotifyDeviceId });
-        break;
-      case 'repeat':
-        await spotifyApi.setRepeat(data.state, { device_id: spotifyDeviceId });
-        break;
-      case 'play-playlist':
-        // Transferimos la reproducción a este dispositivo antes de reproducir
-        await spotifyApi.transferMyPlayback([spotifyDeviceId], { play: false });
-        await spotifyApi.play({
-          device_id: spotifyDeviceId,
-          context_uri: data.uri,
-          offset: { position: data.offset || 0 }
-        });
-        break;
-      case 'seek':
-        await spotifyApi.seek(data.position, { device_id: spotifyDeviceId });
-        break;
-      default:
-        throw new Error(`Acción no soportada: ${action}`);
+    // Validar device_id para acciones críticas
+    if (['play', 'pause', 'play-playlist'].includes(action)) {
+      if (!data?.device_id && !spotifyDeviceId) {
+        throw new Error('Device ID no disponible');
+      }
+      const targetDeviceId = data?.device_id || spotifyDeviceId;
+
+      // Ejecutar acción con device_id correcto
+      switch (action) {
+        // En main.js, modificar el caso 'play-playlist':
+        case 'play-playlist':
+          // Primero transferir playback
+          await spotifyApi.transferMyPlayback([targetDeviceId], { play: false });
+
+          // Esperar 1 segundo
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          // Luego iniciar reproducción
+          await spotifyApi.play({
+            device_id: targetDeviceId,
+            context_uri: data.uri,
+            offset: { position: data.offset || 0 }
+          });
+          break;
+        case 'play':
+          await spotifyApi.play({ device_id: spotifyDeviceId });
+          break;
+        case 'pause':
+          await spotifyApi.pause({ device_id: spotifyDeviceId });
+          break;
+        case 'next':
+          await spotifyApi.skipToNext({ device_id: spotifyDeviceId });
+          break;
+        case 'previous':
+          await spotifyApi.skipToPrevious({ device_id: spotifyDeviceId });
+          break;
+        case 'shuffle':
+          await spotifyApi.setShuffle(data.state, { device_id: spotifyDeviceId });
+          break;
+        case 'repeat':
+          await spotifyApi.setRepeat(data.state, { device_id: spotifyDeviceId });
+          break;
+        case 'seek':
+          await spotifyApi.seek(data.position, { device_id: spotifyDeviceId });
+          break;
+        default:
+          throw new Error(`Acción no soportada: ${action}`);
+      }
     }
   } catch (error) {
-    console.error('Error en Spotify:', error);
+    console.error('Error en spotify-control:', error);
     throw error;
+  }
+});
+
+// Handler para verificar token
+ipcMain.handle('verifySpotifyToken', async (_, token) => {
+  try {
+    spotifyApi.setAccessToken(token);
+    await spotifyApi.getMe();
+    return true;
+  } catch (error) {
+    return false;
   }
 });
 

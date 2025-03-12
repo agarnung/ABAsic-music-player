@@ -1,3 +1,5 @@
+__Acoording to [URL](https://developer.spotify.com/documentation/web-playback-sdk/howtos/web-app-player), Web Playback SDK requires Spotify Premium, so we discontinue this branch at the moment__
+
 Rama para intentar poner a funcionar Spotify en la app.
 
 - Connect to Spotify to play a playlist given its URL.
@@ -41,3 +43,8 @@ Se recomienda también consultar la libería `react-spotify-web-playback-sdk`. I
 
 Limpia caché de Electron: `rm -rf node_modules` y luego puedes volver a la normalidad con `npm install`.
 
+# References 
+
+- https://developer.spotify.com/documentation/web-playback-sdk/howtos/web-app-player
+
+- https://github.com/spotify/spotify-web-playback-sdk-example/tree/main?tab=readme-ov-file

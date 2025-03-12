@@ -21,181 +21,139 @@ document.addEventListener("DOMContentLoaded", function () {
     // Variable para almacenar el estado actual de Spotify
     window.spotifyPlayerState = null;
 
-    // Nueva función para inicializar Spotify
-    // Función principal para cargar el SDK
+    // Carga del SDK
     async function loadSpotifySDK() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                console.log('[SPOTIFY SDK] Iniciando carga...', {
-                    attempts: spotifyLoadAttempts,
-                    alreadyLoaded: spotifySDKLoaded,
-                    loadingInProgress: spotifySDKLoading
-                });
-
-                // 1. Verificar si ya está cargado
-                if (spotifySDKLoaded) {
-                    console.log('[SPOTIFY SDK] Ya estaba cargado previamente');
-                    return resolve();
-                }
-
-                // 2. Control de reintentos
-                if (spotifyLoadAttempts >= MAX_SDK_LOAD_ATTEMPTS) {
-                    const error = new Error('Máximo de reintentos alcanzado');
-                    error.code = 'MAX_ATTEMPTS';
-                    throw error;
-                }
-
-                // 3. Bloquear carga múltiple
-                if (spotifySDKLoading) {
-                    console.log('[SPOTIFY SDK] Carga ya en progreso, esperando...');
-                    await new Promise(r => setTimeout(r, 1000));
-                    return loadSpotifySDK().then(resolve).catch(reject);
-                }
-
-                spotifySDKLoading = true;
-                spotifyLoadAttempts++;
-
-                // 4. Crear elemento script
-                const script = document.createElement('script');
-                const cacheBuster = `?v=${Date.now()}&attempt=${spotifyLoadAttempts}`;
-                script.src = `https://sdk.scdn.co/spotify-player.js${cacheBuster}`;
-                script.crossOrigin = 'anonymous';
-                script.id = 'spotify-player-sdk';
-
-                // 5. Configurar timeout
-                const timeoutDuration = 15000;
-                const timeoutPromise = new Promise((_, timeoutReject) => {
-                    setTimeout(() => {
-                        timeoutReject(new Error(`Timeout de ${timeoutDuration}ms excedido`));
-                    }, timeoutDuration);
-                });
-
-                // 6. Configurar handlers
-                const loadPromise = new Promise((scriptResolve, scriptReject) => {
-                    script.onload = () => {
-                        console.log('[SPOTIFY SDK] Evento onload disparado');
-
-                        // Verificar si el objeto global existe
-                        if (!window.Spotify?.Player) {
-                            const error = new Error('Objeto Spotify no disponible después de carga');
-                            error.code = 'SDK_CORRUPT';
-                            scriptReject(error);
-                            return;
-                        }
-
-                        spotifySDKLoaded = true;
-                        scriptResolve();
-                    };
-
-                    script.onerror = (error) => {
-                        console.error('[SPOTIFY SDK] Error en evento onerror:', error);
-                        scriptReject(new Error(`Error de carga: ${error.message}`));
-                    };
-                });
-
-                // 7. Limpiar scripts anteriores
-                document.querySelectorAll('#spotify-player-sdk').forEach(oldScript => {
-                    console.log('[SPOTIFY SDK] Eliminando script anterior:', oldScript);
-                    oldScript.remove();
-                });
-
-                // 8. Inyectar en el DOM
-                console.log('[SPOTIFY SDK] Añadiendo script al DOM:', script);
-                document.head.appendChild(script);
-
-                // 9. Competir entre carga y timeout
-                Promise.race([loadPromise, timeoutPromise])
-                    .then(() => {
-                        console.log('[SPOTIFY SDK] Carga exitosa', window.Spotify);
-                        resolve();
-                    })
-                    .catch(error => {
-                        console.error('[SPOTIFY SDK] Error durante la carga:', error);
-                        script.remove();
-                        reject(error);
-                    })
-                    .finally(() => {
-                        spotifySDKLoading = false;
-                    });
-
-            } catch (error) {
-                spotifySDKLoading = false;
-                console.error('[SPOTIFY SDK] Error crítico:', error);
-                reject(error);
+        return new Promise((resolve, reject) => {
+            if (window.Spotify?.Player) {
+                console.log('[SDK] Ya cargado');
+                return resolve();
             }
+
+            const script = document.createElement('script');
+            // Añadir fecha para evitar caché:
+            script.src = `https://sdk.scdn.co/spotify-player.js?${Date.now()}`;
+            script.id = 'spotify-sdk';
+
+            script.onload = () => {
+                if (!window.Spotify) {
+                    return reject(new Error('Error carga SDK'));
+                }
+                console.log('[SDK] Cargado correctamente');
+                resolve();
+            };
+
+            script.onerror = (err) => reject(err);
+            document.head.appendChild(script);
         });
     }
 
     // Función de inicialización del reproductor
     async function initSpotifyPlayer(token, uri) {
         try {
-            console.error('initSpotifyPlayer');
+            console.log('[SPOTIFY] Inicializando reproductor...');
 
+            // 1. Cargar SDK
             await loadSpotifySDK();
 
-            console.error('SpotifySDK cargado');
-
+            // 2. Desconectar instancias previas
             if (window.spotifyPlayerInstance) {
                 await window.spotifyPlayerInstance.disconnect();
             }
 
+            // 3. Crear nueva instancia
             window.spotifyPlayerInstance = new window.Spotify.Player({
                 name: 'ABasic Music Player',
                 getOAuthToken: cb => cb(token),
                 volume: 0.5
             });
 
+            // 4. Configurar listeners
             setupPlayerListeners(uri);
 
-            console.error('PlayerListeners configurados');
-
-            window.spotifyPlayerInstance.addListener('initialization_error', ({ message }) => {
-                console.error('Error de inicialización:', message);
-            });
-
+            // 5. Conectar
             await window.spotifyPlayerInstance.connect();
-
+            console.log('[SPOTIFY] Conexión exitosa');
         } catch (error) {
-            console.error('Error al inicializar Spotify:', error);
+            console.error('[SPOTIFY] Error en inicialización:', error);
             throw error;
         }
+    }
+
+    function setupPlayerListeners(uri) {
+        window.spotifyPlayerInstance.addListener('initialization_error', ({ message }) => {
+            console.error('Error de inicialización:', message);
+            alert(`Error inicializando Spotify: ${message}`);
+        });
+
+        window.spotifyPlayerInstance.addListener('authentication_error', ({ message }) => {
+            console.error('Error de autenticación:', message);
+            alert(`Error de autenticación: ${message}`);
+        });
+
+        window.spotifyPlayerInstance.addListener('account_error', ({ message }) => {
+            console.error('Error de cuenta:', message);
+            alert(`Error de cuenta Spotify: ${message}`);
+        });
+
+        // Añadir el listener 'ready' aquí para capturar la URI
+        window.spotifyPlayerInstance.addListener('ready', async ({ device_id }) => {
+            console.log('[SPOTIFY READY] Dispositivo listo:', device_id);
+
+            // Enviar device_id al main process
+            window.electronAPI.sendSpotifyDeviceId(device_id);
+
+            // Esperar 2 segundos para sincronización
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            try {
+                // Verificar estado del dispositivo
+                const state = await window.electronAPI.getSpotifyPlaybackState();
+                if (!state?.is_playing) {
+                    await window.electronAPI.spotifyControl('play-playlist', {
+                        uri: modeData.uri,
+                        device_id: device_id
+                    });
+                }
+            } catch (error) {
+                console.error('Error al iniciar reproducción:', error);
+                alert(`Error: ${error.message}`);
+            }
+        });
     }
 
     async function syncInitialState() {
         try {
             const state = await window.electronAPI.getSpotifyPlaybackState();
-            if (state) {
+            if (state && state.device && state.device.id) {
+                console.log('[SPOTIFY] Sincronizando estado inicial');
+                window.electronAPI.sendSpotifyDeviceId(state.device.id);
                 updatePlayerState(state);
                 updatePlaybackInfo(state);
             }
         } catch (error) {
-            console.error('Error sincronizando estado:', error);
+            console.error('[SPOTIFY] Error sincronizando estado:', error);
         }
     }
 
     initializePlayer().then(syncInitialState);
 
-    // Añadir listeners de estado de reproducción
-    function setupPlayerListeners(uri) {
-        window.spotifyPlayerInstance.addListener('ready', async ({ device_id }) => {
-            console.log('[SPOTIFY READY] Dispositivo listo:', device_id);
-            window.electronAPI.sendSpotifyDeviceId(device_id);
-    
-            // Reproducir automáticamente la primera canción de la lista (offset 0)
-            try {
-                console.error('Reproduciendo la primera canción');
-                await window.electronAPI.spotifyControl('play-playlist', { uri, offset: 0 });
-            } catch (error) {
-                console.error('Error al iniciar reproducción:', error);
-            }
-        });
-    
-        window.spotifyPlayerInstance.addListener('player_state_changed', state => {
-            console.log('[SPOTIFY] Estado actualizado');
-            updatePlayerState(state);
-            updatePlaybackInfo(state);
-        });
-    }
+    window.spotifyPlayerInstance.addListener('player_state_changed', state => {
+        if (!state) return;
+        console.log('[SPOTIFY] Estado actualizado:', state);
+        window.spotifyPlayerState = state;
+
+        // Forzar actualización de la UI
+        updatePlayerState(state);
+        updatePlaybackInfo(state);
+
+        // Si no hay canción reproduciéndose, reintentar
+        if (!state.track_window?.current_track) {
+            window.electronAPI.spotifyControl('play-playlist', {
+                uri: modeInfo.data.uri,
+                device_id: state.device?.id
+            });
+        }
+    });
 
     // Actualizar información de la canción
     function updatePlaybackInfo(state) {
@@ -253,9 +211,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 await loadSongs(data);
                 await loadImages();
             } else if (mode === 'spotify') {
-                console.log('Modo Spotify, URL:', data);
-                const { token, uri } = data;
-                await initSpotifyPlayer(token, uri);
+                // Verificar token activo
+                const valid = await window.electronAPI.verifySpotifyToken(data.token);
+                if (!valid) throw new Error('Token expirado o inválido');
+
+                await initSpotifyPlayer(data.token, data.uri);
             }
         } catch (error) {
             console.error('Error inicializando reproductor:', error);
