@@ -15,5 +15,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getMode: () => ipcRenderer.invoke('get-mode'),
     openSongWindow: () => ipcRenderer.send('open-song-window'),
     getSongsFromFolder: (folder) => ipcRenderer.invoke('get-songs-from-folder', folder),
-    getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder)
+    getImagesFromFolder: (folder) => ipcRenderer.invoke('get-images-from-folder', folder),
+    getYoutubePlaylist: (url) => ipcRenderer.invoke('get-youtube-playlist', url),
+    getYoutubeAudio: (url) => ipcRenderer.invoke('get-youtube-audio', url)
 });

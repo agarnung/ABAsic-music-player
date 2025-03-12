@@ -193,4 +193,6 @@ These alternatives provide different ways to package and distribute an applicati
 
 # References for Youtube API usage:
 
+npm install ytpl play-dl
+
 - https://medium.com/swlh/using-youtube-api-with-node-js-93e247c59786

@@ -57,11 +57,12 @@
   <audio id="click-sound" src="../assets/sounds/mouse-click.mp3" preload="auto" volume="1.0"></audio>
   <audio id="unclick-sound" src="../assets/sounds/mouse-unclick.mp3" preload="auto" volume="1.0"></audio>
 
-  <!-- Modal fuera del body -->
-  <div id="workInProgressModal" class="modal">
+  <div id="youtubeModal" class="modal">
     <div class="modal-content">
-      <img src="../assets/icons/cross icon.svg" id="closeModal" class="close" alt="Close">
-      <p>A work in progress...</p>
+      <img src="../assets/icons/cross icon.svg" id="closeYoutubeModal" class="close" alt="Close">
+      <p>Ingresa la URL de YouTube:</p>
+      <input type="text" id="youtubeUrl" placeholder="Ej: https://youtube.com/watch?v=..." />
+      <button id="submitYoutubeUrl" class="modal-button">Cargar</button>
     </div>
   </div>
 

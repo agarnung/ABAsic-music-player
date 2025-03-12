@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let images = [];
     let playPauseIcon;
 
+    let currentPlaylist = [];
+    let currentAudioElement;
+    let currentTrackIndex = 0;
+
     async function initializePlayer() {
         try {
             const { mode, data } = await window.electronAPI.getMode();
@@ -20,11 +24,93 @@ document.addEventListener("DOMContentLoaded", function () {
                 await loadImages();
             } else if (mode === 'youtube') {
                 console.log('Modo youtube, URL:', data);
-                // ...
+                if (mode === 'youtube') {
+                    if (data.includes('list=')) {
+                        // Es una lista de reproducción
+                        await loadYoutubePlaylist(data);
+                    } else {
+                        // Es un video individual
+                        await loadYoutubeAudio(data);
+                    }
+                }
             }
         } catch (error) {
             console.error('Error inicializando reproductor:', error);
         }
+    }
+
+    async function loadYoutubePlaylist(url) {
+        try {
+            // Obtén los videos de la lista
+            currentPlaylist = await window.electronAPI.getYoutubePlaylist(url);
+
+            if (currentPlaylist.length > 0) {
+                // Reproduce el primer video de la lista
+                await loadYoutubeAudio(currentPlaylist[currentTrackIndex].url);
+            } else {
+                throw new Error('La lista de reproducción está vacía');
+            }
+        } catch (error) {
+            console.error('Error al cargar la lista de reproducción:', error);
+            alert('No se pudo cargar la lista de reproducción. Verifica la URL e intenta nuevamente.');
+        }
+    }
+
+    async function loadYoutubeAudio(url) {
+        try {
+            const { title, audioUrl } = await window.electronAPI.getYoutubeAudio(url);
+
+            // Crea un nuevo elemento de audio
+            currentAudioElement = new Audio(audioUrl);
+
+            // Asocia los controles de reproducción
+            setupAudioControls(currentAudioElement);
+
+            // Actualiza la interfaz con el título del video
+            updateSongName(title);
+
+            // Reproduce el audio
+            currentAudioElement.play();
+        } catch (error) {
+            console.error('Error al cargar el audio de YouTube:', error);
+            alert('No se pudo cargar el audio. Verifica la URL e intenta nuevamente.');
+        }
+    }
+
+    function setupAudioControls(audioElement) {
+        // Asocia los controles de reproducción
+        playPauseBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                playPauseIcon.src = '../assets/icons/Pause button.svg';
+            } else {
+                audioElement.pause();
+                playPauseIcon.src = '../assets/icons/Play button.svg';
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPlaylist.length > 0) {
+                // Reproduce el siguiente video de la lista
+                currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
+                loadYoutubeAudio(currentPlaylist[currentTrackIndex].url);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPlaylist.length > 0) {
+                // Reproduce el video anterior de la lista
+                currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+                loadYoutubeAudio(currentPlaylist[currentTrackIndex].url);
+            }
+        });
+
+        audioElement.addEventListener('ended', () => {
+            if (currentPlaylist.length > 0) {
+                // Reproduce el siguiente video al finalizar
+                nextBtn.click();
+            }
+        });
     }
 
     // Función para cargar canciones desde una carpeta local

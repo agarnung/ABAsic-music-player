@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('node:path');
+const ytpl = require('ytpl');
+const play = require('play-dl');
 
 // Manejar eventos de Squirrel (instalación/actualización)
 if (require('electron-squirrel-startup')) app.quit(); // https://stackoverflow.com/questions/78999493/how-to-create-a-windows-executable-with-electron-forge-that-adds-a-desktop-short
@@ -59,6 +61,48 @@ const showInstallDialog = () => {
     buttons: ['OK']
   });
 };
+
+ipcMain.handle('get-youtube-playlist', async (_, url) => {
+  try {
+      // Valida la URL de la lista de reproducción
+      if (!play.yt_validate(url) || !url.includes('list=')) {
+          throw new Error('URL de lista de YouTube no válida');
+      }
+
+      // Obtén la información de la lista de reproducción
+      const playlist = await ytpl(url);
+
+      // Extrae los datos de los videos
+      const videos = playlist.items.map(item => ({
+          title: item.title,
+          url: item.shortUrl, // URL del video individual
+      }));
+
+      return videos;
+  } catch (error) {
+      throw new Error('Error al obtener la lista: ' + error.message);
+  }
+});
+
+ipcMain.handle('get-youtube-audio', async (_, url) => {
+  try {
+      // Valida la URL del video individual
+      if (!play.yt_validate(url)) {
+          throw new Error('URL de YouTube no válida');
+      }
+
+      // Obtén la información del video
+      const info = await play.video_info(url);
+
+      const stream = await play.stream_from_info(info);
+      return {
+          title: info.video_details.title,
+          audioStream: stream.url,
+      };
+  } catch (error) {
+      throw new Error('Error al obtener el audio: ' + error.message);
+  }
+});
 
 // Verificar si es la primera ejecución
 app.whenReady().then(() => {

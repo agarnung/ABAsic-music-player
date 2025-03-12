@@ -117,38 +117,47 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('Sonido cargado y listo para reproducirse');
     });
 
-    // Botón de youtube (abrir modal)
-    const modal = document.getElementById('workInProgressModal');
-    if (youtubeBtn) {
-        youtubeBtn.addEventListener('click', () => {
-            clickSound.play().catch((error) => {
-                console.error('Error al reproducir el sonido:', error);
-            });
-
-            console.log('[youtube] Botón clickeado, abriendo modal...');
-            if (modal) {
-                modal.classList.add('show'); // Mostrar el modal
-            }
-        });
-    }
-
-    // Botón de cerrar el modal
-    const closeModalBtn = document.getElementById('closeModal');
-    if (closeModalBtn && modal) {
-        closeModalBtn.addEventListener('click', () => {
-            console.log('[MODAL] Cerrando modal...');
-            modal.classList.add('hide');
-
-            setTimeout(() => {
-                modal.classList.remove('show', 'hide');
-            }, 400);
-        });
-    }
-
     // Botones que usan unclick-sound (off/inactivos)
     document.querySelectorAll('#minimizeBtn, #closeBtn, #closeModal').forEach(btn => {
         btn.addEventListener('click', () => {
             document.getElementById('unclick-sound').play().catch(console.error);
         });
     });
+
+    const youtubeModal = document.getElementById('youtubeModal');
+    const closeYoutubeModal = document.getElementById('closeYoutubeModal');
+    const submitYoutubeUrl = document.getElementById('submitYoutubeUrl');
+    const youtubeUrlInput = document.getElementById('youtubeUrl');
+
+    // Botón de YouTube
+    if (youtubeBtn) {
+        youtubeBtn.addEventListener('click', () => {
+            clickSound.play();
+            youtubeModal.classList.add('show');
+        });
+    }
+
+    // Cerrar modal de YouTube
+    if (closeYoutubeModal) {
+        closeYoutubeModal.addEventListener('click', () => {
+            youtubeModal.classList.remove('show');
+        });
+    }
+
+    // Enviar URL de YouTube
+    if (submitYoutubeUrl) {
+        submitYoutubeUrl.addEventListener('click', async () => {
+            const url = youtubeUrlInput.value.trim();
+            if (url) {
+                try {
+                    // Establece el modo y los datos
+                    window.electronAPI.setMode('youtube', url);
+                    window.electronAPI.openSongWindow();
+                    youtubeModal.classList.remove('show');
+                } catch (error) {
+                    console.error('Error al procesar la URL:', error);
+                }
+            }
+        });
+    }
 });
