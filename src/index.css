@@ -192,6 +192,7 @@ h1 {
   top: 0;             /* Asegura que los botones se alineen al inicio del contenedor */
   display: flex;
   justify-content: space-between; /* Coloca los botones en los extremos */
+  -webkit-app-region: drag; /* Evita que los botones sean draggables */
 }
 
 .audio-player {
@@ -295,23 +296,23 @@ h1 {
   transform: scale(1.1); /* Agranda los botones un 10% */
 }
 
-/* Estilos para los botones prev, playPause, next, localFolder y spotifyBtn */
-#prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #spotifyBtn {
+/* Estilos para los botones prev, playPause, next, localFolder y youtubeBtn */
+#prevBtn, #playPauseBtn, #nextBtn, #localFolderBtn, #youtubeBtn {
   transition: transform 0.1s ease; /* Efecto de transición para el hover */
 }
 
-/* Agrandar los botones prev, playPause, next, localFolder y spotifyBtn al hacer hover */
-#prevBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #spotifyBtn:hover {
+/* Agrandar los botones prev, playPause, next, localFolder y youtubeBtn al hacer hover */
+#prevBtn:hover, #nextBtn:hover, #localFolderBtn:hover, #youtubeBtn:hover {
   transform: scale(1.05); /* Agranda los botones un 5% */
 }
 
-/* Agrandar los botones prev, playPause, next, localFolder y spotifyBtn al hacer hover */
+/* Agrandar los botones prev, playPause, next, localFolder y youtubeBtn al hacer hover */
 #playPauseBtn:hover {
   transform: scale(1.025); /* Agranda los botones un 5% */
 }
 
 /* Si solo quieres que los íconos dentro de los botones crezcan */
-#prevBtn img:hover, #playPauseBtn img:hover, #nextBtn img:hover, #localFolderBtn img:hover, #spotifyBtn img:hover {
+#prevBtn img:hover, #playPauseBtn img:hover, #nextBtn img:hover, #localFolderBtn img:hover, #youtubeBtn img:hover {
   transform: scale(1.05);
 }
 
@@ -320,6 +321,12 @@ h1 {
   display: block; /* Elimina cualquier espacio extra debajo de la imagen */
   width: auto; /* Deja que la imagen mantenga su tamaño original */
   height: auto; /* Mantiene la altura original de la imagen */
+}
+
+#youtubeBtn {
+  display: flex; /* Elimina cualquier espacio extra debajo de la imagen */
+  height: 43px;
+  width: 43px;
 }
 
 /* Estilos adicionales para los controles */

@@ -149,7 +149,7 @@ function createSongWindow() {
   });
 
   const query = { mode: currentMode };
-  if (currentMode === 'spotify') query.url = modeData;
+  if (currentMode === 'youtube') query.url = modeData;
   if (currentMode === 'local') query.folder = modeData;
 
   songWindow.loadFile(path.join(__dirname, 'songWindow.html'), { query });

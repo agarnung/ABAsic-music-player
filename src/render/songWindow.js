@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (mode === 'local') {
                 await loadSongs(data);
                 await loadImages();
-            } else if (mode === 'spotify') {
-                console.log('Modo Spotify, URL:', data);
+            } else if (mode === 'youtube') {
+                console.log('Modo youtube, URL:', data);
                 // ...
             }
         } catch (error) {
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Luego cargar las canciones
                     await loadSongs(folder);
                 }
-            } else if (mode === 'spotify') {
+            } else if (mode === 'youtube') {
                 //...
             }
         });

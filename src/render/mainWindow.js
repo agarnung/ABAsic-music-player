@@ -117,15 +117,15 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('Sonido cargado y listo para reproducirse');
     });
 
-    // Botón de Spotify (abrir modal)
+    // Botón de youtube (abrir modal)
     const modal = document.getElementById('workInProgressModal');
-    if (spotifyBtn) {
-        spotifyBtn.addEventListener('click', () => {
+    if (youtubeBtn) {
+        youtubeBtn.addEventListener('click', () => {
             clickSound.play().catch((error) => {
                 console.error('Error al reproducir el sonido:', error);
             });
 
-            console.log('[SPOTIFY] Botón clickeado, abriendo modal...');
+            console.log('[youtube] Botón clickeado, abriendo modal...');
             if (modal) {
                 modal.classList.add('show'); // Mostrar el modal
             }

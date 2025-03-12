@@ -190,3 +190,7 @@ These alternatives provide different ways to package and distribute an applicati
 - When the song is stopped, also stop the movement of the text above.
 - Integrate YouTube (with an API like youtube-api-v3 or youtube-player).
 - Connect to Spotify to play a playlist given its URL.
+
+# References for Youtube API usage:
+
+- https://medium.com/swlh/using-youtube-api-with-node-js-93e247c59786
