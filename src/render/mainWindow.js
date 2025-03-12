@@ -33,8 +33,12 @@ function handleSpotifyAuthSuccess(token) {
         console.log('[RENDERER] Botón confirmar clickeado. Valor input:', playlistInput.value);
 
         try {
+            console.log("modalConfirm.onclick: ", playlistInput.value.trim());
             const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value.trim());
             console.debug('[RENDERER] URI parseada:', uri);
+
+            const tracks = await window.electronAPI.getSpotifyPlaylistTracks(uri, token);
+            console.log('Canciones de la playlist:', tracks);
 
             await window.electronAPI.setMode('spotify', {
                 token: token,
@@ -43,7 +47,6 @@ function handleSpotifyAuthSuccess(token) {
 
             console.log('[RENDERER] Modo Spotify configurado. Abriendo ventana...');
             window.electronAPI.openSongWindow();
-
         } catch (error) {
             console.error('[RENDERER] Error al procesar playlist:', error);
             alert(`Error: ${error.message}`);
@@ -191,39 +194,39 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log('[RENDERER] Token obtenido:', accessToken ? 'OK' : 'Fallo');
 
                 if (accessToken) {
-                    // Paso 2: Mostrar modal
-                    console.log('[RENDERER] Mostrando modal...');
-                    const modal = document.getElementById('spotifyModal');
-                    console.log('Modal existe?:', !!modal);
-                    modal.style.display = 'flex !important';
+                    // // Paso 2: Mostrar modal
+                    // console.log('[RENDERER] Mostrando modal...');
+                    // const modal = document.getElementById('spotifyModal');
+                    // console.log('Modal existe?:', !!modal);
+                    // modal.style.display = 'flex !important';
 
-                    console.log('[RENDERER] Estado de modal:', modal.style.display);
-                    console.log('[RENDERER] Z-Index de modal:', window.getComputedStyle(modal).zIndex);
+                    // console.log('[RENDERER] Estado de modal:', modal.style.display);
+                    // console.log('[RENDERER] Z-Index de modal:', window.getComputedStyle(modal).zIndex);
 
-                    // Paso 3: Manejar entrada
-                    const playlistInput = document.getElementById('playlistInput');
-                    const modalConfirm = document.getElementById('modalConfirm');
+                    // // Paso 3: Manejar entrada
+                    // const playlistInput = document.getElementById('playlistInput');
+                    // const modalConfirm = document.getElementById('modalConfirm');
 
-                    modalConfirm.onclick = async () => {
-                        if (isProcessing) return;
-                        isProcessing = true;
+                    // modalConfirm.onclick = async () => {
+                    //     if (isProcessing) return;
+                    //     isProcessing = true;
 
-                        try {
-                            if (playlistInput.value.trim()) {
-                                const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value);
-                                await window.electronAPI.setMode('spotify', {
-                                    token: accessToken,
-                                    uri: uri
-                                });
-                                modal.style.display = 'none';
-                                window.electronAPI.openSongWindow();
-                            }
-                        } catch (error) {
-                            alert(`Error: ${error.message}`);
-                        } finally {
-                            isProcessing = false;
-                        }
-                    };
+                    //     try {
+                    //         if (playlistInput.value.trim()) {
+                    //             const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value);
+                    //             await window.electronAPI.setMode('spotify', {
+                    //                 token: accessToken,
+                    //                 uri: uri
+                    //             });
+                    //             modal.style.display = 'none';
+                    //             window.electronAPI.openSongWindow();
+                    //         }
+                    //     } catch (error) {
+                    //         alert(`Error: ${error.message}`);
+                    //     } finally {
+                    //         isProcessing = false;
+                    //     }
+                    // };
                 }
             } catch (error) {
                 alert(`Error de autenticación: ${error.message}`);

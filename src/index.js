@@ -369,21 +369,29 @@ ipcMain.on('set-spotify-device-id', (_, deviceId) => {
   // });
 });
 
-function parseSpotifyUri(input) {
-  // Convertir URL a URI
-  const urlMatch = input.match(/open\.spotify\.com\/playlist\/(\w+)/);
-  if (urlMatch) return `spotify:playlist:${urlMatch[1]}`;
-
-  // Verificar si ya es URI
-  if (input.startsWith('spotify:playlist:')) return input;
-
-  throw new Error('Formato inválido');
-}
-
 // Handlers para Spotify
 ipcMain.handle('store-spotify-token', async (_, token) => {
-  spotifyApi.setAccessToken(token);
+  spotifyApi.setAccessToken(token); // Para`poder hacer las llamadas a la API
   return true;
+});
+
+ipcMain.handle('get-spotify-playlist-tracks', async (_, uri, token) => {
+  try {
+    // Configurar el token en cada solicitud
+    spotifyApi.setAccessToken(token);
+
+    const playlistId = uri.split(':')[2];
+    const data = await spotifyApi.getPlaylistTracks(playlistId);
+
+    return data.body.items.map(item => ({
+      name: item.track.name,
+      artist: item.track.artists.map(a => a.name).join(', '),
+      duration: item.track.duration_ms
+    }));
+  } catch (error) {
+    console.error('Error al obtener canciones:', error);
+    throw new Error('Error obteniendo playlist: ' + error.message);
+  }
 });
 
 ipcMain.handle('spotify-control', async (_, action, data) => {
@@ -433,8 +441,10 @@ ipcMain.handle('spotify-control', async (_, action, data) => {
 });
 
 ipcMain.handle('parse-spotify-uri', (_, input) => {
+  console.log('[SPOTIFY CONTROL] input:', input);
+
   // Expresión regular mejorada
-  const uriPattern = /^(?:spotify:playlist:|https?:\/\/(?:open\.)?spotify\.com\/playlist\/)([a-zA-Z0-9]{22})(?:\?.*)?$/;
+  const uriPattern = /^(?:spotify:(?:playlist|album):|https?:\/\/(?:open\.)?spotify\.com\/(?:playlist|album)\/)([a-zA-Z0-9]{22})(?:\?.*)?$/;
   const match = input.match(uriPattern);
 
   if (!match) throw new Error('Formato inválido. Ejemplo válido:\nhttps://open.spotify.com/playlist/5wYbKg8lO4MQVRjDh5JB4A?si=b28770f70d6c47fc');
