@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let spotifyPlayer = null;
 
+    // Variable para almacenar el estado actual de Spotify
+    window.spotifyPlayerState = null;
+
     // Nueva función para inicializar Spotify
     // Función principal para cargar el SDK
     async function loadSpotifySDK() {
@@ -28,37 +31,37 @@ document.addEventListener("DOMContentLoaded", function () {
                     alreadyLoaded: spotifySDKLoaded,
                     loadingInProgress: spotifySDKLoading
                 });
-    
+
                 // 1. Verificar si ya está cargado
                 if (spotifySDKLoaded) {
                     console.log('[SPOTIFY SDK] Ya estaba cargado previamente');
                     return resolve();
                 }
-    
+
                 // 2. Control de reintentos
                 if (spotifyLoadAttempts >= MAX_SDK_LOAD_ATTEMPTS) {
                     const error = new Error('Máximo de reintentos alcanzado');
                     error.code = 'MAX_ATTEMPTS';
                     throw error;
                 }
-    
+
                 // 3. Bloquear carga múltiple
                 if (spotifySDKLoading) {
                     console.log('[SPOTIFY SDK] Carga ya en progreso, esperando...');
                     await new Promise(r => setTimeout(r, 1000));
                     return loadSpotifySDK().then(resolve).catch(reject);
                 }
-    
+
                 spotifySDKLoading = true;
                 spotifyLoadAttempts++;
-    
+
                 // 4. Crear elemento script
                 const script = document.createElement('script');
                 const cacheBuster = `?v=${Date.now()}&attempt=${spotifyLoadAttempts}`;
                 script.src = `https://sdk.scdn.co/spotify-player.js${cacheBuster}`;
                 script.crossOrigin = 'anonymous';
                 script.id = 'spotify-player-sdk';
-    
+
                 // 5. Configurar timeout
                 const timeoutDuration = 15000;
                 const timeoutPromise = new Promise((_, timeoutReject) => {
@@ -66,12 +69,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         timeoutReject(new Error(`Timeout de ${timeoutDuration}ms excedido`));
                     }, timeoutDuration);
                 });
-    
+
                 // 6. Configurar handlers
                 const loadPromise = new Promise((scriptResolve, scriptReject) => {
                     script.onload = () => {
                         console.log('[SPOTIFY SDK] Evento onload disparado');
-                        
+
                         // Verificar si el objeto global existe
                         if (!window.Spotify?.Player) {
                             const error = new Error('Objeto Spotify no disponible después de carga');
@@ -79,27 +82,27 @@ document.addEventListener("DOMContentLoaded", function () {
                             scriptReject(error);
                             return;
                         }
-    
+
                         spotifySDKLoaded = true;
                         scriptResolve();
                     };
-    
+
                     script.onerror = (error) => {
                         console.error('[SPOTIFY SDK] Error en evento onerror:', error);
                         scriptReject(new Error(`Error de carga: ${error.message}`));
                     };
                 });
-    
+
                 // 7. Limpiar scripts anteriores
                 document.querySelectorAll('#spotify-player-sdk').forEach(oldScript => {
                     console.log('[SPOTIFY SDK] Eliminando script anterior:', oldScript);
                     oldScript.remove();
                 });
-    
+
                 // 8. Inyectar en el DOM
                 console.log('[SPOTIFY SDK] Añadiendo script al DOM:', script);
                 document.head.appendChild(script);
-    
+
                 // 9. Competir entre carga y timeout
                 Promise.race([loadPromise, timeoutPromise])
                     .then(() => {
@@ -114,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .finally(() => {
                         spotifySDKLoading = false;
                     });
-    
+
             } catch (error) {
                 spotifySDKLoading = false;
                 console.error('[SPOTIFY SDK] Error crítico:', error);
@@ -122,124 +125,123 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
+
     // Función de inicialización del reproductor
     async function initSpotifyPlayer(token, uri) {
         try {
-            console.log('[SPOTIFY INIT] Iniciando inicialización...');
-    
-            // 1. Cargar SDK con reintentos
-            try {
-                await loadSpotifySDK();
-            } catch (error) {
-                if (error.code === 'SDK_CORRUPT' && spotifyLoadAttempts < MAX_SDK_LOAD_ATTEMPTS) {
-                    console.log('[SPOTIFY INIT] Reintentando carga...');
-                    return initSpotifyPlayer(token, uri);
-                }
-                throw error;
-            }
-    
-            // 2. Verificación exhaustiva post-carga
-            if (!window.Spotify?.Player) {
-                throw new Error('SDK no disponible después de carga exitosa');
-            }
-    
-            console.log('[SPOTIFY INIT] SDK verificado:', {
-                version: window.Spotify.Player.version,
-                features: window.Spotify.Player.supportedFeatures,
-                deviceSDK: !!window.Spotify.Player
-            });
-    
-            // 3. Limpieza de instancias previas
+            console.error('initSpotifyPlayer');
+
+            await loadSpotifySDK();
+
+            console.error('SpotifySDK cargado');
+
             if (window.spotifyPlayerInstance) {
-                console.log('[SPOTIFY INIT] Desconectando instancia anterior');
                 await window.spotifyPlayerInstance.disconnect();
-                delete window.spotifyPlayerInstance;
             }
-    
-            // 4. Crear nueva instancia
-            const playerConfig = {
+
+            window.spotifyPlayerInstance = new window.Spotify.Player({
                 name: 'ABasic Music Player',
-                getOAuthToken: cb => {
-                    console.log('[SPOTIFY AUTH] Solicitando token...');
-                    cb(token);
-                },
+                getOAuthToken: cb => cb(token),
                 volume: 0.5
-            };
-    
-            console.log('[SPOTIFY INIT] Creando instancia Player:', playerConfig);
-            window.spotifyPlayerInstance = new window.Spotify.Player(playerConfig);
-    
-            // 5. Configurar listeners
-            const setupListeners = () => {
-                console.log('[SPOTIFY INIT] Configurando listeners...');
-    
-                window.spotifyPlayerInstance.addListener('ready', ({ device_id }) => {
-                    console.log('[SPOTIFY READY] Dispositivo listo:', device_id);
-                    window.electronAPI.sendSpotifyDeviceId(device_id);
-                });
-    
-                window.spotifyPlayerInstance.addListener('authentication_error', ({ message }) => {
-                    console.error('[SPOTIFY AUTH ERROR]', message);
-                    alert(`Error de autenticación: ${message}`);
-                });
-    
-                window.spotifyPlayerInstance.addListener('account_error', ({ message }) => {
-                    console.error('[SPOTIFY ACCOUNT ERROR]', message);
-                    alert(`Error de cuenta: ${message}\n\nSe requiere Spotify Premium.`);
-                });
-    
-                window.spotifyPlayerInstance.addListener('playback_error', ({ message }) => {
-                    console.error('[SPOTIFY PLAYBACK ERROR]', message);
-                    alert(`Error de reproducción: ${message}`);
-                });
-            };
-    
-            setupListeners();
-    
-            // 6. Conectar
-            console.log('[SPOTIFY INIT] Conectando...');
-            await window.spotifyPlayerInstance.connect();
-            console.log('[SPOTIFY INIT] Conexión exitosa');
-    
-        } catch (error) {
-            console.error('[SPOTIFY INIT] Error en inicialización:', {
-                error: error.message,
-                stack: error.stack,
-                attempts: spotifyLoadAttempts
             });
-            
-            // Resetear estado para futuros intentos
-            spotifySDKLoaded = false;
-            spotifyLoadAttempts = 0;
-    
+
+            setupPlayerListeners(uri);
+
+            console.error('PlayerListeners configurados');
+
+            window.spotifyPlayerInstance.addListener('initialization_error', ({ message }) => {
+                console.error('Error de inicialización:', message);
+            });
+
+            await window.spotifyPlayerInstance.connect();
+
+        } catch (error) {
+            console.error('Error al inicializar Spotify:', error);
             throw error;
         }
     }
 
-    function logPlaybackState(state) {
-        const track = state?.track_window?.current_track;
-        console.log('[SPOTIFY PLAYBACK]', {
-            Canción: track?.name || 'N/A',
-            Artista: track?.artists?.map(a => a.name).join(', ') || 'N/A',
-            Duración: `${Math.floor(state.duration / 1000 / 60)}:${(state.duration / 1000 % 60).toFixed(0).padStart(2, '0')}`,
-            Estado: state.paused ? 'Pausado' : 'Reproduciendo'
+    async function syncInitialState() {
+        try {
+            const state = await window.electronAPI.getSpotifyPlaybackState();
+            if (state) {
+                updatePlayerState(state);
+                updatePlaybackInfo(state);
+            }
+        } catch (error) {
+            console.error('Error sincronizando estado:', error);
+        }
+    }
+
+    initializePlayer().then(syncInitialState);
+
+    // Añadir listeners de estado de reproducción
+    function setupPlayerListeners(uri) {
+        window.spotifyPlayerInstance.addListener('ready', async ({ device_id }) => {
+            console.log('[SPOTIFY READY] Dispositivo listo:', device_id);
+            window.electronAPI.sendSpotifyDeviceId(device_id);
+    
+            // Reproducir automáticamente la primera canción de la lista (offset 0)
+            try {
+                console.error('Reproduciendo la primera canción');
+                await window.electronAPI.spotifyControl('play-playlist', { uri, offset: 0 });
+            } catch (error) {
+                console.error('Error al iniciar reproducción:', error);
+            }
         });
+    
+        window.spotifyPlayerInstance.addListener('player_state_changed', state => {
+            console.log('[SPOTIFY] Estado actualizado');
+            updatePlayerState(state);
+            updatePlaybackInfo(state);
+        });
+    }
+
+    // Actualizar información de la canción
+    function updatePlaybackInfo(state) {
+        const track = state?.track_window?.current_track;
+        if (!track) return;
+
+        const songNameElements = document.querySelectorAll('.song-name');
+        songNameElements.forEach(el => {
+            el.textContent = `${track.name} - ${track.artists.map(a => a.name).join(', ')}`;
+        });
+
+        // Actualizar progreso
+        const progress = document.getElementById('progress');
+        const progressPercentage = (state.position / state.duration) * 100;
+        progress.style.width = `${progressPercentage}%`;
     }
 
     // Función para actualizar la UI con el estado de Spotify
     function updatePlayerState(state) {
-        const playPauseIcon = document.getElementById('playPauseBtn').querySelector('img');
-
-        if (state.paused) {
-            playPauseIcon.src = '../assets/icons/Play button.svg';
-        } else {
-            playPauseIcon.src = '../assets/icons/Pause button.svg';
+        if (currentMode === 'spotify') {
+            window.spotifyPlayerState = state;
         }
 
-        // Actualizar progreso de la canción
-        const progress = (state.position / state.duration) * 100;
-        document.getElementById('progress').style.width = `${progress}%`;
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const loopBtn = document.getElementById('loopBtn');
+
+        // Estado de reproducción
+        if (state.paused) {
+            playPauseBtn.querySelector('img').src = '../assets/icons/Play button.svg';
+        } else {
+            playPauseBtn.querySelector('img').src = '../assets/icons/Pause button.svg';
+        }
+
+        // Estado de shuffle
+        shuffleBtn.classList.toggle('is-active', state.shuffle);
+        shuffleBtn.querySelector('img').src = state.shuffle ?
+            '../assets/icons/shuffle icon on.svg' :
+            '../assets/icons/shuffle icon off.svg';
+
+        // Estado de repeat
+        const repeatStates = ['off', 'context', 'track'];
+        loopBtn.classList.toggle('is-active', state.repeat_mode !== 'off');
+        loopBtn.querySelector('img').src = state.repeat_mode === 'off' ?
+            '../assets/icons/repeat song icon off.svg' :
+            '../assets/icons/repeat song icon on.svg';
     }
 
     async function initializePlayer() {
@@ -357,7 +359,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     await loadSongs(folder);
                 }
             } else if (mode === 'spotify') {
-                //...
+                const playlistUri = await window.electronAPI.getPlaylistInput();
+                if (playlistUri) {
+                    // Se asume que el token ya está almacenado en modeData.token
+                    window.electronAPI.setMode('spotify', { token: modeInfo.data.token, uri: playlistUri });
+                    await initSpotifyPlayer(modeInfo.data.token, playlistUri);
+                }
             }
         });
     }
@@ -469,23 +476,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const playPauseBtn = document.getElementById('playPauseBtn');
     if (playPauseBtn) {
-        playPauseIcon = playPauseBtn.querySelector('img'); // Asignar la referencia
+        playPauseIcon = playPauseBtn.querySelector('img');
         playPauseBtn.addEventListener('click', () => {
-            if (audioElement.paused) {
-                audioElement.play();
-                playPauseIcon.src = '../assets/icons/Pause button.svg';
-                playPauseIcon.alt = 'Pause'; // Corregir texto alternativo
+            if (currentMode === 'spotify') {
+                // Si el estado actual indica que está pausado, se reanuda; de lo contrario, se pausa.
+                if (window.spotifyPlayerState?.paused) {
+                    window.electronAPI.spotifyControl('play');
+                } else {
+                    window.electronAPI.spotifyControl('pause');
+                }
             } else {
-                audioElement.pause();
-                playPauseIcon.src = '../assets/icons/Play button.svg';
-                playPauseIcon.alt = 'Play'; // Corregir texto alternativo
+                if (audioElement.paused) {
+                    audioElement.play();
+                    playPauseIcon.src = '../assets/icons/Pause button.svg';
+                    playPauseIcon.alt = 'Pause';
+                } else {
+                    audioElement.pause();
+                    playPauseIcon.src = '../assets/icons/Play button.svg';
+                    playPauseIcon.alt = 'Play';
+                }
             }
         });
     }
 
     const nextBtn = document.getElementById('nextBtn');
     if (nextBtn) {
-        nextBtn.addEventListener('click', playNextSong);
+        nextBtn.addEventListener('click', () => {
+            if (currentMode === 'spotify') {
+                window.electronAPI.spotifyControl('next');
+            } else {
+                playNextSong();
+            }
+        });
     }
 
     // Función para retroceder a la canción anterior o reiniciar
@@ -506,7 +528,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const prevBtn = document.getElementById('prevBtn');
     if (prevBtn) {
-        prevBtn.addEventListener('click', playPreviousSong);
+        prevBtn.addEventListener('click', () => {
+            if (currentMode === 'spotify') {
+                window.electronAPI.spotifyControl('previous');
+            } else {
+                playPreviousSong();
+            }
+        });
     }
 
     const backBtn = document.getElementById('backBtn');
@@ -527,14 +555,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const loopIcon = loopBtn.querySelector('img');
     if (loopBtn) {
         loopBtn.addEventListener('click', () => {
-            isLoopEnabled = !isLoopEnabled;
-            loopBtn.classList.toggle('is-active', isLoopEnabled);
-            if (isLoopEnabled) {
-                loopIcon.src = '../assets/icons/repeat song icon on.svg';
-                loopIcon.alt = 'Repeat On';
+            if (currentMode === 'spotify') {
+                // Obtener el estado actual de repeat y alternar entre 'off', 'context' y 'track'
+                const states = ['off', 'context', 'track'];
+                const currentRepeat = window.spotifyPlayerState?.repeat_mode || 'off';
+                const currentIndex = states.indexOf(currentRepeat);
+                const newIndex = (currentIndex + 1) % states.length;
+                window.electronAPI.spotifyControl('repeat', { state: states[newIndex] });
             } else {
-                loopIcon.src = '../assets/icons/repeat song icon off.svg';
-                loopIcon.alt = 'Repeat Off';
+                isLoopEnabled = !isLoopEnabled;
+                loopBtn.classList.toggle('is-active', isLoopEnabled);
+                if (isLoopEnabled) {
+                    loopIcon.src = '../assets/icons/repeat song icon on.svg';
+                    loopIcon.alt = 'Repeat On';
+                } else {
+                    loopIcon.src = '../assets/icons/repeat song icon off.svg';
+                    loopIcon.alt = 'Repeat Off';
+                }
             }
         });
     }
@@ -570,9 +607,18 @@ document.addEventListener("DOMContentLoaded", function () {
             // Calcula el porcentaje de la barra de progreso donde se hizo clic
             const percent = offsetX / width;
 
-            // Establece el tiempo actual de la canción en función del porcentaje calculado
-            // audioElement.duration es la duración total de la canción en segundos
-            audioElement.currentTime = percent * audioElement.duration;
+            if (currentMode === 'spotify') {
+                const duration = window.spotifyPlayerState?.track_window?.current_track?.duration_ms;
+                if (duration) {
+                    const newPosition = percent * duration;
+                    window.electronAPI.spotifyControl('seek', { position: newPosition });
+                }
+            }
+            else {
+                // Establece el tiempo actual de la canción en función del porcentaje calculado
+                // audioElement.duration es la duración total de la canción en segundos
+                audioElement.currentTime = percent * audioElement.duration;
+            }
         });
 
         // Cambiar el ícono cuando la canción termina
@@ -593,14 +639,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const shuffleIcon = shuffleBtn.querySelector('img');
     if (shuffleBtn) {
         shuffleBtn.addEventListener('click', () => {
-            isShuffleEnabled = !isShuffleEnabled;
-            shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
-            if (isShuffleEnabled) {
-                shuffleIcon.src = '../assets/icons/shuffle icon on.svg';
-                shuffleIcon.alt = 'Shuffle On';
+            if (currentMode === 'spotify') {
+                // Se invierte el estado actual basado en la clase 'is-active'
+                const newState = !document.getElementById('shuffleBtn').classList.contains('is-active');
+                window.electronAPI.spotifyControl('shuffle', { state: newState });
             } else {
-                shuffleIcon.src = '../assets/icons/shuffle icon off.svg';
-                shuffleIcon.alt = 'Shuffle Off';
+                isShuffleEnabled = !isShuffleEnabled;
+                shuffleBtn.classList.toggle('is-active', isShuffleEnabled);
+                if (isShuffleEnabled) {
+                    shuffleIcon.src = '../assets/icons/shuffle icon on.svg';
+                    shuffleIcon.alt = 'Shuffle On';
+                } else {
+                    shuffleIcon.src = '../assets/icons/shuffle icon off.svg';
+                    shuffleIcon.alt = 'Shuffle Off';
+                }
             }
         });
     }

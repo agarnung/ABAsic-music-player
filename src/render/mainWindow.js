@@ -188,46 +188,9 @@ document.addEventListener("DOMContentLoaded", function () {
         spotifyBtn.addEventListener('click', async () => {
             console.log('[RENDERER] Click en botón Spotify');
             try {
-                // Paso 1: Autenticar
                 console.log('[RENDERER] Iniciando autenticación...');
                 const accessToken = await window.electronAPI.openSpotifyAuth();
                 console.log('[RENDERER] Token obtenido:', accessToken ? 'OK' : 'Fallo');
-
-                if (accessToken) {
-                    // // Paso 2: Mostrar modal
-                    // console.log('[RENDERER] Mostrando modal...');
-                    // const modal = document.getElementById('spotifyModal');
-                    // console.log('Modal existe?:', !!modal);
-                    // modal.style.display = 'flex !important';
-
-                    // console.log('[RENDERER] Estado de modal:', modal.style.display);
-                    // console.log('[RENDERER] Z-Index de modal:', window.getComputedStyle(modal).zIndex);
-
-                    // // Paso 3: Manejar entrada
-                    // const playlistInput = document.getElementById('playlistInput');
-                    // const modalConfirm = document.getElementById('modalConfirm');
-
-                    // modalConfirm.onclick = async () => {
-                    //     if (isProcessing) return;
-                    //     isProcessing = true;
-
-                    //     try {
-                    //         if (playlistInput.value.trim()) {
-                    //             const uri = await window.electronAPI.parseSpotifyUri(playlistInput.value);
-                    //             await window.electronAPI.setMode('spotify', {
-                    //                 token: accessToken,
-                    //                 uri: uri
-                    //             });
-                    //             modal.style.display = 'none';
-                    //             window.electronAPI.openSongWindow();
-                    //         }
-                    //     } catch (error) {
-                    //         alert(`Error: ${error.message}`);
-                    //     } finally {
-                    //         isProcessing = false;
-                    //     }
-                    // };
-                }
             } catch (error) {
                 alert(`Error de autenticación: ${error.message}`);
             }
