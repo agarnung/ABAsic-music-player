@@ -42,7 +42,8 @@ My machine (tested) is:
 # Features
 
 - If "back" is pressed and the song is more than 5 seconds ahead, it acts as a "reset this song" button. If it’s less than 5 seconds ahead, it goes back to the previous song. This way, we can forget about the "reset this song" button.
-
+- Currently only local music reproduction is available. Spotify and Youtube "list modes" are under development.
+  
 ---
 
 # Tools
