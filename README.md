@@ -8,6 +8,10 @@ A basic and nice music player.
 
 Although it may seem so, the design was not made by me, but by my girlfriend.
 
+It is usually combined with [ABAsic-clock](https://github.com/agarnung/ABAsic-clock/tree/main).
+
+![desktop](./assets/desktop.png)
+
 ---
 
 # Plataforms
